@@ -1,5 +1,4 @@
-export const createStatisticsTemplate = () => {
-  return `
+export const createStatisticsTemplate = () => `
 <section class="statistic">
   <p class="statistic__rank">
     Your rank
@@ -51,6 +50,4 @@ export const createStatisticsTemplate = () => {
     <canvas class="statistic__chart" width="1000"></canvas>
   </div>
 </section>
-  `;
-};
-
+`;
