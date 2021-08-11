@@ -44,7 +44,7 @@ export const createFilmDetailsTemplate = (film) => `
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${film.runtime}</td>
+              <td class="film-details__cell">${film.runtime.hours > 0 ? `${film.runtime.hours}h` : ''} ${film.runtime.minutes}m</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>

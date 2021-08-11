@@ -1,4 +1,4 @@
-export const createStatisticsTemplate = (statistics, user) => `
+export const createStatisticsTemplate = (statistics, user, userFilmsStatistics) => `
   <p class="statistic__rank">
     Your rank
     <img class="statistic__img" src="${user.avatar}" alt="Avatar" width="35" height="35">
@@ -32,16 +32,16 @@ export const createStatisticsTemplate = (statistics, user) => `
   <ul class="statistic__text-list">
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">You watched</h4>
-      <p class="statistic__item-text">${statistics.watchedFilms}<span class="statistic__item-description">movies</span></p>
+      <p class="statistic__item-text">${userFilmsStatistics.watched}<span class="statistic__item-description">movies</span></p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Total duration</h4>
-      <p class="statistic__item-text">${statistics.runtime.hours} <span class="statistic__item-description">h</span> ${statistics.runtime.minutes} <span
+      <p class="statistic__item-text">${userFilmsStatistics.runtime.hours} <span class="statistic__item-description">h</span> ${userFilmsStatistics.runtime.minutes} <span
           class="statistic__item-description">m</span></p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Top genre</h4>
-      <p class="statistic__item-text">${statistics.genre}</p>
+      <p class="statistic__item-text">${userFilmsStatistics.topGenre}</p>
     </li>
   </ul>
 
