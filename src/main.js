@@ -8,10 +8,7 @@ import { createStatisticsTemplate } from './view/statistics';
 import { createFilmsStatisticsTemplate } from './view/films-statistics';
 import { createUserProfileTemplate } from './view/user-profile';
 import { createFilmCardTemplate } from './view/film-card';
-
-function render(container, htmlContent, position){
-  container.insertAdjacentHTML(position, htmlContent);
-}
+import { generateFilmData, generateMenuData, generateSortMenuData, generateStatisticsData, generateUserDate, formatDate } from './mocks.js';
 
 const mainContainer = document.querySelector('.main');
 const filmsContainer = mainContainer.querySelector('.films');
@@ -19,22 +16,85 @@ const filmsListContainer = filmsContainer.querySelector('.films-list');
 const filmsListTopRatedContainer = filmsContainer.querySelector('.films-list-top-rated');
 const filmsListMostCommentedContainer = filmsContainer.querySelector('.films-list-most-commented');
 
-render(document.querySelector('.header__profile'), createUserProfileTemplate(), 'beforeend');
-render(mainContainer.querySelector('.main-navigation'), createMenuTemplate(), 'beforeend');
-render(mainContainer.querySelector('.sort-menu-container'), createSortMenuTemplate(), 'beforeend');
-render(document.querySelector('.footer__statistics'), createFilmsStatisticsTemplate(), 'beforeend');
-render(filmsContainer.querySelector('.films-list'), createFilmListTemplate(), 'beforeend');
-render(filmsListTopRatedContainer, createFilmExtraTopRatedTemplate(), 'beforeend');
-render(filmsListMostCommentedContainer, createFilmExtraMostCommentedTemplate(), 'beforeend');
-render(mainContainer.querySelector('.statistic'), createStatisticsTemplate(), 'beforeend');
-render(document.querySelector('.film-details'), createFilmDetailsTemplate(), 'beforeend');
+function render(container, htmlContent, position){
+  container.insertAdjacentHTML(position, htmlContent);
+}
 
-for(let i = 0; i < 5; i++){
-  render(filmsListContainer.querySelector('.films-list__container'), createFilmCardTemplate(), 'beforeend');
+const mockData = {
+  user: generateUserDate(),
+  films: new Array(20).fill().map(() => generateFilmData()),
+  lastShownFilmIndex: 0,
+};
+
+const userFilmsStatistics = {
+  favorites: 0,
+  watchlist: 0,
+  watched: 0,
+  duration: 0,
+  runtime: 0,
+  genres: {},
+  topGenre: '',
+};
+for(const film of mockData.films) {
+  if(film.isInWatchList) {
+    userFilmsStatistics.watchlist++;
+  }
+  if(film.isWatched) {
+    userFilmsStatistics.watched++;
+    userFilmsStatistics.runtime += film.runtime.hours*60 + film.runtime.minutes;
+  }
+  if(film.isFavorite) {
+    userFilmsStatistics.favorites++;
+  }
+  for(const genre of film.genres){
+    if(userFilmsStatistics.genres[genre]) {
+      userFilmsStatistics.genres[genre]++;
+    } else {
+      userFilmsStatistics.genres[genre] = 1;
+    }
+  }
 }
-for(let i = 0; i < 2; i++){
-  render(filmsListTopRatedContainer.querySelector('.films-list__container'), createFilmCardTemplate(), 'beforeend');
+userFilmsStatistics.runtime = formatDate(userFilmsStatistics.runtime);
+const maxGenresValue = Math.max(...Object.values(userFilmsStatistics.genres));
+for(const key in userFilmsStatistics.genres) {
+  if(userFilmsStatistics.genres[key] === maxGenresValue) {
+    userFilmsStatistics.topGenre = key;
+  }
 }
+
+render(document.querySelector('.header__profile'), createUserProfileTemplate(mockData.user), 'beforeend');
+render(mainContainer.querySelector('.main-navigation'), createMenuTemplate(generateMenuData(), userFilmsStatistics), 'beforeend');
+render(mainContainer.querySelector('.sort-menu-container'), createSortMenuTemplate(generateSortMenuData()), 'beforeend');
+render(document.querySelector('.footer__statistics'), createFilmsStatisticsTemplate(generateStatisticsData()), 'beforeend');
+render(filmsContainer.querySelector('.films-list'), createFilmListTemplate(generateFilmData()), 'beforeend');
+render(filmsListTopRatedContainer, createFilmExtraTopRatedTemplate(generateFilmData()), 'beforeend');
+render(filmsListMostCommentedContainer, createFilmExtraMostCommentedTemplate(generateFilmData()), 'beforeend');
+render(mainContainer.querySelector('.statistic'), createStatisticsTemplate(generateStatisticsData(), mockData.user, userFilmsStatistics), 'beforeend');
+render(document.querySelector('.film-details'), createFilmDetailsTemplate(mockData.films[0]), 'beforeend');
+
+const showMoreBtn = filmsContainer.querySelector('.films-list__show-more');
+showMoreBtn.addEventListener('click', () => {
+  const newLastIndex = mockData.lastShownFilmIndex + 5;
+
+  for(; mockData.lastShownFilmIndex < newLastIndex; mockData.lastShownFilmIndex++){
+    if(mockData.lastShownFilmIndex === mockData.films.length){
+      break;
+    }
+    render(filmsListContainer.querySelector('.films-list__container'), createFilmCardTemplate(mockData.films[mockData.lastShownFilmIndex]), 'beforeend');
+  }
+
+  if(mockData.lastShownFilmIndex === mockData.films.length){
+    showMoreBtn.classList.add('visually-hidden');
+  }
+});
+
+for(; mockData.lastShownFilmIndex < 5; mockData.lastShownFilmIndex++){
+  render(filmsListContainer.querySelector('.films-list__container'), createFilmCardTemplate(mockData.films[mockData.lastShownFilmIndex]), 'beforeend');
+}
+
 for(let i = 0; i < 2; i++){
-  render(filmsListMostCommentedContainer.querySelector('.films-list__container'), createFilmCardTemplate(), 'beforeend');
+  render(filmsListTopRatedContainer.querySelector('.films-list__container'), createFilmCardTemplate(mockData.films[i]), 'beforeend');
+}
+for(let i = 2; i < 4; i++){
+  render(filmsListMostCommentedContainer.querySelector('.films-list__container'), createFilmCardTemplate(mockData.films[i]), 'beforeend');
 }

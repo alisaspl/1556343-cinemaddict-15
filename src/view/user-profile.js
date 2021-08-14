@@ -1,4 +1,4 @@
-export const createUserProfileTemplate = () => `
-  <p class="profile__rating">Movie Buff</p>
-  <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
+export const createUserProfileTemplate = (user) => `
+  <p class="profile__rating">${user.rank}</p>
+  <img class="profile__avatar" src="${user.avatar}" alt="Avatar" width="35" height="35">
 `;
