@@ -75,11 +75,16 @@ render(document.querySelector('.film-details'), createFilmDetailsTemplate(mockDa
 const showMoreBtn = filmsContainer.querySelector('.films-list__show-more');
 showMoreBtn.addEventListener('click', () => {
   const newLastIndex = mockData.lastShownFilmIndex + 5;
-  if(newLastIndex > mockData.films.length){
-    return;
-  }
+
   for(; mockData.lastShownFilmIndex < newLastIndex; mockData.lastShownFilmIndex++){
+    if(mockData.lastShownFilmIndex === mockData.films.length){
+      break;
+    }
     render(filmsListContainer.querySelector('.films-list__container'), createFilmCardTemplate(mockData.films[mockData.lastShownFilmIndex]), 'beforeend');
+  }
+
+  if(mockData.lastShownFilmIndex === mockData.films.length){
+    showMoreBtn.classList.add('visually-hidden');
   }
 });
 
