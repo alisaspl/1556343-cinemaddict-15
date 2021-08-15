@@ -1,4 +1,4 @@
-import { createFilmDetailsTemplate } from './view/film-details';
+import { FilmsDetailsView } from './view/film-details';
 import { createFilmListTemplate } from './view/film-list';
 import { createFilmExtraTopRatedTemplate } from './view/film-extra-top-rated';
 import { createFilmExtraMostCommentedTemplate } from './view/film-extra-most-commented';
@@ -68,6 +68,7 @@ const menuView = new MenuView(generateMenuData(), userFilmsStatistics);
 const sortMenuView = new SortMenuView(generateSortMenuData());
 const filmsStatisticsView = new FilmsStatisticsView(generateStatisticsData());
 const statisticsView = new StatisticsView(generateStatisticsData(), mockData.user, userFilmsStatistics);
+const filmsDetailsView = new FilmsDetailsView(mockData.films[0]);
 
 renderElement(document.querySelector('.header'), profileView.getElement(), RenderPosition.BEFOREEND);
 renderElement(mainContainer, menuView.getElement(), RenderPosition.AFTERBEGIN);
@@ -75,10 +76,11 @@ renderElement(mainContainer.querySelector('.sort-menu-container'), sortMenuView.
 renderElement(document.querySelector('.footer__statistics'), filmsStatisticsView.getElement(), RenderPosition.BEFOREEND);
 renderElement(mainContainer, statisticsView.getElement(), RenderPosition.BEFOREEND);
 
+renderElement(document.querySelector('.film-details'), filmsDetailsView.getElement(), RenderPosition.BEFOREEND);
+
 render(filmsContainer.querySelector('.films-list'), createFilmListTemplate(generateFilmData()), 'beforeend');
 render(filmsListTopRatedContainer, createFilmExtraTopRatedTemplate(generateFilmData()), 'beforeend');
 render(filmsListMostCommentedContainer, createFilmExtraMostCommentedTemplate(generateFilmData()), 'beforeend');
-//render(document.querySelector('.film-details'), createFilmDetailsTemplate(mockData.films[0]), 'beforeend');
 
 const showMoreBtn = filmsContainer.querySelector('.films-list__show-more');
 showMoreBtn.addEventListener('click', () => {

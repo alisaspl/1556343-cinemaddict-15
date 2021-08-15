@@ -21,23 +21,23 @@ class StatisticsView {
           <p class="statistic__filters-description">Show stats:</p>
 
           <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time"
-            value="all-time" ${this._stat.selectedMenu ===  'allTime' ? 'checked' : ''}>
+            value="all-time" ${this._stat.selectedMenu === 'allTime' ? 'checked' : ''}>
           <label for="statistic-all-time" class="statistic__filters-label">All time</label>
 
           <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today"
-            value="today" ${this._stat.selectedMenu ===  'today' ? 'checked' : ''}>
+            value="today" ${this._stat.selectedMenu === 'today' ? 'checked' : ''}>
           <label for="statistic-today" class="statistic__filters-label">Today</label>
 
           <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week"
-            value="week" ${this._stat.selectedMenu ===  'week' ? 'checked' : ''}>
+            value="week" ${this._stat.selectedMenu === 'week' ? 'checked' : ''}>
           <label for="statistic-week" class="statistic__filters-label">Week</label>
 
           <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month"
-            value="month" ${this._stat.selectedMenu ===  'month' ? 'checked' : ''}>
+            value="month" ${this._stat.selectedMenu === 'month' ? 'checked' : ''}>
           <label for="statistic-month" class="statistic__filters-label">Month</label>
 
           <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year"
-            value="year" ${this._stat.selectedMenu ===  'year' ? 'checked' : ''}>
+            value="year" ${this._stat.selectedMenu === 'year' ? 'checked' : ''}>
           <label for="statistic-year" class="statistic__filters-label">Year</label>
         </form>
 
@@ -64,16 +64,16 @@ class StatisticsView {
     `;
   }
 
-getElement() {
-  if(this._element === null) {
-    this._element = createElement(this.getTemplate());
+  getElement() {
+    if(this._element === null) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
   }
-  return this._element;
-}
 
-removeElement() {
-  this._element = null;
-}
+  removeElement() {
+    this._element = null;
+  }
 }
 
 export { StatisticsView };
