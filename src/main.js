@@ -2,8 +2,8 @@ import { createFilmDetailsTemplate } from './view/film-details';
 import { createFilmListTemplate } from './view/film-list';
 import { createFilmExtraTopRatedTemplate } from './view/film-extra-top-rated';
 import { createFilmExtraMostCommentedTemplate } from './view/film-extra-most-commented';
-import { createMenuTemplate } from './view/menu';
-import { createSortMenuTemplate } from './view/sort-menu';
+import { MenuView } from './view/menu';
+import { SortMenuView } from './view/sort-menu';
 import { createStatisticsTemplate } from './view/statistics';
 import { createFilmsStatisticsTemplate } from './view/films-statistics';
 import { UserProfileView } from './view/user-profile';
@@ -64,10 +64,13 @@ for(const key in userFilmsStatistics.genres) {
 }
 
 const profile = new UserProfileView(mockData.user);
-renderElement(document.querySelector('.header'), profile.getElement(), RenderPosition.BEFOREEND);
+const menu = new MenuView(generateMenuData(), userFilmsStatistics);
+const sortMenu = new SortMenuView(generateSortMenuData());
 
-render(mainContainer.querySelector('.main-navigation'), createMenuTemplate(generateMenuData(), userFilmsStatistics), 'beforeend');
-render(mainContainer.querySelector('.sort-menu-container'), createSortMenuTemplate(generateSortMenuData()), 'beforeend');
+renderElement(document.querySelector('.header'), profile.getElement(), RenderPosition.BEFOREEND);
+renderElement(document.querySelector('.main'), menu.getElement(), RenderPosition.AFTERBEGIN);
+renderElement(mainContainer.querySelector('.sort-menu-container'), sortMenu.getElement(), RenderPosition.BEFOREEND);
+
 render(document.querySelector('.footer__statistics'), createFilmsStatisticsTemplate(generateStatisticsData()), 'beforeend');
 render(filmsContainer.querySelector('.films-list'), createFilmListTemplate(generateFilmData()), 'beforeend');
 render(filmsListTopRatedContainer, createFilmExtraTopRatedTemplate(generateFilmData()), 'beforeend');
