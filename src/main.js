@@ -6,9 +6,10 @@ import { createMenuTemplate } from './view/menu';
 import { createSortMenuTemplate } from './view/sort-menu';
 import { createStatisticsTemplate } from './view/statistics';
 import { createFilmsStatisticsTemplate } from './view/films-statistics';
-import { createUserProfileTemplate } from './view/user-profile';
+import { UserProfileView } from './view/user-profile';
 import { createFilmCardTemplate } from './view/film-card';
 import { generateFilmData, generateMenuData, generateSortMenuData, generateStatisticsData, generateUserDate, formatDate } from './mocks.js';
+import { renderElement, RenderPosition } from './utils.js';
 
 const mainContainer = document.querySelector('.main');
 const filmsContainer = mainContainer.querySelector('.films');
@@ -62,7 +63,9 @@ for(const key in userFilmsStatistics.genres) {
   }
 }
 
-render(document.querySelector('.header__profile'), createUserProfileTemplate(mockData.user), 'beforeend');
+const profile = new UserProfileView(mockData.user);
+renderElement(document.querySelector('.header'), profile.getElement(), RenderPosition.BEFOREEND);
+
 render(mainContainer.querySelector('.main-navigation'), createMenuTemplate(generateMenuData(), userFilmsStatistics), 'beforeend');
 render(mainContainer.querySelector('.sort-menu-container'), createSortMenuTemplate(generateSortMenuData()), 'beforeend');
 render(document.querySelector('.footer__statistics'), createFilmsStatisticsTemplate(generateStatisticsData()), 'beforeend');
@@ -70,7 +73,7 @@ render(filmsContainer.querySelector('.films-list'), createFilmListTemplate(gener
 render(filmsListTopRatedContainer, createFilmExtraTopRatedTemplate(generateFilmData()), 'beforeend');
 render(filmsListMostCommentedContainer, createFilmExtraMostCommentedTemplate(generateFilmData()), 'beforeend');
 render(mainContainer.querySelector('.statistic'), createStatisticsTemplate(generateStatisticsData(), mockData.user, userFilmsStatistics), 'beforeend');
-render(document.querySelector('.film-details'), createFilmDetailsTemplate(mockData.films[0]), 'beforeend');
+//render(document.querySelector('.film-details'), createFilmDetailsTemplate(mockData.films[0]), 'beforeend');
 
 const showMoreBtn = filmsContainer.querySelector('.films-list__show-more');
 showMoreBtn.addEventListener('click', () => {
