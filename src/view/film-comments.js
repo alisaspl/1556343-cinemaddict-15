@@ -36,7 +36,6 @@ class FilmCommentView {
   }
 }
 
-//export const createFilmCommentsTemplate = (comments) => `
 class FilmCommentsView {
   constructor(comments) {
     this._comments = comments;
