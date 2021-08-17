@@ -19,9 +19,10 @@ class FilmExtraMostCommentedView {
   getElement() {
     if(this._element === null) {
       this._element = createElement(this.getTemplate());
+      const container = this._element.querySelector('.films-list__container');
       for(const film of this._films) {
         renderElement(
-          this._element.querySelector('.films-list__container'),
+          container,
           new FilmCardView(film).getElement(),
           RenderPosition.BEFOREEND,
         );

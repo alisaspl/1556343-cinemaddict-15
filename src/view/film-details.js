@@ -1,10 +1,27 @@
 import { createElement, renderElement, RenderPosition } from '../utils';
 import { FilmCommentsView } from './film-comments';
 
+let currentOpenedFilmDetailsView = null;
+document.addEventListener('keydown', (evt) => {
+  if (evt.key === 'Escape' || evt.key === 'Esc') {
+    evt.preventDefault();
+    if(currentOpenedFilmDetailsView) {
+      currentOpenedFilmDetailsView.removeElement();
+    }
+  }
+});
+
 class FilmsDetailsView {
   constructor(film) {
     this._film = film;
     this._element = null;
+
+    if(currentOpenedFilmDetailsView) {
+      currentOpenedFilmDetailsView.removeElement();
+    }
+    currentOpenedFilmDetailsView = this;
+
+    document.body.classList.add('hide-overflow');
   }
 
   getTemplate() {
@@ -91,12 +108,16 @@ class FilmsDetailsView {
         new FilmCommentsView(this._film.comments).getElement(),
         RenderPosition.BEFOREEND,
       );
+      this._element.querySelector('.film-details__close').addEventListener('click', this.removeElement.bind(this));
     }
     return this._element;
   }
 
   removeElement() {
+    this._element.remove();
     this._element = null;
+    currentOpenedFilmDetailsView = null;
+    document.body.classList.remove('hide-overflow');
   }
 }
 

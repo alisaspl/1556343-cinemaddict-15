@@ -1,4 +1,3 @@
-import { FilmsDetailsView } from './view/film-details';
 import { FilmsListView } from './view/film-list';
 import { FilmExtraTopRatedView } from './view/film-extra-top-rated';
 import { FilmExtraMostCommentedView } from './view/film-extra-most-commented';
@@ -61,11 +60,10 @@ const menuView = new MenuView(generateMenuData(), userFilmsStatistics);
 const sortMenuView = new SortMenuView(generateSortMenuData());
 const filmsStatisticsView = new FilmsStatisticsView(filmsStatisticsData);
 const statisticsView = new StatisticsView(filmsStatisticsData, mockData.user, userFilmsStatistics);
-const filmsDetailsView = new FilmsDetailsView(mockData.films[0]);
+
 const filmsListView = new FilmsListView(mockData.films);
 const filmExtraTopRatedView = new FilmExtraTopRatedView([mockData.films[0], mockData.films[1]]);
 const filmExtraMostCommentedView = new FilmExtraMostCommentedView([mockData.films[2], mockData.films[3]]);
-
 
 renderElement(document.querySelector('.header'), profileView.getElement(), RenderPosition.BEFOREEND);
 renderElement(document.querySelector('.footer__statistics'), filmsStatisticsView.getElement(), RenderPosition.BEFOREEND);
@@ -78,5 +76,3 @@ renderElement(mainContainer, statisticsView.getElement(), RenderPosition.BEFOREE
 renderElement(filmsContainer, filmsListView.getElement(), RenderPosition.AFTERBEGIN);
 renderElement(filmsContainer, filmExtraTopRatedView.getElement(), RenderPosition.BEFOREEND);
 renderElement(filmsContainer, filmExtraMostCommentedView.getElement(), RenderPosition.BEFOREEND);
-
-renderElement(document.querySelector('.film-details'), filmsDetailsView.getElement(), RenderPosition.BEFOREEND);

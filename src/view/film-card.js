@@ -1,4 +1,5 @@
-import { createElement } from '../utils';
+import { createElement, renderElement, RenderPosition } from '../utils';
+import { FilmsDetailsView } from './film-details';
 
 class FilmCardView {
   constructor(film) {
@@ -34,12 +35,23 @@ class FilmCardView {
   getElement() {
     if(this._element === null) {
       this._element = createElement(this.getTemplate());
+      this._element.querySelector('.film-card__title').addEventListener('click', this.showFilmDetails.bind(this));
+      this._element.querySelector('.film-card__poster').addEventListener('click', this.showFilmDetails.bind(this));
+      this._element.querySelector('.film-card__comments').addEventListener('click', this.showFilmDetails.bind(this));
     }
     return this._element;
   }
 
   removeElement() {
     this._element = null;
+  }
+
+  showFilmDetails() {
+    renderElement(
+      document.querySelector('.film-details'),
+      new FilmsDetailsView(this._film).getElement(),
+      RenderPosition.BEFOREEND,
+    );
   }
 }
 

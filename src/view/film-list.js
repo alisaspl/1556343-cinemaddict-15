@@ -7,6 +7,7 @@ class FilmsListView {
     this._element = null;
     this._showMoreButton = null;
     this._lastFilmIndex = 0;
+    this._showMoreButtonClickCallback = null;
   }
 
   getTemplate() {
@@ -23,12 +24,14 @@ class FilmsListView {
     if(this._element === null) {
       this._element = createElement(this.getTemplate());
       this._showMoreButton = this._element.querySelector('.films-list__show-more');
-      this._showMoreButton.addEventListener('click', () => {
-        this.onShowMoreButtonClick();
-      });
+
+      this._showMoreButtonClickCallback = this.onShowMoreButtonClick.bind(this);
+      this._showMoreButton.addEventListener('click', this._showMoreButtonClickCallback);
+
+      const container = this._element.querySelector('.films-list__container');
       for(; this._lastFilmIndex < 5; this._lastFilmIndex++) {
         renderElement(
-          this._element.querySelector('.films-list__container'),
+          container,
           new FilmCardView(this._films[this._lastFilmIndex]).getElement(),
           RenderPosition.BEFOREEND,
         );
@@ -39,19 +42,22 @@ class FilmsListView {
 
   removeElement() {
     this._element = null;
+    this._showMoreButton.removeEventListener('click', this._showMoreButtonClickCallback);
     this._showMoreButton = null;
+    this._showMoreButtonClickCallback = null;
     this._lastFilmIndex = 0;
   }
 
   onShowMoreButtonClick() {
     const newLastIndex = this._lastFilmIndex + 5;
+    const container = this._element.querySelector('.films-list__container');
 
     for(; this._lastFilmIndex < newLastIndex; this._lastFilmIndex++){
       if(this._lastFilmIndex === this._films.length){
         break;
       }
       renderElement(
-        this._element.querySelector('.films-list__container'),
+        container,
         new FilmCardView(this._films[this._lastFilmIndex]).getElement(),
         RenderPosition.BEFOREEND,
       );
