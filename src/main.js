@@ -1,13 +1,13 @@
-import { FilmsListView } from './view/film-list';
-import { FilmExtraTopRatedView } from './view/film-extra-top-rated';
-import { FilmExtraMostCommentedView } from './view/film-extra-most-commented';
-import { MenuView } from './view/menu';
-import { SortMenuView } from './view/sort-menu';
-import { StatisticsView } from './view/statistics';
-import { FilmsStatisticsView } from './view/films-statistics';
-import { UserProfileView } from './view/user-profile';
-import { generateFilmData, generateMenuData, generateSortMenuData, generateStatisticsData, generateUserDate, formatDate } from './mocks.js';
-import { renderElement, RenderPosition } from './utils.js';
+import FilmsListView from './view/film-list';
+import FilmExtraTopRatedView from './view/film-extra-top-rated';
+import FilmExtraMostCommentedView from './view/film-extra-most-commented';
+import MenuView from './view/menu';
+import SortMenuView from './view/sort-menu';
+//import StatisticsView from './view/statistics';
+import FilmsStatisticsView from './view/films-statistics';
+import UserProfileView from './view/user-profile';
+import {generateFilmData, generateMenuData, generateSortMenuData, generateStatisticsData, generateUserDate, formatDate } from './mocks.js';
+import utils from './utils';
 
 const mainContainer = document.querySelector('.main');
 const filmsContainer = mainContainer.querySelector('.films');
@@ -59,20 +59,20 @@ const profileView = new UserProfileView(mockData.user);
 const menuView = new MenuView(generateMenuData(), userFilmsStatistics);
 const sortMenuView = new SortMenuView(generateSortMenuData());
 const filmsStatisticsView = new FilmsStatisticsView(filmsStatisticsData);
-const statisticsView = new StatisticsView(filmsStatisticsData, mockData.user, userFilmsStatistics);
+//const statisticsView = new StatisticsView(filmsStatisticsData, mockData.user, userFilmsStatistics);
 
 const filmsListView = new FilmsListView(mockData.films);
 const filmExtraTopRatedView = new FilmExtraTopRatedView([mockData.films[0], mockData.films[1]]);
 const filmExtraMostCommentedView = new FilmExtraMostCommentedView([mockData.films[2], mockData.films[3]]);
 
-renderElement(document.querySelector('.header'), profileView.getElement(), RenderPosition.BEFOREEND);
-renderElement(document.querySelector('.footer__statistics'), filmsStatisticsView.getElement(), RenderPosition.BEFOREEND);
+utils.renderElement(document.querySelector('.header'), profileView.getElement());
+utils.renderElement(document.querySelector('.footer__statistics'), filmsStatisticsView.getElement());
 
-renderElement(mainContainer, menuView.getElement(), RenderPosition.AFTERBEGIN);
-renderElement(mainContainer.querySelector('.sort-menu-container'), sortMenuView.getElement(), RenderPosition.BEFOREEND);
+utils.renderElement(mainContainer, menuView.getElement(), utils.RenderPosition.AFTERBEGIN);
+utils.renderElement(mainContainer.querySelector('.sort-menu-container'), sortMenuView.getElement());
 
-renderElement(mainContainer, statisticsView.getElement(), RenderPosition.BEFOREEND);
+//utils.renderElement(mainContainer, statisticsView.getElement());
 
-renderElement(filmsContainer, filmsListView.getElement(), RenderPosition.AFTERBEGIN);
-renderElement(filmsContainer, filmExtraTopRatedView.getElement(), RenderPosition.BEFOREEND);
-renderElement(filmsContainer, filmExtraMostCommentedView.getElement(), RenderPosition.BEFOREEND);
+utils.renderElement(filmsContainer, filmsListView.getElement(), utils.RenderPosition.AFTERBEGIN);
+utils.renderElement(filmsContainer, filmExtraTopRatedView.getElement());
+utils.renderElement(filmsContainer, filmExtraMostCommentedView.getElement());

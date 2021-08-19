@@ -1,4 +1,4 @@
-import { createElement } from '../utils';
+import utils from '../utils';
 
 class SortMenuView {
   constructor(menu) {
@@ -18,7 +18,7 @@ class SortMenuView {
 
   getElement() {
     if(this._element === null) {
-      this._element = createElement(this.getTemplate());
+      this._element = utils.createElement(this.getTemplate());
     }
     return this._element;
   }
@@ -28,4 +28,4 @@ class SortMenuView {
   }
 }
 
-export { SortMenuView };
+export default SortMenuView;

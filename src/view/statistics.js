@@ -1,4 +1,4 @@
-import { createElement } from '../utils';
+import utils from '../utils';
 
 class StatisticsView {
   constructor(stat, user, userFilmsStat) {
@@ -66,7 +66,7 @@ class StatisticsView {
 
   getElement() {
     if(this._element === null) {
-      this._element = createElement(this.getTemplate());
+      this._element = utils.createElement(this.getTemplate());
     }
     return this._element;
   }
@@ -76,4 +76,4 @@ class StatisticsView {
   }
 }
 
-export { StatisticsView };
+export default StatisticsView;

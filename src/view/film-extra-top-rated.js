@@ -1,5 +1,5 @@
-import { createElement, renderElement, RenderPosition } from '../utils';
-import { FilmCardView } from './film-card';
+import utils from '../utils';
+import FilmCardView from './film-card';
 
 class FilmExtraTopRatedView {
   constructor(films) {
@@ -18,13 +18,13 @@ class FilmExtraTopRatedView {
 
   getElement() {
     if(this._element === null) {
-      this._element = createElement(this.getTemplate());
+      this._element = utils.createElement(this.getTemplate());
       const container = this._element.querySelector('.films-list__container');
       for(const film of this._films){
-        renderElement(
+        utils.renderElement(
           container,
           new FilmCardView(film).getElement(),
-          RenderPosition.BEFOREEND,
+
         );
       }
     }
@@ -36,4 +36,4 @@ class FilmExtraTopRatedView {
   }
 }
 
-export { FilmExtraTopRatedView };
+export default FilmExtraTopRatedView;

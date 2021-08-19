@@ -1,5 +1,5 @@
-import { createElement, renderElement, RenderPosition } from '../utils';
-import { FilmsDetailsView } from './film-details';
+import utils from '../utils';
+import FilmsDetailsView from './film-details';
 
 class FilmCardView {
   constructor(film) {
@@ -34,10 +34,10 @@ class FilmCardView {
 
   getElement() {
     if(this._element === null) {
-      this._element = createElement(this.getTemplate());
-      this._element.querySelector('.film-card__title').addEventListener('click', this.showFilmDetails.bind(this));
-      this._element.querySelector('.film-card__poster').addEventListener('click', this.showFilmDetails.bind(this));
-      this._element.querySelector('.film-card__comments').addEventListener('click', this.showFilmDetails.bind(this));
+      this._element = utils.createElement(this.getTemplate());
+      ['.film-card__title', '.film-card__poster', '.film-card__comments'].forEach((element) =>
+        this._element.querySelector(element).addEventListener('click', this.showFilmDetails.bind(this)),
+      );
     }
     return this._element;
   }
@@ -47,12 +47,8 @@ class FilmCardView {
   }
 
   showFilmDetails() {
-    renderElement(
-      document.querySelector('.film-details'),
-      new FilmsDetailsView(this._film).getElement(),
-      RenderPosition.BEFOREEND,
-    );
+    utils.renderElement(document.body, new FilmsDetailsView(this._film).getElement());
   }
 }
 
-export { FilmCardView };
+export default FilmCardView;

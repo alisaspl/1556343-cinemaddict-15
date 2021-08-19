@@ -1,4 +1,4 @@
-import { createElement } from '../utils';
+import utils from '../utils';
 
 class MenuView {
   constructor(menu, stat) {
@@ -23,7 +23,7 @@ class MenuView {
 
   getElement() {
     if(this._element === null) {
-      this._element = createElement(this.getTemplate());
+      this._element = utils.createElement(this.getTemplate());
     }
     return this._element;
   }
@@ -33,5 +33,4 @@ class MenuView {
   }
 }
 
-export { MenuView };
-
+export default MenuView;

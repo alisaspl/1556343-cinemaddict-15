@@ -1,5 +1,5 @@
-import { createElement, renderElement, RenderPosition } from '../utils';
-import { FilmCardView } from './film-card';
+import utils from '../utils';
+import FilmCardView from './film-card';
 
 class FilmsListView {
   constructor(films) {
@@ -22,7 +22,7 @@ class FilmsListView {
 
   getElement() {
     if(this._element === null) {
-      this._element = createElement(this.getTemplate());
+      this._element = utils.createElement(this.getTemplate());
       this._showMoreButton = this._element.querySelector('.films-list__show-more');
 
       this._showMoreButtonClickCallback = this.onShowMoreButtonClick.bind(this);
@@ -30,11 +30,7 @@ class FilmsListView {
 
       const container = this._element.querySelector('.films-list__container');
       for(; this._lastFilmIndex < 5; this._lastFilmIndex++) {
-        renderElement(
-          container,
-          new FilmCardView(this._films[this._lastFilmIndex]).getElement(),
-          RenderPosition.BEFOREEND,
-        );
+        utils.renderElement(container, new FilmCardView(this._films[this._lastFilmIndex]).getElement());
       }
     }
     return this._element;
@@ -53,21 +49,14 @@ class FilmsListView {
     const container = this._element.querySelector('.films-list__container');
 
     for(; this._lastFilmIndex < newLastIndex; this._lastFilmIndex++){
-      if(this._lastFilmIndex === this._films.length){
+      utils.renderElement(container, new FilmCardView(this._films[this._lastFilmIndex]).getElement());
+
+      if(this._lastFilmIndex === this._films.length - 1){
+        this._showMoreButton.classList.add('visually-hidden');
         break;
       }
-      renderElement(
-        container,
-        new FilmCardView(this._films[this._lastFilmIndex]).getElement(),
-        RenderPosition.BEFOREEND,
-      );
-    }
-
-    if(this._lastFilmIndex === this._films.length){
-      this._showMoreButton.classList.add('visually-hidden');
     }
   }
-
 }
 
-export { FilmsListView };
+export default FilmsListView;
