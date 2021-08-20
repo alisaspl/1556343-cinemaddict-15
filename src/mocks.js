@@ -139,11 +139,26 @@ const releases = [
 ];
 
 const mainMenuTitles = [
-  'allMovies',
-  'watchlist',
-  'history',
-  'favorites',
-  'stats',
+  {
+    type: 'allMovies',
+    emptyText: 'There are no movies in our database',
+  },
+  {
+    type: 'watchlist',
+    emptyText: 'There are no movies to watch now',
+  },
+  {
+    type: 'history',
+    emptyText: 'There are no watched movies now',
+  },
+  {
+    type: 'favorites',
+    emptyText: 'There are no favorite movies now',
+  },
+  {
+    type: 'stats',
+    emptyText: '',
+  },
 ];
 
 const sortMenuTitles = [
@@ -223,9 +238,7 @@ const generateFilmData = () => ({
   ageRating: getRandomInteger(0, 18),
 });
 
-const generateMenuData = () => ({
-  selected: getRandomElementFromArray(mainMenuTitles),
-});
+const generateMenuData = () => getRandomElementFromArray(mainMenuTitles);
 
 const generateSortMenuData = () => ({
   selected: getRandomElementFromArray(sortMenuTitles),

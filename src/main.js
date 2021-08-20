@@ -1,6 +1,4 @@
 import FilmsListView from './view/film-list';
-import FilmExtraTopRatedView from './view/film-extra-top-rated';
-import FilmExtraMostCommentedView from './view/film-extra-most-commented';
 import MenuView from './view/menu';
 import SortMenuView from './view/sort-menu';
 //import StatisticsView from './view/statistics';
@@ -10,7 +8,6 @@ import {generateFilmData, generateMenuData, generateSortMenuData, generateStatis
 import utils from './utils';
 
 const mainContainer = document.querySelector('.main');
-const filmsContainer = mainContainer.querySelector('.films');
 
 const mockData = {
   user: generateUserDate(),
@@ -54,25 +51,22 @@ for(const key in userFilmsStatistics.genres) {
 }
 
 const filmsStatisticsData = generateStatisticsData();
+const menuData = generateMenuData();
 
 const profileView = new UserProfileView(mockData.user);
-const menuView = new MenuView(generateMenuData(), userFilmsStatistics);
+const menuView = new MenuView(menuData, userFilmsStatistics);
 const sortMenuView = new SortMenuView(generateSortMenuData());
 const filmsStatisticsView = new FilmsStatisticsView(filmsStatisticsData);
 //const statisticsView = new StatisticsView(filmsStatisticsData, mockData.user, userFilmsStatistics);
 
-const filmsListView = new FilmsListView(mockData.films);
-const filmExtraTopRatedView = new FilmExtraTopRatedView([mockData.films[0], mockData.films[1]]);
-const filmExtraMostCommentedView = new FilmExtraMostCommentedView([mockData.films[2], mockData.films[3]]);
+const filmsListView = new FilmsListView(mockData.films, menuData);
 
 utils.renderElement(document.querySelector('.header'), profileView.getElement());
 utils.renderElement(document.querySelector('.footer__statistics'), filmsStatisticsView.getElement());
 
 utils.renderElement(mainContainer, menuView.getElement(), utils.RenderPosition.AFTERBEGIN);
-utils.renderElement(mainContainer.querySelector('.sort-menu-container'), sortMenuView.getElement());
+utils.renderElement(mainContainer, sortMenuView.getElement());
 
 //utils.renderElement(mainContainer, statisticsView.getElement());
 
-utils.renderElement(filmsContainer, filmsListView.getElement(), utils.RenderPosition.AFTERBEGIN);
-utils.renderElement(filmsContainer, filmExtraTopRatedView.getElement());
-utils.renderElement(filmsContainer, filmExtraMostCommentedView.getElement());
+utils.renderElement(mainContainer, filmsListView.getElement());
