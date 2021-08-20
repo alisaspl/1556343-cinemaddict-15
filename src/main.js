@@ -1,29 +1,20 @@
-import { createFilmDetailsTemplate } from './view/film-details';
-import { createFilmListTemplate } from './view/film-list';
-import { createFilmExtraTopRatedTemplate } from './view/film-extra-top-rated';
-import { createFilmExtraMostCommentedTemplate } from './view/film-extra-most-commented';
-import { createMenuTemplate } from './view/menu';
-import { createSortMenuTemplate } from './view/sort-menu';
-import { createStatisticsTemplate } from './view/statistics';
-import { createFilmsStatisticsTemplate } from './view/films-statistics';
-import { createUserProfileTemplate } from './view/user-profile';
-import { createFilmCardTemplate } from './view/film-card';
-import { generateFilmData, generateMenuData, generateSortMenuData, generateStatisticsData, generateUserDate, formatDate } from './mocks.js';
+import FilmsListView from './view/film-list';
+import FilmExtraTopRatedView from './view/film-extra-top-rated';
+import FilmExtraMostCommentedView from './view/film-extra-most-commented';
+import MenuView from './view/menu';
+import SortMenuView from './view/sort-menu';
+//import StatisticsView from './view/statistics';
+import FilmsStatisticsView from './view/films-statistics';
+import UserProfileView from './view/user-profile';
+import {generateFilmData, generateMenuData, generateSortMenuData, generateStatisticsData, generateUserDate, formatDate } from './mocks.js';
+import utils from './utils';
 
 const mainContainer = document.querySelector('.main');
 const filmsContainer = mainContainer.querySelector('.films');
-const filmsListContainer = filmsContainer.querySelector('.films-list');
-const filmsListTopRatedContainer = filmsContainer.querySelector('.films-list-top-rated');
-const filmsListMostCommentedContainer = filmsContainer.querySelector('.films-list-most-commented');
-
-function render(container, htmlContent, position){
-  container.insertAdjacentHTML(position, htmlContent);
-}
 
 const mockData = {
   user: generateUserDate(),
   films: new Array(20).fill().map(() => generateFilmData()),
-  lastShownFilmIndex: 0,
 };
 
 const userFilmsStatistics = {
@@ -62,39 +53,26 @@ for(const key in userFilmsStatistics.genres) {
   }
 }
 
-render(document.querySelector('.header__profile'), createUserProfileTemplate(mockData.user), 'beforeend');
-render(mainContainer.querySelector('.main-navigation'), createMenuTemplate(generateMenuData(), userFilmsStatistics), 'beforeend');
-render(mainContainer.querySelector('.sort-menu-container'), createSortMenuTemplate(generateSortMenuData()), 'beforeend');
-render(document.querySelector('.footer__statistics'), createFilmsStatisticsTemplate(generateStatisticsData()), 'beforeend');
-render(filmsContainer.querySelector('.films-list'), createFilmListTemplate(generateFilmData()), 'beforeend');
-render(filmsListTopRatedContainer, createFilmExtraTopRatedTemplate(generateFilmData()), 'beforeend');
-render(filmsListMostCommentedContainer, createFilmExtraMostCommentedTemplate(generateFilmData()), 'beforeend');
-render(mainContainer.querySelector('.statistic'), createStatisticsTemplate(generateStatisticsData(), mockData.user, userFilmsStatistics), 'beforeend');
-render(document.querySelector('.film-details'), createFilmDetailsTemplate(mockData.films[0]), 'beforeend');
+const filmsStatisticsData = generateStatisticsData();
 
-const showMoreBtn = filmsContainer.querySelector('.films-list__show-more');
-showMoreBtn.addEventListener('click', () => {
-  const newLastIndex = mockData.lastShownFilmIndex + 5;
+const profileView = new UserProfileView(mockData.user);
+const menuView = new MenuView(generateMenuData(), userFilmsStatistics);
+const sortMenuView = new SortMenuView(generateSortMenuData());
+const filmsStatisticsView = new FilmsStatisticsView(filmsStatisticsData);
+//const statisticsView = new StatisticsView(filmsStatisticsData, mockData.user, userFilmsStatistics);
 
-  for(; mockData.lastShownFilmIndex < newLastIndex; mockData.lastShownFilmIndex++){
-    if(mockData.lastShownFilmIndex === mockData.films.length){
-      break;
-    }
-    render(filmsListContainer.querySelector('.films-list__container'), createFilmCardTemplate(mockData.films[mockData.lastShownFilmIndex]), 'beforeend');
-  }
+const filmsListView = new FilmsListView(mockData.films);
+const filmExtraTopRatedView = new FilmExtraTopRatedView([mockData.films[0], mockData.films[1]]);
+const filmExtraMostCommentedView = new FilmExtraMostCommentedView([mockData.films[2], mockData.films[3]]);
 
-  if(mockData.lastShownFilmIndex === mockData.films.length){
-    showMoreBtn.classList.add('visually-hidden');
-  }
-});
+utils.renderElement(document.querySelector('.header'), profileView.getElement());
+utils.renderElement(document.querySelector('.footer__statistics'), filmsStatisticsView.getElement());
 
-for(; mockData.lastShownFilmIndex < 5; mockData.lastShownFilmIndex++){
-  render(filmsListContainer.querySelector('.films-list__container'), createFilmCardTemplate(mockData.films[mockData.lastShownFilmIndex]), 'beforeend');
-}
+utils.renderElement(mainContainer, menuView.getElement(), utils.RenderPosition.AFTERBEGIN);
+utils.renderElement(mainContainer.querySelector('.sort-menu-container'), sortMenuView.getElement());
 
-for(let i = 0; i < 2; i++){
-  render(filmsListTopRatedContainer.querySelector('.films-list__container'), createFilmCardTemplate(mockData.films[i]), 'beforeend');
-}
-for(let i = 2; i < 4; i++){
-  render(filmsListMostCommentedContainer.querySelector('.films-list__container'), createFilmCardTemplate(mockData.films[i]), 'beforeend');
-}
+//utils.renderElement(mainContainer, statisticsView.getElement());
+
+utils.renderElement(filmsContainer, filmsListView.getElement(), utils.RenderPosition.AFTERBEGIN);
+utils.renderElement(filmsContainer, filmExtraTopRatedView.getElement());
+utils.renderElement(filmsContainer, filmExtraMostCommentedView.getElement());

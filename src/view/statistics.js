@@ -1,51 +1,79 @@
-export const createStatisticsTemplate = (statistics, user, userFilmsStatistics) => `
-  <p class="statistic__rank">
-    Your rank
-    <img class="statistic__img" src="${user.avatar}" alt="Avatar" width="35" height="35">
-    <span class="statistic__rank-label">${user.rank}</span>
-  </p>
+import utils from '../utils';
 
-  <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
-    <p class="statistic__filters-description">Show stats:</p>
+class StatisticsView {
+  constructor(stat, user, userFilmsStat) {
+    this._user = user;
+    this._stat = stat;
+    this._userFilmsStat = userFilmsStat;
+    this._element = null;
+  }
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time"
-      value="all-time" ${statistics.selectedMenu ===  'allTime' ? 'checked' : ''}>
-    <label for="statistic-all-time" class="statistic__filters-label">All time</label>
+  getTemplate() {
+    return `
+      <section class="statistic">
+        <p class="statistic__rank">
+          Your rank
+          <img class="statistic__img" src="${this._user.avatar}" alt="Avatar" width="35" height="35">
+          <span class="statistic__rank-label">${this._user.rank}</span>
+        </p>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today"
-      value="today" ${statistics.selectedMenu ===  'today' ? 'checked' : ''}>
-    <label for="statistic-today" class="statistic__filters-label">Today</label>
+        <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
+          <p class="statistic__filters-description">Show stats:</p>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week"
-      value="week" ${statistics.selectedMenu ===  'week' ? 'checked' : ''}>
-    <label for="statistic-week" class="statistic__filters-label">Week</label>
+          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time"
+            value="all-time" ${this._stat.selectedMenu === 'allTime' ? 'checked' : ''}>
+          <label for="statistic-all-time" class="statistic__filters-label">All time</label>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month"
-      value="month" ${statistics.selectedMenu ===  'month' ? 'checked' : ''}>
-    <label for="statistic-month" class="statistic__filters-label">Month</label>
+          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today"
+            value="today" ${this._stat.selectedMenu === 'today' ? 'checked' : ''}>
+          <label for="statistic-today" class="statistic__filters-label">Today</label>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year"
-      value="year" ${statistics.selectedMenu ===  'year' ? 'checked' : ''}>
-    <label for="statistic-year" class="statistic__filters-label">Year</label>
-  </form>
+          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week"
+            value="week" ${this._stat.selectedMenu === 'week' ? 'checked' : ''}>
+          <label for="statistic-week" class="statistic__filters-label">Week</label>
 
-  <ul class="statistic__text-list">
-    <li class="statistic__text-item">
-      <h4 class="statistic__item-title">You watched</h4>
-      <p class="statistic__item-text">${userFilmsStatistics.watched}<span class="statistic__item-description">movies</span></p>
-    </li>
-    <li class="statistic__text-item">
-      <h4 class="statistic__item-title">Total duration</h4>
-      <p class="statistic__item-text">${userFilmsStatistics.runtime.hours} <span class="statistic__item-description">h</span> ${userFilmsStatistics.runtime.minutes} <span
-          class="statistic__item-description">m</span></p>
-    </li>
-    <li class="statistic__text-item">
-      <h4 class="statistic__item-title">Top genre</h4>
-      <p class="statistic__item-text">${userFilmsStatistics.topGenre}</p>
-    </li>
-  </ul>
+          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month"
+            value="month" ${this._stat.selectedMenu === 'month' ? 'checked' : ''}>
+          <label for="statistic-month" class="statistic__filters-label">Month</label>
 
-  <div class="statistic__chart-wrap">
-    <canvas class="statistic__chart" width="1000"></canvas>
-  </div>
-`;
+          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year"
+            value="year" ${this._stat.selectedMenu === 'year' ? 'checked' : ''}>
+          <label for="statistic-year" class="statistic__filters-label">Year</label>
+        </form>
+
+        <ul class="statistic__text-list">
+          <li class="statistic__text-item">
+            <h4 class="statistic__item-title">You watched</h4>
+            <p class="statistic__item-text">${this._userFilmsStat.watched}<span class="statistic__item-description">movies</span></p>
+          </li>
+          <li class="statistic__text-item">
+            <h4 class="statistic__item-title">Total duration</h4>
+            <p class="statistic__item-text">${this._userFilmsStat.runtime.hours} <span class="statistic__item-description">h</span> ${this._userFilmsStat.runtime.minutes} <span
+                class="statistic__item-description">m</span></p>
+          </li>
+          <li class="statistic__text-item">
+            <h4 class="statistic__item-title">Top genre</h4>
+            <p class="statistic__item-text">${this._userFilmsStat.topGenre}</p>
+          </li>
+        </ul>
+
+        <div class="statistic__chart-wrap">
+          <canvas class="statistic__chart" width="1000"></canvas>
+        </div>
+      </section>
+    `;
+  }
+
+  getElement() {
+    if(this._element === null) {
+      this._element = utils.createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+export default StatisticsView;
