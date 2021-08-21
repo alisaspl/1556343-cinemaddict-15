@@ -1,18 +1,13 @@
 import FilmsListView from './view/film-list';
+import EmptyView from './view/empty';
 import MenuView from './view/menu';
 import SortMenuView from './view/sort-menu';
-//import StatisticsView from './view/statistics';
 import FilmsStatisticsView from './view/films-statistics';
 import UserProfileView from './view/user-profile';
-import {generateFilmData, generateMenuData, generateSortMenuData, generateStatisticsData, generateUserDate, formatDate } from './mocks.js';
+import { filmListData, menuData, sortMenuData, filmsStatisticsData, userData } from './mocks.js';
 import utils from './utils';
 
 const mainContainer = document.querySelector('.main');
-
-const mockData = {
-  user: generateUserDate(),
-  films: new Array(20).fill().map(() => generateFilmData()),
-};
 
 const userFilmsStatistics = {
   favorites: 0,
@@ -23,7 +18,7 @@ const userFilmsStatistics = {
   genres: {},
   topGenre: '',
 };
-for(const film of mockData.films) {
+for(const film of filmListData.films) {
   if(film.isInWatchList) {
     userFilmsStatistics.watchlist++;
   }
@@ -42,7 +37,7 @@ for(const film of mockData.films) {
     }
   }
 }
-userFilmsStatistics.runtime = formatDate(userFilmsStatistics.runtime);
+userFilmsStatistics.runtime = utils.formatDate(userFilmsStatistics.runtime);
 const maxGenresValue = Math.max(...Object.values(userFilmsStatistics.genres));
 for(const key in userFilmsStatistics.genres) {
   if(userFilmsStatistics.genres[key] === maxGenresValue) {
@@ -50,23 +45,21 @@ for(const key in userFilmsStatistics.genres) {
   }
 }
 
-const filmsStatisticsData = generateStatisticsData();
-const menuData = generateMenuData();
-
-const profileView = new UserProfileView(mockData.user);
+const profileView = new UserProfileView(userData);
 const menuView = new MenuView(menuData, userFilmsStatistics);
-const sortMenuView = new SortMenuView(generateSortMenuData());
+const sortMenuView = new SortMenuView(sortMenuData);
 const filmsStatisticsView = new FilmsStatisticsView(filmsStatisticsData);
-//const statisticsView = new StatisticsView(filmsStatisticsData, mockData.user, userFilmsStatistics);
-
-const filmsListView = new FilmsListView(mockData.films, menuData);
+const filmsListView = new FilmsListView(filmListData.films);
+const emptyView = new EmptyView(menuData);
 
 utils.renderElement(document.querySelector('.header'), profileView.getElement());
 utils.renderElement(document.querySelector('.footer__statistics'), filmsStatisticsView.getElement());
-
 utils.renderElement(mainContainer, menuView.getElement(), utils.RenderPosition.AFTERBEGIN);
-utils.renderElement(mainContainer, sortMenuView.getElement());
 
-//utils.renderElement(mainContainer, statisticsView.getElement());
 
-utils.renderElement(mainContainer, filmsListView.getElement());
+if(!filmListData.films || filmListData.films.length === 0) {
+  utils.renderElement(mainContainer, emptyView.getElement());
+} else {
+  utils.renderElement(mainContainer, sortMenuView.getElement());
+  utils.renderElement(mainContainer, filmsListView.getElement());
+}

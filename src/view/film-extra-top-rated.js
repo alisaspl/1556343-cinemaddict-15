@@ -3,7 +3,7 @@ import FilmCardView from './film-card';
 
 class FilmExtraTopRatedView {
   constructor(films) {
-    this._films = films;
+    this._films = utils.sortBy(films, (film) => film.totalRating).slice(0,2);
     this._element = null;
   }
 

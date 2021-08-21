@@ -2,11 +2,11 @@ import utils from '../utils';
 import FilmCardView from './film-card';
 import FilmExtraTopRatedView from './film-extra-top-rated';
 import FilmExtraMostCommentedView from './film-extra-most-commented';
+import config from '../config.js';
 
 class FilmsListView {
-  constructor(films, menu) {
+  constructor(films) {
     this._films = films;
-    this._menu = menu;
     this._element = null;
     this._showMoreButton = null;
     this._lastFilmIndex = 0;
@@ -25,36 +25,20 @@ class FilmsListView {
     `;
   }
 
-  getEmptyTemplate(){
-    return `
-      <h2 class="films-list__title">
-        ${this._menu.emptyText}
-      </h2>
-    `;
-  }
-
   getElement() {
     if(this._element === null) {
-      if(!this._films || this._films.length === 0) {
-        this._element = utils.createElement(this.getEmptyTemplate());
-      } else {
+      this._element = utils.createElement(this.getTemplate());
+      this._showMoreButton = this._element.querySelector('.films-list__show-more');
 
-        this._element = utils.createElement(this.getTemplate());
-        this._showMoreButton = this._element.querySelector('.films-list__show-more');
+      this._showMoreButtonClickCallback = this.onShowMoreButtonClick.bind(this);
+      this._showMoreButton.addEventListener('click', this._showMoreButtonClickCallback);
 
-        this._showMoreButtonClickCallback = this.onShowMoreButtonClick.bind(this);
-        this._showMoreButton.addEventListener('click', this._showMoreButtonClickCallback);
+      this.onShowMoreButtonClick();
 
-        const container = this._element.querySelector('.films-list__container');
-        for(; this._lastFilmIndex < 5; this._lastFilmIndex++) {
-          utils.renderElement(container, new FilmCardView(this._films[this._lastFilmIndex]).getElement());
-        }
-
-        const filmExtraTopRatedView = new FilmExtraTopRatedView([this._films[0], this._films[1]]);
-        const filmExtraMostCommentedView = new FilmExtraMostCommentedView([this._films[2], this._films[3]]);
-        utils.renderElement(this._element, filmExtraTopRatedView.getElement());
-        utils.renderElement(this._element, filmExtraMostCommentedView.getElement());
-      }
+      const filmExtraTopRatedView = new FilmExtraTopRatedView(this._films);
+      const filmExtraMostCommentedView = new FilmExtraMostCommentedView(this._films);
+      utils.renderElement(this._element, filmExtraTopRatedView.getElement());
+      utils.renderElement(this._element, filmExtraMostCommentedView.getElement());
     }
     return this._element;
   }
@@ -68,7 +52,7 @@ class FilmsListView {
   }
 
   onShowMoreButtonClick() {
-    const newLastIndex = this._lastFilmIndex + 5;
+    const newLastIndex = this._lastFilmIndex + config.FILMS_IN_LINE;
     const container = this._element.querySelector('.films-list__container');
 
     for(; this._lastFilmIndex < newLastIndex; this._lastFilmIndex++){
