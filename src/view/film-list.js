@@ -1,5 +1,8 @@
 import utils from '../utils';
 import FilmCardView from './film-card';
+import FilmExtraTopRatedView from './film-extra-top-rated';
+import FilmExtraMostCommentedView from './film-extra-most-commented';
+import config from '../config.js';
 
 class FilmsListView {
   constructor(films) {
@@ -12,10 +15,12 @@ class FilmsListView {
 
   getTemplate() {
     return `
-      <section class="films-list">
-        <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-        <div class="films-list__container"></div>
-        <button class="films-list__show-more">Show more</button>
+      <section class="films">
+        <section class="films-list">
+          <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+          <div class="films-list__container"></div>
+          <button class="films-list__show-more">Show more</button>
+        </section>
       </section>
     `;
   }
@@ -28,10 +33,12 @@ class FilmsListView {
       this._showMoreButtonClickCallback = this.onShowMoreButtonClick.bind(this);
       this._showMoreButton.addEventListener('click', this._showMoreButtonClickCallback);
 
-      const container = this._element.querySelector('.films-list__container');
-      for(; this._lastFilmIndex < 5; this._lastFilmIndex++) {
-        utils.renderElement(container, new FilmCardView(this._films[this._lastFilmIndex]).getElement());
-      }
+      this.onShowMoreButtonClick();
+
+      const filmExtraTopRatedView = new FilmExtraTopRatedView(this._films);
+      const filmExtraMostCommentedView = new FilmExtraMostCommentedView(this._films);
+      utils.renderElement(this._element, filmExtraTopRatedView.getElement());
+      utils.renderElement(this._element, filmExtraMostCommentedView.getElement());
     }
     return this._element;
   }
@@ -45,7 +52,7 @@ class FilmsListView {
   }
 
   onShowMoreButtonClick() {
-    const newLastIndex = this._lastFilmIndex + 5;
+    const newLastIndex = this._lastFilmIndex + config.FILMS_IN_LINE;
     const container = this._element.querySelector('.films-list__container');
 
     for(; this._lastFilmIndex < newLastIndex; this._lastFilmIndex++){

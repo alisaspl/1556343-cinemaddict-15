@@ -3,7 +3,7 @@ import FilmCardView from './film-card';
 
 class FilmExtraMostCommentedView {
   constructor(films) {
-    this._films = films;
+    this._films = utils.sortBy(films, (film) => film.comments.length).slice(0,2);
     this._element = null;
   }
 

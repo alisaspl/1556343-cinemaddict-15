@@ -1,3 +1,5 @@
+import utils from './utils';
+
 const titles = [
   'made for each other',
   'popeye meets sinbad',
@@ -139,11 +141,26 @@ const releases = [
 ];
 
 const mainMenuTitles = [
-  'allMovies',
-  'watchlist',
-  'history',
-  'favorites',
-  'stats',
+  {
+    type: 'allMovies',
+    emptyText: 'There are no movies in our database',
+  },
+  {
+    type: 'watchlist',
+    emptyText: 'There are no movies to watch now',
+  },
+  {
+    type: 'history',
+    emptyText: 'There are no watched movies now',
+  },
+  {
+    type: 'favorites',
+    emptyText: 'There are no favorite movies now',
+  },
+  {
+    type: 'stats',
+    emptyText: '',
+  },
 ];
 
 const sortMenuTitles = [
@@ -172,73 +189,48 @@ const userRanks = [
   'Movie Horror',
 ];
 
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
-
-const getRandomUniqArray = (array) => {
-  const numberOfElements = getRandomInteger(1, array.length - 1);
-  const uniqArray = new Set();
-  while(uniqArray.size < numberOfElements){
-    uniqArray.add(array[getRandomInteger(0, array.length - 1)]);
-  }
-  return Array.from(uniqArray);
-};
-
-const getRandomElementFromArray = (array) => array[getRandomInteger(0, array.length - 1)];
-
 const generateFilmDescription = (sentences) => {
   const randomDescription = [];
-  for(let i = 0; i <= getRandomInteger(0, 4); i++){
-    randomDescription.push(sentences[getRandomInteger(0, sentences.length - 1)]);
+  for(let i = 0; i <= utils.getRandomInteger(0, 4); i++){
+    randomDescription.push(sentences[utils.getRandomInteger(0, sentences.length - 1)]);
   }
 
   return `${randomDescription.join('. ')}.`;
 };
 
-const formatDate = (runtime) => ({
-  hours: Math.trunc(runtime/60),
-  minutes: runtime%60,
-});
-
 const generateFilmData = () => ({
-  title: getRandomElementFromArray(titles),
-  originalTitle: getRandomElementFromArray(originalTitles),
-  poster: `images/posters/${getRandomElementFromArray(posters)}`,
+  title: utils.getRandomElementFromArray(titles),
+  originalTitle: utils.getRandomElementFromArray(originalTitles),
+  poster: `images/posters/${utils.getRandomElementFromArray(posters)}`,
   description: generateFilmDescription(descriptions),
-  comments: getRandomUniqArray(comments),
-  genres: getRandomUniqArray(genres),
-  director: getRandomElementFromArray(directors),
-  actors: getRandomUniqArray(actors),
-  writers: getRandomUniqArray(writers),
-  release: getRandomElementFromArray(releases),
-  totalRating: (getRandomInteger(0, 100)/10).toFixed(1),
-  runtime: formatDate(getRandomInteger(30, 240)),
-  isWatched: getRandomInteger(0,1),
-  isInWatchList: getRandomInteger(0,1),
-  isFavorite: getRandomInteger(0,1),
-  ageRating: getRandomInteger(0, 18),
+  comments: utils.getRandomUniqArray(comments),
+  genres: utils.getRandomUniqArray(genres),
+  director: utils.getRandomElementFromArray(directors),
+  actors: utils.getRandomUniqArray(actors),
+  writers: utils.getRandomUniqArray(writers),
+  release: utils.getRandomElementFromArray(releases),
+  totalRating: (utils.getRandomInteger(0, 100)/10).toFixed(1),
+  runtime: utils.formatDate(utils.getRandomInteger(30, 240)),
+  isWatched: utils.getRandomInteger(0,1),
+  isInWatchList: utils.getRandomInteger(0,1),
+  isFavorite: utils.getRandomInteger(0,1),
+  ageRating: utils.getRandomInteger(0, 18),
 });
 
-const generateMenuData = () => ({
-  selected: getRandomElementFromArray(mainMenuTitles),
-});
+const filmListData = {
+  films: new Array(20).fill().map(() => generateFilmData()),
+};
+const userData =  {
+  avatar:  `images/${utils.getRandomElementFromArray(userAvatars)}`,
+  rank: utils.getRandomElementFromArray(userRanks),
+};
+const menuData = utils.getRandomElementFromArray(mainMenuTitles);
+const sortMenuData = {
+  selected: utils.getRandomElementFromArray(sortMenuTitles),
+};
+const filmsStatisticsData = {
+  selectedMenu: utils.getRandomElementFromArray(statisticsMenuTitles),
+  allFilms: utils.getRandomInteger(0, 10000000),
+};
 
-const generateSortMenuData = () => ({
-  selected: getRandomElementFromArray(sortMenuTitles),
-});
-
-const generateStatisticsData = () => ({
-  selectedMenu: getRandomElementFromArray(statisticsMenuTitles),
-  allFilms: getRandomInteger(0, 10000000),
-});
-
-const generateUserDate = () => ({
-  avatar:  `images/${getRandomElementFromArray(userAvatars)}`,
-  rank: getRandomElementFromArray(userRanks),
-});
-
-export { generateFilmData, generateMenuData, generateSortMenuData, generateStatisticsData, generateUserDate, formatDate };
+export { filmListData, menuData, sortMenuData, filmsStatisticsData, userData };
