@@ -1,10 +1,12 @@
-import utils from '../utils';
+import utilsRender from '../utils/render';
+import AbstractView from '../view';
+
 import FilmCommentView from './film-comment.js';
 
-class FilmCommentsView {
+class FilmCommentsView extends AbstractView {
   constructor(comments) {
+    super();
     this._comments = comments;
-    this._element = null;
   }
 
   getTemplate() {
@@ -49,17 +51,13 @@ class FilmCommentsView {
 
   getElement() {
     if(this._element === null) {
-      this._element = utils.createElement(this.getTemplate());
+      super.getElement();
       const container = this._element.querySelector('.film-details__comments-list');
       for(const comment of this._comments) {
-        utils.renderElement(container, new FilmCommentView(comment).getElement());
+        utilsRender.renderView(container, new FilmCommentView(comment));
       }
     }
     return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

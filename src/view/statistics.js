@@ -1,11 +1,11 @@
-import utils from '../utils';
+import AbstractView from '../view';
 
-class StatisticsView {
+class StatisticsView extends AbstractView {
   constructor(stat, user, userFilmsStat) {
+    super();
     this._user = user;
     this._stat = stat;
     this._userFilmsStat = userFilmsStat;
-    this._element = null;
   }
 
   getTemplate() {
@@ -62,17 +62,6 @@ class StatisticsView {
         </div>
       </section>
     `;
-  }
-
-  getElement() {
-    if(this._element === null) {
-      this._element = utils.createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

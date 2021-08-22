@@ -1,10 +1,13 @@
-import utils from '../utils';
+import utils from '../utils/common';
+import utilsRender from '../utils/render';
+import AbstractView from '../view';
+
 import FilmCardView from './film-card';
 
-class FilmExtraMostCommentedView {
+class FilmExtraMostCommentedView extends AbstractView {
   constructor(films) {
+    super();
     this._films = utils.sortBy(films, (film) => film.comments.length).slice(0,2);
-    this._element = null;
   }
 
   getTemplate() {
@@ -18,20 +21,13 @@ class FilmExtraMostCommentedView {
 
   getElement() {
     if(this._element === null) {
-      this._element = utils.createElement(this.getTemplate());
+      super.getElement();
       const container = this._element.querySelector('.films-list__container');
       for(const film of this._films) {
-        utils.renderElement(
-          container,
-          new FilmCardView(film).getElement(),
-        );
+        utilsRender.renderView(container, new FilmCardView(film));
       }
     }
     return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

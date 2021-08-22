@@ -1,9 +1,9 @@
-import utils from '../utils';
+import AbstractView from '../view';
 
-class SortMenuView {
+class SortMenuView extends AbstractView {
   constructor(menu) {
+    super();
     this._menu = menu;
-    this._element = null;
   }
 
   getTemplate() {
@@ -16,17 +16,6 @@ class SortMenuView {
         </ul>
       </section>
     `;
-  }
-
-  getElement() {
-    if(this._element === null) {
-      this._element = utils.createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

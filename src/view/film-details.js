@@ -1,10 +1,12 @@
-import utils from '../utils';
+import utilsRender from '../utils/render';
+import AbstractView from '../view';
+
 import FilmCommentsView from './film-comments';
 
-class FilmsDetailsView {
+class FilmsDetailsView extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
     this.closeByEscape = this.closeByEscape.bind(this);
 
     if(FilmsDetailsView.currentOpenedFilmDetailsView) {
@@ -104,10 +106,10 @@ class FilmsDetailsView {
 
   getElement() {
     if(this._element === null) {
-      this._element = utils.createElement(this.getTemplate());
-      utils.renderElement(
+      super.getElement();
+      utilsRender.renderView(
         this._element.querySelector('.film-details__bottom-container'),
-        new FilmCommentsView(this._film.comments).getElement(),
+        new FilmCommentsView(this._film.comments),
       );
       this._element.querySelector('.film-details__close').addEventListener('click', this.removeElement.bind(this));
       document.addEventListener('keydown', this.closeByEscape);
@@ -118,7 +120,7 @@ class FilmsDetailsView {
 
   removeElement() {
     this._element.remove();
-    this._element = null;
+    super.removeElement();
     FilmsDetailsView.currentOpenedFilmDetailsView = null;
     document.body.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this.closeByEscape);
