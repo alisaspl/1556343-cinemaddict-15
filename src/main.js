@@ -56,6 +56,3 @@ if(!filmListData.films || filmListData.films.length === 0) {
   utilsRender.renderView(mainContainer, new SortMenuView(sortMenuData));
   utilsRender.renderView(mainContainer, new FilmsListView(filmListData.films));
 }
-
-import StatisticsView from './view/statistics';
-utilsRender.renderView(mainContainer, new StatisticsView(filmsStatisticsData, userData, userFilmsStatistics));
