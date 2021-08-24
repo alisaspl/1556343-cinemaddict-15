@@ -1,10 +1,10 @@
-import utils from '../utils';
+import AbstractView from './abstract';
 
-class MenuView {
+class MenuView extends AbstractView {
   constructor(menu, stat) {
+    super();
     this._menu = menu;
     this._stat = stat;
-    this._element = null;
   }
 
   getTemplate() {
@@ -19,17 +19,6 @@ class MenuView {
         <a href="#stats" class="main-navigation__additional ${this._menu.type === 'stats' ? 'main-navigation__item--active' : ''}">Stats</a>
       </nav>
     `;
-  }
-
-  getElement() {
-    if(this._element === null) {
-      this._element = utils.createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

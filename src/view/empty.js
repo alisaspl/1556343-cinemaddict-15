@@ -1,9 +1,9 @@
-import utils from '../utils';
+import AbstractView from './abstract';
 
-class EmptyView {
+class EmptyView extends AbstractView {
   constructor(menu) {
+    super();
     this._menu = menu;
-    this._element = null;
   }
 
   getTemplate() {
@@ -12,17 +12,6 @@ class EmptyView {
         ${this._menu.emptyText}
       </h2>
     `;
-  }
-
-  getElement() {
-    if(this._element === null) {
-      this._element = utils.createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

@@ -1,16 +1,18 @@
-import utils from '../utils';
+import utilsRender from '../utils/render';
+import config from '../config.js';
+import AbstractView from './abstract';
+
 import FilmCardView from './film-card';
 import FilmExtraTopRatedView from './film-extra-top-rated';
 import FilmExtraMostCommentedView from './film-extra-most-commented';
-import config from '../config.js';
 
-class FilmsListView {
+class FilmListView extends AbstractView {
   constructor(films) {
+    super();
     this._films = films;
-    this._element = null;
     this._showMoreButton = null;
     this._lastFilmIndex = 0;
-    this._showMoreButtonClickCallback = null;
+    this._showMoreButtonClickCallback = this._onShowMoreButtonClick.bind(this);
   }
 
   getTemplate() {
@@ -27,36 +29,31 @@ class FilmsListView {
 
   getElement() {
     if(this._element === null) {
-      this._element = utils.createElement(this.getTemplate());
+      super.getElement();
       this._showMoreButton = this._element.querySelector('.films-list__show-more');
-
-      this._showMoreButtonClickCallback = this.onShowMoreButtonClick.bind(this);
       this._showMoreButton.addEventListener('click', this._showMoreButtonClickCallback);
+      this._renderNextElements();
 
-      this.onShowMoreButtonClick();
-
-      const filmExtraTopRatedView = new FilmExtraTopRatedView(this._films);
-      const filmExtraMostCommentedView = new FilmExtraMostCommentedView(this._films);
-      utils.renderElement(this._element, filmExtraTopRatedView.getElement());
-      utils.renderElement(this._element, filmExtraMostCommentedView.getElement());
+      utilsRender.renderView(this._element, new FilmExtraTopRatedView(this._films));
+      utilsRender.renderView(this._element, new FilmExtraMostCommentedView(this._films));
     }
     return this._element;
   }
 
   removeElement() {
-    this._element = null;
+    super.removeElement();
     this._showMoreButton.removeEventListener('click', this._showMoreButtonClickCallback);
     this._showMoreButton = null;
     this._showMoreButtonClickCallback = null;
     this._lastFilmIndex = 0;
   }
 
-  onShowMoreButtonClick() {
+  _renderNextElements() {
     const newLastIndex = this._lastFilmIndex + config.FILMS_IN_LINE;
     const container = this._element.querySelector('.films-list__container');
 
     for(; this._lastFilmIndex < newLastIndex; this._lastFilmIndex++){
-      utils.renderElement(container, new FilmCardView(this._films[this._lastFilmIndex]).getElement());
+      utilsRender.renderView(container, new FilmCardView(this._films[this._lastFilmIndex]));
 
       if(this._lastFilmIndex === this._films.length - 1){
         this._showMoreButton.classList.add('visually-hidden');
@@ -64,6 +61,11 @@ class FilmsListView {
       }
     }
   }
+
+  _onShowMoreButtonClick(event) {
+    event.preventDefault();
+    this._renderNextElements();
+  }
 }
 
-export default FilmsListView;
+export default FilmListView;

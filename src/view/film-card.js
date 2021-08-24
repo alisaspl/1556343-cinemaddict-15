@@ -1,10 +1,14 @@
-import utils from '../utils';
+import utilsRender from '../utils/render';
+import AbstractView from './abstract';
+
 import FilmsDetailsView from './film-details';
 
-class FilmCardView {
+class FilmCardView extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
+    this._showFilmDetails = this._showFilmDetails.bind(this);
+    this._detailsViewOpenElements = ['.film-card__title', '.film-card__poster', '.film-card__comments'];
   }
 
   getTemplate() {
@@ -34,20 +38,23 @@ class FilmCardView {
 
   getElement() {
     if(this._element === null) {
-      this._element = utils.createElement(this.getTemplate());
-      ['.film-card__title', '.film-card__poster', '.film-card__comments'].forEach((element) =>
-        this._element.querySelector(element).addEventListener('click', this.showFilmDetails.bind(this)),
+      super.getElement();
+      this._detailsViewOpenElements.forEach((element) =>
+        this._element.querySelector(element).addEventListener('click', this._showFilmDetails),
       );
     }
     return this._element;
   }
 
   removeElement() {
-    this._element = null;
+    super.removeElement();
+    this._detailsViewOpenElements.forEach((element) =>
+      this._element.querySelector(element).removeEventListener('click', this._showFilmDetails),
+    );
   }
 
-  showFilmDetails() {
-    utils.renderElement(document.body, new FilmsDetailsView(this._film).getElement());
+  _showFilmDetails() {
+    utilsRender.renderView(document.body, new FilmsDetailsView(this._film));
   }
 }
 

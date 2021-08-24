@@ -1,9 +1,9 @@
-import utils from '../utils';
+import AbstractView from './abstract';
 
-class FilmCommentView {
+class FilmCommentView extends AbstractView {
   constructor(comment) {
+    super();
     this._comment = comment;
-    this._element = null;
   }
 
   getTemplate() {
@@ -22,17 +22,6 @@ class FilmCommentView {
         </div>
       </li>
     `;
-  }
-
-  getElement() {
-    if(this._element === null) {
-      this._element = utils.createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

@@ -1,11 +1,14 @@
-import utils from '../utils';
+import utilsRender from '../utils/render';
+import AbstractView from './abstract';
+
 import FilmCommentsView from './film-comments';
 
-class FilmsDetailsView {
+class FilmsDetailsView extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
-    this.closeByEscape = this.closeByEscape.bind(this);
+    this._closeByEscape = this._closeByEscape.bind(this);
+    this.removeElement = this.removeElement.bind(this);
 
     if(FilmsDetailsView.currentOpenedFilmDetailsView) {
       FilmsDetailsView.currentOpenedFilmDetailsView.removeElement();
@@ -15,7 +18,7 @@ class FilmsDetailsView {
     document.body.classList.add('hide-overflow');
   }
 
-  closeByEscape(evt) {
+  _closeByEscape(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       if(FilmsDetailsView.currentOpenedFilmDetailsView) {
@@ -104,24 +107,25 @@ class FilmsDetailsView {
 
   getElement() {
     if(this._element === null) {
-      this._element = utils.createElement(this.getTemplate());
-      utils.renderElement(
+      super.getElement();
+      utilsRender.renderView(
         this._element.querySelector('.film-details__bottom-container'),
-        new FilmCommentsView(this._film.comments).getElement(),
+        new FilmCommentsView(this._film.comments),
       );
-      this._element.querySelector('.film-details__close').addEventListener('click', this.removeElement.bind(this));
-      document.addEventListener('keydown', this.closeByEscape);
+      this._element.querySelector('.film-details__close').addEventListener('click', this.removeElement);
+      document.addEventListener('keydown', this._closeByEscape);
     }
 
     return this._element;
   }
 
   removeElement() {
+    this._element.querySelector('.film-details__close').removeEventListener('click', this.removeElement);
     this._element.remove();
-    this._element = null;
+    super.removeElement();
     FilmsDetailsView.currentOpenedFilmDetailsView = null;
     document.body.classList.remove('hide-overflow');
-    document.removeEventListener('keydown', this.closeByEscape);
+    document.removeEventListener('keydown', this._closeByEscape);
   }
 }
 

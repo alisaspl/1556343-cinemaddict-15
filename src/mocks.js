@@ -1,4 +1,4 @@
-import utils from './utils';
+import utils from './utils/common';
 
 const titles = [
   'made for each other',

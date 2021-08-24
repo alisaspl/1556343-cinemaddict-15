@@ -1,11 +1,12 @@
-import FilmsListView from './view/film-list';
+import FilmListView from './view/film-list';
 import EmptyView from './view/empty';
 import MenuView from './view/menu';
 import SortMenuView from './view/sort-menu';
-import FilmsStatisticsView from './view/films-statistics';
+import UserStatisticsView from './view/user-statistics';
 import UserProfileView from './view/user-profile';
 import { filmListData, menuData, sortMenuData, filmsStatisticsData, userData } from './mocks.js';
-import utils from './utils';
+import utils from './utils/common';
+import utilsRender from './utils/render';
 
 const mainContainer = document.querySelector('.main');
 
@@ -45,21 +46,13 @@ for(const key in userFilmsStatistics.genres) {
   }
 }
 
-const profileView = new UserProfileView(userData);
-const menuView = new MenuView(menuData, userFilmsStatistics);
-const sortMenuView = new SortMenuView(sortMenuData);
-const filmsStatisticsView = new FilmsStatisticsView(filmsStatisticsData);
-const filmsListView = new FilmsListView(filmListData.films);
-const emptyView = new EmptyView(menuData);
-
-utils.renderElement(document.querySelector('.header'), profileView.getElement());
-utils.renderElement(document.querySelector('.footer__statistics'), filmsStatisticsView.getElement());
-utils.renderElement(mainContainer, menuView.getElement(), utils.RenderPosition.AFTERBEGIN);
-
+utilsRender.renderView(document.querySelector('.header'), new UserProfileView(userData));
+utilsRender.renderView(document.querySelector('.footer__statistics'), new UserStatisticsView(filmsStatisticsData));
+utilsRender.renderView(mainContainer, new MenuView(menuData, userFilmsStatistics), utilsRender.RenderPosition.AFTERBEGIN);
 
 if(!filmListData.films || filmListData.films.length === 0) {
-  utils.renderElement(mainContainer, emptyView.getElement());
+  utilsRender.renderView(mainContainer, new EmptyView(menuData));
 } else {
-  utils.renderElement(mainContainer, sortMenuView.getElement());
-  utils.renderElement(mainContainer, filmsListView.getElement());
+  utilsRender.renderView(mainContainer, new SortMenuView(sortMenuData));
+  utilsRender.renderView(mainContainer, new FilmListView(filmListData.films));
 }
