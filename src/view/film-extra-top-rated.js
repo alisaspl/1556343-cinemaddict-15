@@ -6,7 +6,7 @@ import FilmCardView from './film-card';
 
 class FilmExtraTopRatedView extends AbstractView {
   constructor(films) {
-    super()
+    super();
     this._films = films;
     this._prepareData();
   }
