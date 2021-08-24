@@ -6,8 +6,14 @@ import FilmCardView from './film-card';
 
 class FilmExtraTopRatedView extends AbstractView {
   constructor(films) {
-    super();
-    this._films = utils.sortBy(films, (film) => film.totalRating).slice(0,2);
+    super()
+    this._films = films;
+    this._prepareData();
+  }
+
+  _prepareData() {
+    this._films = utils.sortBy(this._films, (film) => parseInt(film.totalRating, 10));
+    this._films = this._films.slice(0,2);
   }
 
   getTemplate() {

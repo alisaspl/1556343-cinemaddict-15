@@ -6,7 +6,7 @@ import FilmCardView from './film-card';
 import FilmExtraTopRatedView from './film-extra-top-rated';
 import FilmExtraMostCommentedView from './film-extra-most-commented';
 
-class FilmsListView extends AbstractView {
+class FilmListView extends AbstractView {
   constructor(films) {
     super();
     this._films = films;
@@ -71,4 +71,4 @@ class FilmsListView extends AbstractView {
   }
 }
 
-export default FilmsListView;
+export default FilmListView;

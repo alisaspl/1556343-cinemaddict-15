@@ -7,7 +7,12 @@ import FilmCardView from './film-card';
 class FilmExtraMostCommentedView extends AbstractView {
   constructor(films) {
     super();
-    this._films = utils.sortBy(films, (film) => film.comments.length).slice(0,2);
+    this._films = films;
+    this._prepareData();
+  }
+
+  _prepareData() {
+    this._films = utils.sortBy(this._films, (film) => film.comments.length).slice(0,2);
   }
 
   getTemplate() {

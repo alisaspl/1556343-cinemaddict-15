@@ -1,8 +1,8 @@
-import FilmsListView from './view/film-list';
+import FilmListView from './view/film-list';
 import EmptyView from './view/empty';
 import MenuView from './view/menu';
 import SortMenuView from './view/sort-menu';
-import FilmsStatisticsView from './view/films-statistics';
+import UserStatisticsView from './view/user-statistics';
 import UserProfileView from './view/user-profile';
 import { filmListData, menuData, sortMenuData, filmsStatisticsData, userData } from './mocks.js';
 import utils from './utils/common';
@@ -47,12 +47,12 @@ for(const key in userFilmsStatistics.genres) {
 }
 
 utilsRender.renderView(document.querySelector('.header'), new UserProfileView(userData));
-utilsRender.renderView(document.querySelector('.footer__statistics'), new FilmsStatisticsView(filmsStatisticsData));
+utilsRender.renderView(document.querySelector('.footer__statistics'), new UserStatisticsView(filmsStatisticsData));
 utilsRender.renderView(mainContainer, new MenuView(menuData, userFilmsStatistics), utilsRender.RenderPosition.AFTERBEGIN);
 
 if(!filmListData.films || filmListData.films.length === 0) {
   utilsRender.renderView(mainContainer, new EmptyView(menuData));
 } else {
   utilsRender.renderView(mainContainer, new SortMenuView(sortMenuData));
-  utilsRender.renderView(mainContainer, new FilmsListView(filmListData.films));
+  utilsRender.renderView(mainContainer, new FilmListView(filmListData.films));
 }

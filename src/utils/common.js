@@ -25,11 +25,11 @@ const getRandomInteger = (a = 0, b = 1) => {
 
 const getRandomUniqArray = (data) => {
   const numberOfElements = getRandomInteger(1, data.length - 1);
-  const uniqArray = new Set();
-  while(uniqArray.size < numberOfElements){
-    uniqArray.add(data[getRandomInteger(0, data.length - 1)]);
+  const uniqData = new Set();
+  while(uniqData.size < numberOfElements){
+    uniqData.add(data[getRandomInteger(0, data.length - 1)]);
   }
-  return Array.from(uniqArray);
+  return Array.from(uniqData);
 };
 
 const getRandomElementFromArray = (data) => data[getRandomInteger(0, data.length - 1)];

@@ -8,6 +8,7 @@ class FilmCardView extends AbstractView {
     super();
     this._film = film;
     this._showFilmDetails = this._showFilmDetails.bind(this);
+    this._detailsViewOpenElements = ['.film-card__title', '.film-card__poster', '.film-card__comments'];
   }
 
   getTemplate() {
@@ -38,11 +39,18 @@ class FilmCardView extends AbstractView {
   getElement() {
     if(this._element === null) {
       super.getElement();
-      ['.film-card__title', '.film-card__poster', '.film-card__comments'].forEach((element) =>
+      this._detailsViewOpenElements.forEach((element) =>
         this._element.querySelector(element).addEventListener('click', this._showFilmDetails),
       );
     }
     return this._element;
+  }
+
+  removeElement() {
+    super.removeElement();
+    this._detailsViewOpenElements.forEach((element) =>
+      this._element.querySelector(element).removeEventListener('click', this._showFilmDetails),
+    );
   }
 
   _showFilmDetails() {
