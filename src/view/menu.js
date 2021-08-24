@@ -1,4 +1,4 @@
-import AbstractView from '../view';
+import AbstractView from './abstract';
 
 class MenuView extends AbstractView {
   constructor(menu, stat) {

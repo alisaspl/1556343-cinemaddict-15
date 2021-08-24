@@ -1,4 +1,4 @@
-import AbstractView from '../view';
+import AbstractView from './abstract';
 
 class FilmsStatisticsView extends AbstractView {
   constructor(stat) {

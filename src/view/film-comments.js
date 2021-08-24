@@ -1,5 +1,5 @@
 import utilsRender from '../utils/render';
-import AbstractView from '../view';
+import AbstractView from './abstract';
 
 import FilmCommentView from './film-comment.js';
 

@@ -1,5 +1,5 @@
 import utilsRender from '../utils/render';
-import AbstractView from '../view';
+import AbstractView from './abstract';
 
 import FilmCommentsView from './film-comments';
 
@@ -119,6 +119,7 @@ class FilmsDetailsView extends AbstractView {
   }
 
   removeElement() {
+    this._element.querySelector('.film-details__close').removeEventListener('click', this.removeElement.bind(this));
     this._element.remove();
     super.removeElement();
     FilmsDetailsView.currentOpenedFilmDetailsView = null;

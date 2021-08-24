@@ -1,7 +1,7 @@
-const sortBy = function (array, sortByFunction){
-  const arrayCopy = [...array];
+const sortBy = function (data, sortByFunction){
+  const dataToSort = [...data];
 
-  arrayCopy.sort(
+  dataToSort.sort(
     (a, b) => {
       if (sortByFunction(a) < sortByFunction(b)) {
         return 1;
@@ -13,7 +13,7 @@ const sortBy = function (array, sortByFunction){
     },
   );
 
-  return arrayCopy;
+  return dataToSort;
 };
 
 const getRandomInteger = (a = 0, b = 1) => {
@@ -23,16 +23,16 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const getRandomUniqArray = (array) => {
-  const numberOfElements = getRandomInteger(1, array.length - 1);
+const getRandomUniqArray = (data) => {
+  const numberOfElements = getRandomInteger(1, data.length - 1);
   const uniqArray = new Set();
   while(uniqArray.size < numberOfElements){
-    uniqArray.add(array[getRandomInteger(0, array.length - 1)]);
+    uniqArray.add(data[getRandomInteger(0, data.length - 1)]);
   }
   return Array.from(uniqArray);
 };
 
-const getRandomElementFromArray = (array) => array[getRandomInteger(0, array.length - 1)];
+const getRandomElementFromArray = (data) => data[getRandomInteger(0, data.length - 1)];
 
 const formatDate = (runtime) => ({
   hours: Math.trunc(runtime/60),

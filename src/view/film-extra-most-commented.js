@@ -1,6 +1,6 @@
 import utils from '../utils/common';
 import utilsRender from '../utils/render';
-import AbstractView from '../view';
+import AbstractView from './abstract';
 
 import FilmCardView from './film-card';
 

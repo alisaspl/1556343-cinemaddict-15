@@ -1,6 +1,6 @@
 import utilsRender from '../utils/render';
 import config from '../config.js';
-import AbstractView from '../view';
+import AbstractView from './abstract';
 
 import FilmCardView from './film-card';
 import FilmExtraTopRatedView from './film-extra-top-rated';
@@ -32,10 +32,10 @@ class FilmsListView extends AbstractView {
       super.getElement();
       this._showMoreButton = this._element.querySelector('.films-list__show-more');
 
-      this._showMoreButtonClickCallback = this.onShowMoreButtonClick.bind(this);
+      this._showMoreButtonClickCallback = this._onShowMoreButtonClick.bind(this);
       this._showMoreButton.addEventListener('click', this._showMoreButtonClickCallback);
 
-      this.renderNextElements();
+      this._renderNextElements();
 
       utilsRender.renderView(this._element, new FilmExtraTopRatedView(this._films));
       utilsRender.renderView(this._element, new FilmExtraMostCommentedView(this._films));
@@ -51,7 +51,7 @@ class FilmsListView extends AbstractView {
     this._lastFilmIndex = 0;
   }
 
-  renderNextElements() {
+  _renderNextElements() {
     const newLastIndex = this._lastFilmIndex + config.FILMS_IN_LINE;
     const container = this._element.querySelector('.films-list__container');
 
@@ -65,9 +65,9 @@ class FilmsListView extends AbstractView {
     }
   }
 
-  onShowMoreButtonClick(event) {
+  _onShowMoreButtonClick(event) {
     event.preventDefault();
-    this.renderNextElements();
+    this._renderNextElements();
   }
 }
 
