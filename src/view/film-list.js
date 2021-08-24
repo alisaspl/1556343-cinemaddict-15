@@ -12,7 +12,7 @@ class FilmListView extends AbstractView {
     this._films = films;
     this._showMoreButton = null;
     this._lastFilmIndex = 0;
-    this._showMoreButtonClickCallback = null;
+    this._showMoreButtonClickCallback = this._onShowMoreButtonClick.bind(this);
   }
 
   getTemplate() {
@@ -31,10 +31,7 @@ class FilmListView extends AbstractView {
     if(this._element === null) {
       super.getElement();
       this._showMoreButton = this._element.querySelector('.films-list__show-more');
-
-      this._showMoreButtonClickCallback = this._onShowMoreButtonClick.bind(this);
       this._showMoreButton.addEventListener('click', this._showMoreButtonClickCallback);
-
       this._renderNextElements();
 
       utilsRender.renderView(this._element, new FilmExtraTopRatedView(this._films));
