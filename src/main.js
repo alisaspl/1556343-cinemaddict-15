@@ -1,12 +1,11 @@
-import FilmListView from './view/film-list';
-import EmptyView from './view/empty';
 import MenuView from './view/menu';
-import SortMenuView from './view/sort-menu';
 import UserStatisticsView from './view/user-statistics';
 import UserProfileView from './view/user-profile';
 import { filmListData, menuData, sortMenuData, filmsStatisticsData, userData } from './mocks.js';
 import utils from './utils/common';
 import utilsRender from './utils/render';
+
+import FilmListPresenter from './presenter/film-list';
 
 const mainContainer = document.querySelector('.main');
 
@@ -19,7 +18,7 @@ const userFilmsStatistics = {
   genres: {},
   topGenre: '',
 };
-for(const film of filmListData.films) {
+for(const film of filmListData) {
   if(film.isInWatchList) {
     userFilmsStatistics.watchlist++;
   }
@@ -50,9 +49,5 @@ utilsRender.renderView(document.querySelector('.header'), new UserProfileView(us
 utilsRender.renderView(document.querySelector('.footer__statistics'), new UserStatisticsView(filmsStatisticsData));
 utilsRender.renderView(mainContainer, new MenuView(menuData, userFilmsStatistics), utilsRender.RenderPosition.AFTERBEGIN);
 
-if(!filmListData.films || filmListData.films.length === 0) {
-  utilsRender.renderView(mainContainer, new EmptyView(menuData));
-} else {
-  utilsRender.renderView(mainContainer, new SortMenuView(sortMenuData));
-  utilsRender.renderView(mainContainer, new FilmListView(filmListData.films));
-}
+const filmListPresenter = new FilmListPresenter(mainContainer);
+filmListPresenter.init(filmListData, menuData, sortMenuData);
