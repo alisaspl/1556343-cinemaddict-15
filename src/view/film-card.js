@@ -1,13 +1,10 @@
-import utilsRender from '../utils/render';
 import AbstractView from './abstract';
 
-import FilmsDetailsView from './film-details';
-
 class FilmCardView extends AbstractView {
-  constructor(film) {
+  constructor(film, showFilmDetailsCallback) {
     super();
     this._film = film;
-    this._showFilmDetails = this._showFilmDetails.bind(this);
+    this._showFilmDetails = showFilmDetailsCallback;
     this._detailsViewOpenElements = ['.film-card__title', '.film-card__poster', '.film-card__comments'];
   }
 
@@ -51,10 +48,6 @@ class FilmCardView extends AbstractView {
     this._detailsViewOpenElements.forEach((element) =>
       this._element.querySelector(element).removeEventListener('click', this._showFilmDetails),
     );
-  }
-
-  _showFilmDetails() {
-    utilsRender.renderView(document.body, new FilmsDetailsView(this._film));
   }
 }
 

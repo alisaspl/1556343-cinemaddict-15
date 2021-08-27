@@ -2,13 +2,14 @@ import config from '../config';
 import utils from '../utils/common';
 import utilsRender from '../utils/render';
 
+import FilmPresenter from './film';
+
 import EmptyView from '../view/empty';
 import FilmListView from '../view/film-list';
 import SortMenuView from '../view/sort-menu';
 import FilmExtraTopRatedView from '../view/film-extra-top-rated';
 import FilmExtraMostCommentedView from '../view/film-extra-most-commented';
 import ShowMoreButtonView from '../view/show-more-button';
-import FilmCardView from '../view/film-card';
 
 class FilmListPresenter {
   constructor(container) {
@@ -52,6 +53,10 @@ class FilmListPresenter {
     }
   }
 
+  _renderFilmCard(film, view) {
+    new FilmPresenter(view.getElement().querySelector('.films-list__container'), film);
+  }
+
   _renderEmpty() {
     this._view.empty = new EmptyView(this._data.menu);
     utilsRender.renderView(this._container, this._view.empty);
@@ -65,14 +70,6 @@ class FilmListPresenter {
   _renderFilmList() {
     this._view.filmList = new FilmListView();
     utilsRender.renderView(this._container, this._view.filmList);
-  }
-
-  _renderFilmCard(film, view) {
-    this._view.filmCard = new FilmCardView(film);
-    utilsRender.renderView(
-      view.getElement().querySelector('.films-list__container'),
-      this._view.filmCard,
-    );
   }
 
   _renderTopRated() {
