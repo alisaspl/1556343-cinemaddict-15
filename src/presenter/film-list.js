@@ -1,4 +1,5 @@
 import config from '../config';
+import utils from '../utils/common';
 import utilsRender from '../utils/render';
 
 import EmptyView from '../view/empty';
@@ -66,21 +67,33 @@ class FilmListPresenter {
     utilsRender.renderView(this._container, this._view.filmList);
   }
 
-  _renderFilmCard(film) {
+  _renderFilmCard(film, view) {
     this._view.filmCard = new FilmCardView(film);
     utilsRender.renderView(
-      this._view.filmList.getElement().querySelector('.films-list__container'),
+      view.getElement().querySelector('.films-list__container'),
       this._view.filmCard,
     );
   }
 
   _renderTopRated() {
-    this._view.topRated = new FilmExtraTopRatedView(this._data.films);
+    const films = utils.sortBy(this._data.films,
+      (film) => parseFloat(film.totalRating),
+    ).slice(0,2);
+    this._view.topRated = new FilmExtraTopRatedView();
+    for(const film of films){
+      this._renderFilmCard(film, this._view.topRated);
+    }
     utilsRender.renderView(this._view.filmList.getElement(), this._view.topRated);
   }
 
   _renderMostCommented() {
-    this._view.mostCommented = new FilmExtraMostCommentedView(this._data.films);
+    const films = utils.sortBy(this._data.films,
+      (film) => film.comments.length,
+    ).slice(0,2);
+    this._view.mostCommented = new FilmExtraMostCommentedView();
+    for(const film of films) {
+      this._renderFilmCard(film, this._view.mostCommented);
+    }
     utilsRender.renderView(this._view.filmList.getElement(), this._view.mostCommented);
   }
 
@@ -96,7 +109,7 @@ class FilmListPresenter {
     const newLastIndex = this._lastFilmIndex + config.FILMS_IN_LINE;
 
     for(; this._lastFilmIndex < newLastIndex; this._lastFilmIndex++){
-      this._renderFilmCard(this._data.films[this._lastFilmIndex]);
+      this._renderFilmCard(this._data.films[this._lastFilmIndex], this._view.filmList);
 
       if(this._lastFilmIndex === this._data.films.length - 1){
         this._view.showMoreButton.removeElement();
