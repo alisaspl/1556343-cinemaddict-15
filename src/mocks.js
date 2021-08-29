@@ -198,7 +198,10 @@ const generateFilmDescription = (sentences) => {
   return `${randomDescription.join('. ')}.`;
 };
 
+let id = 0;
+
 const generateFilmData = () => ({
+  id: id++,
   title: utils.getRandomElementFromArray(titles),
   originalTitle: utils.getRandomElementFromArray(originalTitles),
   poster: `images/posters/${utils.getRandomElementFromArray(posters)}`,

@@ -1,7 +1,4 @@
-import utilsRender from '../utils/render';
 import AbstractView from './abstract';
-
-import FilmCommentView from './film-comment.js';
 
 class FilmCommentsView extends AbstractView {
   constructor(comments) {
@@ -47,17 +44,6 @@ class FilmCommentsView extends AbstractView {
         </div>
       </section>
     `;
-  }
-
-  getElement() {
-    if(this._element === null) {
-      super.getElement();
-      const container = this._element.querySelector('.film-details__comments-list');
-      for(const comment of this._comments) {
-        utilsRender.renderView(container, new FilmCommentView(comment));
-      }
-    }
-    return this._element;
   }
 }
 

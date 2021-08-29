@@ -1,29 +1,51 @@
-import utilsRender from '../utils/render';
 import AbstractView from './abstract';
 
-import FilmCommentsView from './film-comments';
-
-class FilmsDetailsView extends AbstractView {
-  constructor(film) {
+class FilmDetailsView extends AbstractView {
+  constructor(film, closeCallback, addToWatchListCallback, markAsWatchedCallback, favoriteCallback) {
     super();
     this._film = film;
-    this._closeByEscape = this._closeByEscape.bind(this);
+    this._closeCallback = closeCallback;
+    this._addToWatchListCallback = addToWatchListCallback;
+    this._markAsWatchedCallback = markAsWatchedCallback;
+    this._favoriteCallback = favoriteCallback;
     this.removeElement = this.removeElement.bind(this);
 
-    if(FilmsDetailsView.currentOpenedFilmDetailsView) {
-      FilmsDetailsView.currentOpenedFilmDetailsView.removeElement();
-    }
-    FilmsDetailsView.currentOpenedFilmDetailsView = this;
 
-    document.body.classList.add('hide-overflow');
+    this._isInWatchListButton = null;
+    this._isWatchedButton = null;
+    this._isFavoriteButton = null;
   }
 
-  _closeByEscape(evt) {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      if(FilmsDetailsView.currentOpenedFilmDetailsView) {
-        FilmsDetailsView.currentOpenedFilmDetailsView.removeElement();
-      }
+  get isInWatchList() {
+    return this._film.isInWatchList;
+  }
+
+  set isInWatchList(value) {
+    this._dynamicSetter('isInWatchList', value);
+  }
+
+  get isWatched() {
+    return this._film.isWatched;
+  }
+
+  set isWatched(value) {
+    this._dynamicSetter('isWatched', value);
+  }
+
+  get isFavorite() {
+    return this._film.isFavorite;
+  }
+
+  set isFavorite(value) {
+    this._dynamicSetter('isFavorite', value);
+  }
+
+  _dynamicSetter(property, value) {
+    this._film[property] = !!value;
+    if(this._film[property]){
+      this[`_${property}Button`].classList.add('film-details__control-button--active');
+    } else {
+      this[`_${property}Button`].classList.remove('film-details__control-button--active');
     }
   }
 
@@ -93,9 +115,9 @@ class FilmsDetailsView extends AbstractView {
             </div>
 
             <section class="film-details__controls">
-              <button type="button" class="film-details__control-button film-details__control-button--watchlist ${this._film.isInWatchList ? 'film-details__control-button--active' : ''}" id="watchlist" name="watchlist">Add to watchlist</button>
-              <button type="button" class="film-details__control-button film-details__control-button--watched ${this._film.isWatched ? 'film-details__control-button--active' : ''}" id="watched" name="watched">Already watched</button>
-              <button type="button" class="film-details__control-button film-details__control-button--favorite ${this._film.isFavorite ? 'film-details__control-button--active' : ''}" id="favorite" name="favorite">Add to favorites</button>
+              <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
+              <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watched" name="watched">Already watched</button>
+              <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
             </section>
           </div>
 
@@ -108,12 +130,21 @@ class FilmsDetailsView extends AbstractView {
   getElement() {
     if(this._element === null) {
       super.getElement();
-      utilsRender.renderView(
-        this._element.querySelector('.film-details__bottom-container'),
-        new FilmCommentsView(this._film.comments),
-      );
+
+      this._isInWatchListButton = this._element.querySelector('#watchlist');
+      this.isInWatchList = this._film.isInWatchList;
+
+      this._isWatchedButton = this._element.querySelector('#watched');
+      this.isWatched = this._film.isWatched;
+
+      this._isFavoriteButton = this._element.querySelector('#favorite');
+      this.isFavorite = this._film.isFavorite;
+
       this._element.querySelector('.film-details__close').addEventListener('click', this.removeElement);
-      document.addEventListener('keydown', this._closeByEscape);
+
+      this._isInWatchListButton.addEventListener('click', this._addToWatchListCallback);
+      this._isWatchedButton.addEventListener('click', this._markAsWatchedCallback);
+      this._isFavoriteButton.addEventListener('click', this._favoriteCallback);
     }
 
     return this._element;
@@ -121,12 +152,15 @@ class FilmsDetailsView extends AbstractView {
 
   removeElement() {
     this._element.querySelector('.film-details__close').removeEventListener('click', this.removeElement);
+
+    this._isInWatchListButton.removeEventListener('click', this._addToWatchListCallback);
+    this._isWatchedButton.removeEventListener('click', this._markAsWatchedCallback);
+    this._isFavoriteButton.removeEventListener('click', this._favoriteCallback);
+
     this._element.remove();
     super.removeElement();
-    FilmsDetailsView.currentOpenedFilmDetailsView = null;
-    document.body.classList.remove('hide-overflow');
-    document.removeEventListener('keydown', this._closeByEscape);
+    this._closeCallback();
   }
 }
 
-export default FilmsDetailsView;
+export default FilmDetailsView;
