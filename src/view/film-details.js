@@ -157,7 +157,6 @@ class FilmDetailsView extends AbstractView {
     this._isWatchedButton.removeEventListener('click', this._markAsWatchedCallback);
     this._isFavoriteButton.removeEventListener('click', this._favoriteCallback);
 
-    this._element.remove();
     super.removeElement();
     this._closeCallback();
   }

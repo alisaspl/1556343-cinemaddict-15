@@ -20,9 +20,11 @@ class ShowMoreButtonView extends AbstractView {
   }
 
   removeElement(){
-    this._element.removeEventListener('click', this._onClick);
-    this._element.classList.add('visually-hidden');
-    super.removeElement();
+    if(this._element !== null){
+      this._element.removeEventListener('click', this._onClick);
+      this._element.classList.add('visually-hidden');
+      super.removeElement();
+    }
   }
 
   _onClick(event) {

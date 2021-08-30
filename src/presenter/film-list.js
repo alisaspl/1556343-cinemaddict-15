@@ -6,6 +6,7 @@ import FilmPresenter from './film';
 
 import EmptyView from '../view/empty';
 import FilmListView from '../view/film-list';
+import MenuView from '../view/menu';
 import SortMenuView from '../view/sort-menu';
 import FilmExtraTopRatedView from '../view/film-extra-top-rated';
 import FilmExtraMostCommentedView from '../view/film-extra-most-commented';
@@ -23,6 +24,7 @@ class FilmListPresenter {
 
     this._view = {
       empty: null,
+      menu: null,
       sortMenu: null,
       filmList: null,
       filmCard: null,
@@ -46,13 +48,24 @@ class FilmListPresenter {
     if(!this._data.films || this._data.films.length === 0) {
       this._renderEmpty();
     } else {
-      this._renderSortMenu();
-      this._renderFilmList();
-      this._renderShowMoreButton();
-      this._renderNextElements();
-      this._renderTopRated();
-      this._renderMostCommented();
+      this._rerender();
     }
+  }
+
+  _rerender() {
+    this._lastFilmIndex = 0;
+    for(const key in this._view) {
+      if(this._view[key] !== null) {
+        this._view[key].removeElement();
+      }
+    }
+    this._renderMenu();
+    this._renderSortMenu();
+    this._renderFilmList();
+    this._renderShowMoreButton();
+    this._renderNextElements();
+    this._renderTopRated();
+    this._renderMostCommented();
   }
 
   _renderFilmCard(film, view) {
@@ -71,6 +84,7 @@ class FilmListPresenter {
               }
             }
           }
+          this._renderMenu();
         },
         (isWatched) => {
           for(const key of this._filmPresenters.keys()) {
@@ -82,6 +96,7 @@ class FilmListPresenter {
               }
             }
           }
+          this._renderMenu();
         },
         (isFavorite) => {
           for(const key of this._filmPresenters.keys()) {
@@ -93,6 +108,7 @@ class FilmListPresenter {
               }
             }
           }
+          this._renderMenu();
         },
       ),
     );
@@ -103,8 +119,53 @@ class FilmListPresenter {
     utilsRender.renderView(this._container, this._view.empty);
   }
 
+  _renderMenu() {
+    if(this._view.menu !== null) {
+      this._view.menu.removeElement();
+    }
+    const stat = {
+      favorites: 0,
+      watchlist: 0,
+      watched: 0,
+    };
+    for(const film of this._data.films) {
+      if(film.isInWatchList) {
+        stat.watchlist++;
+      }
+      if(film.isWatched) {
+        stat.watched++;
+      }
+      if(film.isFavorite) {
+        stat.favorites++;
+      }
+    }
+
+    this._view.menu = new MenuView(this._data.menu, stat);
+    utilsRender.renderView(this._container, this._view.menu, utilsRender.RenderPosition.AFTERBEGIN);
+  }
+
   _renderSortMenu() {
     this._view.sortMenu = new SortMenuView(this._data.sortMenu);
+    this._view.sortMenu.addListener((menuType) => {
+      this._data.sortMenu.selected = menuType;
+      if(menuType === 'default') {
+        this._data.films = utils.sortBy(this._data.films,
+          (film) => film.id,
+        );
+      } else if(menuType === 'rating') {
+        this._data.films = utils.sortBy(this._data.films,
+          (film) => parseFloat(film.totalRating),
+        );
+      } else if(menuType === 'date') {
+        this._data.films = utils.sortBy(this._data.films,
+          (film) => {
+            const date = new Date(film.release.date);
+            return date.getTime();
+          },
+        );
+      }
+      this._rerender();
+    });
     utilsRender.renderView(this._container, this._view.sortMenu);
   }
 
