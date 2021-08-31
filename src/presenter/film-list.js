@@ -141,6 +141,12 @@ class FilmListPresenter {
     }
 
     this._view.menu = new MenuView(this._data.menu, stat);
+    this._view.menu.addListener(
+      (menuType) => {
+        this._data.menu.type = menuType;
+        this._renderMenu();
+      }
+    );
     utilsRender.renderView(this._container, this._view.menu, utilsRender.RenderPosition.AFTERBEGIN);
   }
 
