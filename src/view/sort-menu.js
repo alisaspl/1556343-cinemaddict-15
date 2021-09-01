@@ -41,8 +41,10 @@ class SortMenuView extends AbstractView {
   }
 
   removeElement() {
-    this._element.querySelectorAll('a').forEach((element) => element.removeEventListener('click', this._clickHandler));
-    super.removeElement();
+    if(this._element !== null){
+      this._element.querySelectorAll('a').forEach((element) => element.removeEventListener('click', this._clickHandler));
+      super.removeElement();
+    }
   }
 }
 

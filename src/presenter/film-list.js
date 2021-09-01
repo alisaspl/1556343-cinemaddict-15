@@ -11,6 +11,7 @@ import SortMenuView from '../view/sort-menu';
 import FilmExtraTopRatedView from '../view/film-extra-top-rated';
 import FilmExtraMostCommentedView from '../view/film-extra-most-commented';
 import ShowMoreButtonView from '../view/show-more-button';
+import StatisticsView from '../view/statistics';
 
 class FilmListPresenter {
   constructor(container) {
@@ -20,6 +21,9 @@ class FilmListPresenter {
       films: null,
       menu: null,
       sortMenu: null,
+      user: null,
+      userFilmStatistics: null,
+      filmStatistics: null,
     };
 
     this._view = {
@@ -31,6 +35,7 @@ class FilmListPresenter {
       topRated: null,
       mostCommented: null,
       showMoreButton: null,
+      statistics: null,
     };
 
     this._filmPresenters = new Map();
@@ -38,21 +43,34 @@ class FilmListPresenter {
     this._lastFilmIndex = 0;
   }
 
-  init(films, menu, sortMenu){
+  init(films, menu, sortMenu, user, userFilmStatistics, filmStatistics){
     this._data = {
       films,
       menu,
       sortMenu,
+      user,
+      userFilmStatistics,
+      filmStatistics,
     };
 
     if(!this._data.films || this._data.films.length === 0) {
       this._renderEmpty();
     } else {
-      this._rerender();
+      this._rerenderFilms();
     }
   }
 
-  _rerender() {
+  _rerenderFilms() {
+    this._clearMainContainer();
+    this._renderSortMenu();
+    this._renderFilmList();
+    this._renderShowMoreButton();
+    this._renderNextElements();
+    this._renderTopRated();
+    this._renderMostCommented();
+  }
+
+  _clearMainContainer() {
     this._lastFilmIndex = 0;
     for(const key in this._view) {
       if(this._view[key] !== null) {
@@ -60,12 +78,6 @@ class FilmListPresenter {
       }
     }
     this._renderMenu();
-    this._renderSortMenu();
-    this._renderFilmList();
-    this._renderShowMoreButton();
-    this._renderNextElements();
-    this._renderTopRated();
-    this._renderMostCommented();
   }
 
   _renderFilmCard(film, view) {
@@ -145,9 +157,33 @@ class FilmListPresenter {
       (menuType) => {
         this._data.menu.type = menuType;
         this._renderMenu();
-      }
+
+        switch(menuType) {
+          case 'stats':
+            this._clearMainContainer();
+            this._renderStatistics();
+            break;
+          case 'allMovies':
+            this._rerenderFilms();
+            break;
+          case 'watchlist':
+            this._rerenderFilms();
+            break;
+          case 'history':
+            this._rerenderFilms();
+            break;
+          case 'favorites':
+            this._rerenderFilms();
+            break;
+        }
+      },
     );
     utilsRender.renderView(this._container, this._view.menu, utilsRender.RenderPosition.AFTERBEGIN);
+  }
+
+  _renderStatistics() {
+    this._view.statistics = new StatisticsView(this._data.user, this._data.userFilmStatistics, this._data.filmStatistics);
+    utilsRender.renderView(this._container, this._view.statistics);
   }
 
   _renderSortMenu() {
@@ -170,7 +206,7 @@ class FilmListPresenter {
           },
         );
       }
-      this._rerender();
+      this._rerenderFilms();
     });
     utilsRender.renderView(this._container, this._view.sortMenu);
   }
@@ -211,12 +247,25 @@ class FilmListPresenter {
   }
 
   _renderNextElements() {
+    let filmList = [...this._data.films];
+
+    switch(this._data.menu.type) {
+      case 'watchlist':
+        filmList = filmList.filter((element) => !!element.isInWatchList);
+        break;
+      case 'history':
+        filmList = filmList.filter((element) => !!element.isWatched);
+        break;
+      case 'favorites':
+        filmList = filmList.filter((element) => !!element.isFavorite);
+        break;
+    }
     const newLastIndex = this._lastFilmIndex + config.FILMS_IN_LINE;
 
     for(; this._lastFilmIndex < newLastIndex; this._lastFilmIndex++){
-      this._renderFilmCard(this._data.films[this._lastFilmIndex], this._view.filmList);
+      this._renderFilmCard(filmList[this._lastFilmIndex], this._view.filmList);
 
-      if(this._lastFilmIndex === this._data.films.length - 1){
+      if(this._lastFilmIndex === filmList.length - 1){
         this._view.showMoreButton.removeElement();
         break;
       }

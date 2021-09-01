@@ -1,11 +1,11 @@
-import AbstractView from '../view';
+import AbstractView from './abstract';
 
 class StatisticsView extends AbstractView {
-  constructor(stat, user, userFilmsStat) {
+  constructor(user, userFilmsStat, stat) {
     super();
     this._user = user;
-    this._stat = stat;
     this._userFilmsStat = userFilmsStat;
+    this._stat = stat;
   }
 
   getTemplate() {

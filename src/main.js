@@ -1,4 +1,4 @@
-import UserStatisticsView from './view/user-statistics';
+import FilmsStatisticsView from './view/films-statistics';
 import UserProfileView from './view/user-profile';
 import { filmListData, menuData, sortMenuData, filmsStatisticsData, userData } from './mocks.js';
 import utils from './utils/common';
@@ -45,7 +45,7 @@ for(const key in userFilmsStatistics.genres) {
 }
 
 utilsRender.renderView(document.querySelector('.header'), new UserProfileView(userData));
-utilsRender.renderView(document.querySelector('.footer__statistics'), new UserStatisticsView(filmsStatisticsData));
+utilsRender.renderView(document.querySelector('.footer__statistics'), new FilmsStatisticsView(filmsStatisticsData));
 
 const filmListPresenter = new FilmListPresenter(mainContainer);
-filmListPresenter.init(filmListData, menuData, sortMenuData);
+filmListPresenter.init(filmListData, menuData, sortMenuData, userData, userFilmsStatistics, filmsStatisticsData);
