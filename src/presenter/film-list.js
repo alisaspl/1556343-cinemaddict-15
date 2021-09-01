@@ -3,6 +3,7 @@ import utils from '../utils/common';
 import utilsRender from '../utils/render';
 
 import FilmPresenter from './film';
+import StatisticsPresenter from './statistics';
 
 import EmptyView from '../view/empty';
 import FilmListView from '../view/film-list';
@@ -11,7 +12,7 @@ import SortMenuView from '../view/sort-menu';
 import FilmExtraTopRatedView from '../view/film-extra-top-rated';
 import FilmExtraMostCommentedView from '../view/film-extra-most-commented';
 import ShowMoreButtonView from '../view/show-more-button';
-import StatisticsView from '../view/statistics';
+
 
 class FilmListPresenter {
   constructor(container) {
@@ -22,7 +23,6 @@ class FilmListPresenter {
       menu: null,
       sortMenu: null,
       user: null,
-      userFilmStatistics: null,
       filmStatistics: null,
     };
 
@@ -39,17 +39,17 @@ class FilmListPresenter {
     };
 
     this._filmPresenters = new Map();
+    this._statisticsPresenter = null;
 
     this._lastFilmIndex = 0;
   }
 
-  init(films, menu, sortMenu, user, userFilmStatistics, filmStatistics){
+  init(films, menu, sortMenu, user, filmStatistics){
     this._data = {
       films,
       menu,
       sortMenu,
       user,
-      userFilmStatistics,
       filmStatistics,
     };
 
@@ -76,6 +76,10 @@ class FilmListPresenter {
       if(this._view[key] !== null) {
         this._view[key].removeElement();
       }
+    }
+    if(this._statisticsPresenter !== null) {
+      this._statisticsPresenter.remove();
+      this.StatisticsPresenter = null;
     }
     this._renderMenu();
   }
@@ -182,8 +186,7 @@ class FilmListPresenter {
   }
 
   _renderStatistics() {
-    this._view.statistics = new StatisticsView(this._data.user, this._data.userFilmStatistics, this._data.filmStatistics);
-    utilsRender.renderView(this._container, this._view.statistics);
+    this._statisticsPresenter = new StatisticsPresenter(this._container, this._data.user, this._data.films, this._data.filmStatistics.selectedMenu);
   }
 
   _renderSortMenu() {
