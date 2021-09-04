@@ -4,7 +4,7 @@ import FilmDetailsView from '../view/film-details';
 import FilmCommentsView from '../view/film-comments';
 import FilmCommentView from '../view/film-comment';
 
-class FilmPresenter {
+class Film {
   constructor(container, film, isInWatchListCallback, isWatchedCallback, isFavoriteCallback) {
     this._film = film;
     this._container = container;
@@ -66,17 +66,17 @@ class FilmPresenter {
       utilsRender.renderView(container, new FilmCommentView(comment));
     }
 
-    if(FilmPresenter.currentOpenedFilmDetailsView) {
-      FilmPresenter.currentOpenedFilmDetailsView.removeElement();
+    if(Film.currentOpenedFilmDetailsView) {
+      Film.currentOpenedFilmDetailsView.removeElement();
       this._hideFilmDetails();
     }
-    FilmPresenter.currentOpenedFilmDetailsView = this.filmCardDetails;
+    Film.currentOpenedFilmDetailsView = this.filmCardDetails;
     document.addEventListener('keydown', this._closeByEscape);
     document.body.classList.add('hide-overflow');
   }
 
   _hideFilmDetails() {
-    FilmPresenter.currentOpenedFilmDetailsView = null;
+    Film.currentOpenedFilmDetailsView = null;
     document.removeEventListener('keydown', this._closeByEscape);
     document.body.classList.remove('hide-overflow');
   }
@@ -84,11 +84,11 @@ class FilmPresenter {
   _closeByEscape(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      if(FilmPresenter.currentOpenedFilmDetailsView) {
-        FilmPresenter.currentOpenedFilmDetailsView.removeElement();
+      if(Film.currentOpenedFilmDetailsView) {
+        Film.currentOpenedFilmDetailsView.removeElement();
         this._hideFilmDetails();
       }
     }
   }
 }
-export default FilmPresenter;
+export default Film;

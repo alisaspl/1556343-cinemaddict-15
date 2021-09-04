@@ -20,6 +20,7 @@ class FilmListPresenter {
 
     this._data = {
       films: null,
+      filmsCopy: null,
       menu: null,
       sortMenu: null,
       user: null,
@@ -47,27 +48,41 @@ class FilmListPresenter {
   init(films, menu, sortMenu, user, filmStatistics){
     this._data = {
       films,
+      filmsCopy: [...films],
       menu,
       sortMenu,
       user,
       filmStatistics,
     };
 
-    if(!this._data.films || this._data.films.length === 0) {
-      this._renderEmpty();
-    } else {
-      this._rerenderFilms();
-    }
+    this._rerenderFilms();
   }
 
   _rerenderFilms() {
-    this._clearMainContainer();
-    this._renderSortMenu();
-    this._renderFilmList();
-    this._renderShowMoreButton();
-    this._renderNextElements();
-    this._renderTopRated();
-    this._renderMostCommented();
+    this._data.filmsCopy = [...this._data.films];
+    switch(this._data.menu.type) {
+      case 'watchlist':
+        this._data.filmsCopy = this._data.filmsCopy.filter((element) => !!element.isInWatchList);
+        break;
+      case 'history':
+        this._data.filmsCopy = this._data.filmsCopy.filter((element) => !!element.isWatched);
+        break;
+      case 'favorites':
+        this._data.filmsCopy = this._data.filmsCopy.filter((element) => !!element.isFavorite);
+        break;
+    }
+
+    if(!this._data.filmsCopy || this._data.filmsCopy.length === 0) {
+      this._renderEmpty();
+    } else {
+      this._clearMainContainer();
+      this._renderSortMenu();
+      this._renderFilmList();
+      this._renderShowMoreButton();
+      this._renderNextElements();
+      this._renderTopRated();
+      this._renderMostCommented();
+    }
   }
 
   _clearMainContainer() {
@@ -131,6 +146,8 @@ class FilmListPresenter {
   }
 
   _renderEmpty() {
+    this._clearMainContainer();
+    console.log(this._data.menu);
     this._view.empty = new EmptyView(this._data.menu);
     utilsRender.renderView(this._container, this._view.empty);
   }
@@ -250,25 +267,12 @@ class FilmListPresenter {
   }
 
   _renderNextElements() {
-    let filmList = [...this._data.films];
-
-    switch(this._data.menu.type) {
-      case 'watchlist':
-        filmList = filmList.filter((element) => !!element.isInWatchList);
-        break;
-      case 'history':
-        filmList = filmList.filter((element) => !!element.isWatched);
-        break;
-      case 'favorites':
-        filmList = filmList.filter((element) => !!element.isFavorite);
-        break;
-    }
     const newLastIndex = this._lastFilmIndex + config.FILMS_IN_LINE;
 
     for(; this._lastFilmIndex < newLastIndex; this._lastFilmIndex++){
-      this._renderFilmCard(filmList[this._lastFilmIndex], this._view.filmList);
+      this._renderFilmCard(this._data.filmsCopy[this._lastFilmIndex], this._view.filmList);
 
-      if(this._lastFilmIndex === filmList.length - 1){
+      if(this._lastFilmIndex === this._data.filmsCopy.length - 1){
         this._view.showMoreButton.removeElement();
         break;
       }
