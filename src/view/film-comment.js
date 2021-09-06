@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-class FilmCommentView extends AbstractView {
+class FilmComment extends AbstractView {
   constructor(comment) {
     super();
     this._comment = comment;
@@ -25,4 +25,4 @@ class FilmCommentView extends AbstractView {
   }
 }
 
-export default FilmCommentView;
+export default FilmComment;

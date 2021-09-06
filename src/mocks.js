@@ -159,7 +159,7 @@ const mainMenuTitles = [
   },
   {
     type: 'stats',
-    emptyText: '',
+    emptyText: 'No stat sorry',
   },
 ];
 
@@ -225,7 +225,10 @@ const userData =  {
   avatar:  `images/${utils.getRandomElementFromArray(userAvatars)}`,
   rank: utils.getRandomElementFromArray(userRanks),
 };
-const menuData = utils.getRandomElementFromArray(mainMenuTitles);
+
+const menuData = mainMenuTitles;
+menuData[utils.getRandomInteger(0, menuData.length-1)].selected = true;
+
 const sortMenuData = {
   selected: utils.getRandomElementFromArray(sortMenuTitles),
 };

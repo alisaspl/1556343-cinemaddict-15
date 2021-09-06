@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-class FilmListView extends AbstractView {
+class FilmList extends AbstractView {
   constructor() {
     super();
   }
@@ -17,4 +17,4 @@ class FilmListView extends AbstractView {
   }
 }
 
-export default FilmListView;
+export default FilmList;

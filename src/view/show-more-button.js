@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-class ShowMoreButtonView extends AbstractView {
+class ShowMoreButton extends AbstractView {
   constructor(clickCallback) {
     super();
     this._onClick = this._onClick.bind(this);
@@ -33,4 +33,4 @@ class ShowMoreButtonView extends AbstractView {
   }
 }
 
-export default ShowMoreButtonView;
+export default ShowMoreButton;

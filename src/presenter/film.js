@@ -8,9 +8,11 @@ class Film {
   constructor(container, film, isInWatchListCallback, isWatchedCallback, isFavoriteCallback) {
     this._film = film;
     this._container = container;
-    this._isInWatchListCallback = isInWatchListCallback;
-    this._isWatchedCallback = isWatchedCallback;
-    this._isFavoriteCallback = isFavoriteCallback;
+    this._callbacks = {
+      isInWatchList: isInWatchListCallback,
+      isWatched: isWatchedCallback,
+      isFavorite: isFavoriteCallback,
+    };
 
     this.filmCard = null;
     this.filmCardDetails = null;
@@ -20,38 +22,25 @@ class Film {
     this._closeByEscape = this._closeByEscape.bind(this);
   }
 
+  _callCalback(view, property) {
+    this[view][property] = !this._film[property];
+    this._callbacks[property](this[view][property]);
+  }
+
   _renderFilmCard() {
     this.filmCard = new FilmCardView(this._film, this._showFilmDetails.bind(this),
-      () => {
-        this.filmCard.isInWatchList = !this._film.isInWatchList;
-        this._isInWatchListCallback(this.filmCard.isInWatchList);
-      },
-      () => {
-        this.filmCard.isWatched = !this._film.isWatched;
-        this._isWatchedCallback(this.filmCard.isWatched);
-      },
-      () => {
-        this.filmCard.isFavorite = !this._film.isFavorite;
-        this._isFavoriteCallback(this.filmCard.isFavorite);
-      },
+      this._callCalback.bind(this, 'filmCard', 'isInWatchList'),
+      this._callCalback.bind(this, 'filmCard', 'isWatched'),
+      this._callCalback.bind(this, 'filmCard', 'isFavorite'),
     );
     utilsRender.renderView(this._container, this.filmCard);
   }
 
   _showFilmDetails() {
     this.filmCardDetails = new FilmDetailsView(this._film, this._hideFilmDetails.bind(this),
-      () => {
-        this.filmCardDetails.isInWatchList = !this._film.isInWatchList;
-        this._isInWatchListCallback(this.filmCardDetails.isInWatchList);
-      },
-      () => {
-        this.filmCardDetails.isWatched = !this._film.isWatched;
-        this._isWatchedCallback(this.filmCardDetails.isWatched);
-      },
-      () => {
-        this.filmCardDetails.isFavorite = !this._film.isFavorite;
-        this._isFavoriteCallback(this.filmCardDetails.isFavorite);
-      },
+      this._callCalback.bind(this, 'filmCardDetails', 'isInWatchList'),
+      this._callCalback.bind(this, 'filmCardDetails', 'isWatched'),
+      this._callCalback.bind(this, 'filmCardDetails', 'isFavorite'),
     );
     utilsRender.renderView(document.body, this.filmCardDetails);
 

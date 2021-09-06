@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-class UserProfileView extends AbstractView {
+class UserProfile extends AbstractView {
   constructor(user) {
     super();
     this._user = user;
@@ -18,4 +18,4 @@ class UserProfileView extends AbstractView {
 
 }
 
-export default UserProfileView;
+export default UserProfile;

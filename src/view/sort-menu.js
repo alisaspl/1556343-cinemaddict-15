@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-class SortMenuView extends AbstractView {
+class SortMenu extends AbstractView {
   constructor(menu) {
     super();
     this._menu = menu;
@@ -48,4 +48,4 @@ class SortMenuView extends AbstractView {
   }
 }
 
-export default SortMenuView;
+export default SortMenu;

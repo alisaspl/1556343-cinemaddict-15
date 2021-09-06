@@ -11,4 +11,5 @@ utilsRender.renderView(document.querySelector('.header'), new UserProfileView(us
 utilsRender.renderView(document.querySelector('.footer__statistics'), new FilmsStatisticsView(filmsStatisticsData));
 
 const filmListPresenter = new FilmListPresenter(mainContainer);
+
 filmListPresenter.init(filmListData, menuData, sortMenuData, userData, filmsStatisticsData);

@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-class FilmCardView extends AbstractView {
+class FilmCard extends AbstractView {
   constructor(film, showFilmDetailsCallback, addToWatchListCallback, markAsWatchedCallback, favoriteCallback) {
     super();
     this._film = film;
@@ -106,4 +106,4 @@ class FilmCardView extends AbstractView {
   }
 }
 
-export default FilmCardView;
+export default FilmCard;

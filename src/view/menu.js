@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-class MenuView extends AbstractView {
+class Menu extends AbstractView {
   constructor(menu, stat) {
     super();
     this._menu = menu;
@@ -11,9 +11,8 @@ class MenuView extends AbstractView {
 
   _clickHandler(evt) {
     evt.preventDefault();
-    if(this._menu.selected !== evt.target.dataset.type) {
-      this._menu.selected = evt.target.dataset.type;
-      this._callback(this._menu.selected);
+    if(!this.getElement().classList.contains('main-navigation__item--active')) {
+      this._callback(evt.currentTarget.dataset.type);
     }
   }
 
@@ -25,7 +24,7 @@ class MenuView extends AbstractView {
     return `
       <nav class="main-navigation">
         <div class="main-navigation__items">
-          <a href="#all" data-type="allMovies" class="main-navigation__item   ${this._menu.type === 'allMovies' ? 'main-navigation__item--active' : ''}">All movies</a>
+          <a href="#all" data-type="allMovies" class="main-navigation__item ${this._menu.type === 'allMovies' ? 'main-navigation__item--active' : ''}">All movies</a>
           <a href="#watchlist" data-type="watchlist" class="main-navigation__item ${this._menu.type === 'watchlist' ? 'main-navigation__item--active' : ''}">Watchlist <span class="main-navigation__item-count" >${this._stat.watchlist}</span></a>
           <a href="#history" data-type="history" class="main-navigation__item ${this._menu.type === 'history' ? 'main-navigation__item--active' : ''}">History <span class="main-navigation__item-count" >${this._stat.watched}</span></a>
           <a href="#favorites" data-type="favorites" class="main-navigation__item ${this._menu.type === 'favorites' ? 'main-navigation__item--active' : ''}">Favorites <span class="main-navigation__item-count">${this._stat.favorites}</span></a>
@@ -51,4 +50,4 @@ class MenuView extends AbstractView {
   }
 }
 
-export default MenuView;
+export default Menu;

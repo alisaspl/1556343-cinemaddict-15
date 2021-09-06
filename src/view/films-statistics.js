@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-class FilmsStatisticsView extends AbstractView {
+class FilmsStatistics extends AbstractView {
   constructor(stat) {
     super();
     this._stat = stat;
@@ -13,4 +13,4 @@ class FilmsStatisticsView extends AbstractView {
   }
 }
 
-export default FilmsStatisticsView;
+export default FilmsStatistics;

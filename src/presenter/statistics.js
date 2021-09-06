@@ -3,7 +3,7 @@ import utilsRender from '../utils/render';
 
 import StatisticsView from '../view/statistics';
 
-class StatisticsPresenter {
+class Statistics {
   constructor(container, user, films, menu){
     this._container = container;
     this._data = {
@@ -68,4 +68,4 @@ class StatisticsPresenter {
   }
 }
 
-export default StatisticsPresenter;
+export default Statistics;
