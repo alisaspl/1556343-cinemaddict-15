@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-class EmptyView extends AbstractView {
+class Empty extends AbstractView {
   constructor(menu) {
     super();
     this._menu = menu;
@@ -15,4 +15,4 @@ class EmptyView extends AbstractView {
   }
 }
 
-export default EmptyView;
+export default Empty;

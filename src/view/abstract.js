@@ -1,8 +1,8 @@
 import utilsRender from '../utils/render';
 
-class AbstractView {
+class Abstract {
   constructor() {
-    if (new.target === AbstractView) {
+    if (new.target === Abstract) {
       throw new Error(`Can't instantiate Abstract class - ${new.target}, only concrete one.`);
     }
 
@@ -21,8 +21,11 @@ class AbstractView {
   }
 
   removeElement() {
-    this._element = null;
+    if(this._element !== null){
+      this._element.remove();
+      this._element = null;
+    }
   }
 }
 
-export default AbstractView;
+export default Abstract;

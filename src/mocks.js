@@ -159,7 +159,7 @@ const mainMenuTitles = [
   },
   {
     type: 'stats',
-    emptyText: '',
+    emptyText: 'No stat sorry',
   },
 ];
 
@@ -198,7 +198,10 @@ const generateFilmDescription = (sentences) => {
   return `${randomDescription.join('. ')}.`;
 };
 
+let id = 0;
+
 const generateFilmData = () => ({
+  id: id++,
   title: utils.getRandomElementFromArray(titles),
   originalTitle: utils.getRandomElementFromArray(originalTitles),
   poster: `images/posters/${utils.getRandomElementFromArray(posters)}`,
@@ -217,14 +220,15 @@ const generateFilmData = () => ({
   ageRating: utils.getRandomInteger(0, 18),
 });
 
-const filmListData = {
-  films: new Array(20).fill().map(() => generateFilmData()),
-};
+const filmListData = new Array(12).fill().map(() => generateFilmData());
 const userData =  {
   avatar:  `images/${utils.getRandomElementFromArray(userAvatars)}`,
   rank: utils.getRandomElementFromArray(userRanks),
 };
-const menuData = utils.getRandomElementFromArray(mainMenuTitles);
+
+const menuData = mainMenuTitles;
+menuData[utils.getRandomInteger(0, menuData.length-1)].selected = true;
+
 const sortMenuData = {
   selected: utils.getRandomElementFromArray(sortMenuTitles),
 };

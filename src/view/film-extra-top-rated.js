@@ -1,19 +1,8 @@
-import utils from '../utils/common';
-import utilsRender from '../utils/render';
 import AbstractView from './abstract';
 
-import FilmCardView from './film-card';
-
-class FilmExtraTopRatedView extends AbstractView {
-  constructor(films) {
+class FilmExtraTopRated extends AbstractView {
+  constructor() {
     super();
-    this._films = films;
-    this._prepareData();
-  }
-
-  _prepareData() {
-    this._films = utils.sortBy(this._films, (film) => parseInt(film.totalRating, 10));
-    this._films = this._films.slice(0,2);
   }
 
   getTemplate() {
@@ -24,17 +13,6 @@ class FilmExtraTopRatedView extends AbstractView {
       </section>
     `;
   }
-
-  getElement() {
-    if(this._element === null) {
-      super.getElement();
-      const container = this._element.querySelector('.films-list__container');
-      for(const film of this._films){
-        utilsRender.renderView(container, new FilmCardView(film));
-      }
-    }
-    return this._element;
-  }
 }
 
-export default FilmExtraTopRatedView;
+export default FilmExtraTopRated;

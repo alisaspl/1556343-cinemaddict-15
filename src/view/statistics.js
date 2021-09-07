@@ -1,11 +1,11 @@
-import AbstractView from '../view';
+import AbstractView from './abstract';
 
-class StatisticsView extends AbstractView {
-  constructor(stat, user, userFilmsStat) {
+class Statistics extends AbstractView {
+  constructor(user, userFilmsStat, menu) {
     super();
     this._user = user;
-    this._stat = stat;
     this._userFilmsStat = userFilmsStat;
+    this._menu = menu;
   }
 
   getTemplate() {
@@ -21,23 +21,23 @@ class StatisticsView extends AbstractView {
           <p class="statistic__filters-description">Show stats:</p>
 
           <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time"
-            value="all-time" ${this._stat.selectedMenu === 'allTime' ? 'checked' : ''}>
+            value="all-time" ${this._menu === 'allTime' ? 'checked' : ''}>
           <label for="statistic-all-time" class="statistic__filters-label">All time</label>
 
           <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today"
-            value="today" ${this._stat.selectedMenu === 'today' ? 'checked' : ''}>
+            value="today" ${this._menu === 'today' ? 'checked' : ''}>
           <label for="statistic-today" class="statistic__filters-label">Today</label>
 
           <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week"
-            value="week" ${this._stat.selectedMenu === 'week' ? 'checked' : ''}>
+            value="week" ${this._menu === 'week' ? 'checked' : ''}>
           <label for="statistic-week" class="statistic__filters-label">Week</label>
 
           <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month"
-            value="month" ${this._stat.selectedMenu === 'month' ? 'checked' : ''}>
+            value="month" ${this._menu === 'month' ? 'checked' : ''}>
           <label for="statistic-month" class="statistic__filters-label">Month</label>
 
           <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year"
-            value="year" ${this._stat.selectedMenu === 'year' ? 'checked' : ''}>
+            value="year" ${this._menu === 'year' ? 'checked' : ''}>
           <label for="statistic-year" class="statistic__filters-label">Year</label>
         </form>
 
@@ -65,4 +65,4 @@ class StatisticsView extends AbstractView {
   }
 }
 
-export default StatisticsView;
+export default Statistics;
