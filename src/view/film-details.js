@@ -1,6 +1,10 @@
-import AbstractView from './abstract';
+import utilsRender from '../utils/render';
 
-class FilmDetails extends AbstractView {
+import SmartView from './smart';
+import FilmCommentsView from '../view/film-comments';
+import FilmCommentView from '../view/film-comment';
+
+class FilmDetails extends SmartView {
   constructor(film, closeCallback, addToWatchListCallback, markAsWatchedCallback, favoriteCallback) {
     super();
     this._film = film;
@@ -8,12 +12,13 @@ class FilmDetails extends AbstractView {
     this._addToWatchListCallback = addToWatchListCallback;
     this._markAsWatchedCallback = markAsWatchedCallback;
     this._favoriteCallback = favoriteCallback;
-    this.removeElement = this.removeElement.bind(this);
-
 
     this._isInWatchListButton = null;
     this._isWatchedButton = null;
     this._isFavoriteButton = null;
+
+    this.commentsView = null;
+    this.commentView = [];
   }
 
   get isInWatchList() {
@@ -38,6 +43,10 @@ class FilmDetails extends AbstractView {
 
   set isFavorite(value) {
     this._dynamicSetter('isFavorite', value);
+  }
+
+  addComment() {
+    this.commentsView
   }
 
   _dynamicSetter(property, value) {
@@ -140,26 +149,47 @@ class FilmDetails extends AbstractView {
       this._isFavoriteButton = this._element.querySelector('#favorite');
       this.isFavorite = this._film.isFavorite;
 
-      this._element.querySelector('.film-details__close').addEventListener('click', this.removeElement);
+      this._element.querySelector('.film-details__close').addEventListener('click', this._closeCallback);
 
       this._isInWatchListButton.addEventListener('click', this._addToWatchListCallback);
       this._isWatchedButton.addEventListener('click', this._markAsWatchedCallback);
       this._isFavoriteButton.addEventListener('click', this._favoriteCallback);
+
+      this.commentsView = new FilmCommentsView(this._film.comments);
+      utilsRender.renderView(
+        this._element.querySelector('.film-details__bottom-container'),
+        this.commentsView,
+      );
+
+      const commentsContainer = this.commentsView.getElement().querySelector('.film-details__comments-list');
+      for(const comment of this._film.comments) {
+        this.commentView.push(new FilmCommentView(comment));
+        utilsRender.renderView(commentsContainer, this.commentView[this.commentView.length - 1])
+      }
     }
 
     return this._element;
   }
 
   removeElement() {
-    this._element.querySelector('.film-details__close').removeEventListener('click', this.removeElement);
+    for(const commentView of this.commentView) {
+      commentView.removeElement();
+    }
+    this.commentView = [];
+    this.commentsView.removeElement();
+
+    this._element.querySelector('.film-details__close').removeEventListener('click', this._closeCallback);
 
     this._isInWatchListButton.removeEventListener('click', this._addToWatchListCallback);
     this._isWatchedButton.removeEventListener('click', this._markAsWatchedCallback);
     this._isFavoriteButton.removeEventListener('click', this._favoriteCallback);
 
     super.removeElement();
-    this._closeCallback();
   }
+
+  restoreHandlers() {
+  }
+
 }
 
 export default FilmDetails;

@@ -1,11 +1,9 @@
 import utilsRender from '../utils/render';
 import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/film-details';
-import FilmCommentsView from '../view/film-comments';
-import FilmCommentView from '../view/film-comment';
 
 class Film {
-  constructor(container, film, isInWatchListCallback, isWatchedCallback, isFavoriteCallback) {
+  constructor(container, film, isInWatchListCallback, isWatchedCallback, isFavoriteCallback, filmCommentsChangeCallback) {
     this._film = film;
     this._container = container;
     this._callbacks = {
@@ -20,6 +18,8 @@ class Film {
     this._renderFilmCard();
 
     this._closeByEscape = this._closeByEscape.bind(this);
+    this._submitComment = this._submitComment.bind(this);
+    this._filmCommentsChange = filmCommentsChangeCallback;
   }
 
   _callCalback(view, property) {
@@ -42,42 +42,65 @@ class Film {
       this._callCalback.bind(this, 'filmCardDetails', 'isWatched'),
       this._callCalback.bind(this, 'filmCardDetails', 'isFavorite'),
     );
+
     utilsRender.renderView(document.body, this.filmCardDetails);
 
-    this._filmComments = new FilmCommentsView(this._film.comments);
-    utilsRender.renderView(
-      this.filmCardDetails.getElement().querySelector('.film-details__bottom-container'),
-      this._filmComments,
-    );
-
-    const container = this._filmComments.getElement().querySelector('.film-details__comments-list');
-    for(const comment of this._film.comments) {
-      utilsRender.renderView(container, new FilmCommentView(comment));
-    }
-
     if(Film.currentOpenedFilmDetailsView) {
-      Film.currentOpenedFilmDetailsView.removeElement();
       this._hideFilmDetails();
     }
     Film.currentOpenedFilmDetailsView = this.filmCardDetails;
     document.addEventListener('keydown', this._closeByEscape);
+    document.addEventListener('keydown', this._submitComment);
+
     document.body.classList.add('hide-overflow');
   }
 
   _hideFilmDetails() {
+    Film.currentOpenedFilmDetailsView.removeElement();
     Film.currentOpenedFilmDetailsView = null;
     document.removeEventListener('keydown', this._closeByEscape);
+    document.removeEventListener('keydown', this._submitComment);
+
     document.body.classList.remove('hide-overflow');
   }
 
   _closeByEscape(evt) {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if(evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       if(Film.currentOpenedFilmDetailsView) {
-        Film.currentOpenedFilmDetailsView.removeElement();
         this._hideFilmDetails();
       }
     }
   }
+
+  _submitComment(evt) {
+    if(evt.key === 'Enter' && evt.ctrlKey) {
+      if(this.filmCardDetails !== null) {
+        const newComment = this.filmCardDetails.commentsView.addComment();
+        if(!newComment) {
+          return;
+        }
+        this._film.comments.push({
+          text: newComment.text,
+          emoji: {
+            src: newComment.src,
+            name: newComment.name,
+          },
+          author: 'Bob',
+          date: new Date(),
+        });
+
+        this._filmCommentsChange(this._film.comments.length);
+
+        // fixme scroll
+        // get scroll y
+
+        this.filmCardDetails.updateData();
+
+        // set scroll y
+      }
+    }
+  }
+
 }
 export default Film;

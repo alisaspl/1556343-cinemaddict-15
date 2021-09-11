@@ -41,6 +41,10 @@ class FilmCard extends AbstractView {
     this._dynamicSetter('isFavorite', value);
   }
 
+  changeCommentsLength(value) {
+    this._element.querySelector('.film-card__comments').innerText = `${value} comments`;
+  }
+
   _dynamicSetter(property, value) {
     this._film[property] = !!value;
     if(this._film[property]){
@@ -62,7 +66,7 @@ class FilmCard extends AbstractView {
         </p>
         <img src="./${this._film.poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${this._film.description.length > 140 ? `${this._film.description.slice(0, 139)}...` : this._film.description}</p>
-        <a class="film-card__comments">${this._film.comments.length} comments</a>
+        <a class="film-card__comments"></a>
         <div class="film-card__controls">
           <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
           <button class="film-card__controls-item film-card__controls-item--mark-as-watched" type="button">Mark as watched</button>
@@ -91,6 +95,8 @@ class FilmCard extends AbstractView {
       this._isInWatchListButton.addEventListener('click', this._addToWatchListCallback);
       this._isWatchedButton.addEventListener('click', this._markAsWatchedCallback);
       this._isFavoriteButton.addEventListener('click', this._favoriteCallback);
+
+      this.changeCommentsLength(this._film.comments.length);
     }
     return this._element;
   }
