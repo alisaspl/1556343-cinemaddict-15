@@ -1,3 +1,7 @@
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+
 import utils from './utils/common';
 
 const titles = [
@@ -61,7 +65,7 @@ const comments = [
       name: 'smile',
     },
     author: 'Tim Macoveev',
-    date: '2019/12/31 23:59',
+    date: '1999-12-31T23:59:59.554Z',
   },
   {
     text: 'Booooooooooring',
@@ -70,7 +74,7 @@ const comments = [
       name: 'sleeping',
     },
     author: 'John Doe',
-    date: '2 days ago',
+    date: '2021-09-10T14:00:59.554Z',
   },
   {
     text: 'Very very old. Meh',
@@ -79,7 +83,7 @@ const comments = [
       name: 'puke',
     },
     author: 'Bob',
-    date: '2019/11/31 23:59',
+    date: '2019-11-31T23:59:59.554Z',
   },
   {
     text: 'Almost two hours? Seriously?',
@@ -88,7 +92,7 @@ const comments = [
       name: 'angry',
     },
     author: 'Alice',
-    date: 'Today',
+    date: '2021-09-12T14:00:59.554Z',
   },
   {
     text: 'Awesome',
@@ -97,7 +101,7 @@ const comments = [
       name: 'smile',
     },
     author: 'Charlie',
-    date: 'Just now',
+    date: new Date(),
   },
 ];
 
@@ -123,19 +127,19 @@ const writers = [
 
 const releases = [
   {
-    date: '5 November 1999',
+    date: dayjs('05-10-1999', 'DD-MM-YYYY').format('DD MMMM YYYY'),
     releaseCountry: 'Finland',
   },
   {
-    date: '10 April 2000',
+    date: dayjs('10 04 2000', 'DD-MM-YYYY').format('DD MMMM YYYY'),
     releaseCountry: 'USA',
   },
   {
-    date: '17 February 1945',
+    date: dayjs('17 02 1945', 'DD-MM-YYYY').format('DD MMMM YYYY'),
     releaseCountry: 'Russia',
   },
   {
-    date: '28 March 1938',
+    date: dayjs('28 03 1938', 'DD-MM-YYYY').format('DD MMMM YYYY'),
     releaseCountry: 'France',
   },
 ];
@@ -213,7 +217,7 @@ const generateFilmData = () => ({
   writers: utils.getRandomUniqArray(writers),
   release: utils.getRandomElementFromArray(releases),
   totalRating: (utils.getRandomInteger(0, 100)/10).toFixed(1),
-  runtime: utils.formatDate(utils.getRandomInteger(30, 240)),
+  runtime: utils.getRandomInteger(30, 240),
   isWatched: utils.getRandomInteger(0,1),
   isInWatchList: utils.getRandomInteger(0,1),
   isFavorite: utils.getRandomInteger(0,1),
@@ -221,6 +225,7 @@ const generateFilmData = () => ({
 });
 
 const filmListData = new Array(12).fill().map(() => generateFilmData());
+
 const userData =  {
   avatar:  `images/${utils.getRandomElementFromArray(userAvatars)}`,
   rank: utils.getRandomElementFromArray(userRanks),

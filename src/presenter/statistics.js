@@ -33,7 +33,7 @@ class Statistics {
       }
       if(film.isWatched) {
         userFilmsStatistics.watched++;
-        userFilmsStatistics.runtime += film.runtime.hours*60 + film.runtime.minutes;
+        userFilmsStatistics.runtime += film.runtime;
       }
       if(film.isFavorite) {
         userFilmsStatistics.favorites++;
@@ -47,7 +47,7 @@ class Statistics {
         }
       }
     }
-    userFilmsStatistics.runtime = utils.formatDate(userFilmsStatistics.runtime);
+    userFilmsStatistics.runtime = utils.formatTime(userFilmsStatistics.runtime);
     const maxGenresValue = Math.max(...Object.values(userFilmsStatistics.genres));
     for(const key in userFilmsStatistics.genres) {
       if(userFilmsStatistics.genres[key] === maxGenresValue) {

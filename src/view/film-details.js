@@ -1,3 +1,4 @@
+import utils from '../utils/common';
 import utilsRender from '../utils/render';
 
 import SmartView from './smart';
@@ -43,10 +44,6 @@ class FilmDetails extends SmartView {
 
   set isFavorite(value) {
     this._dynamicSetter('isFavorite', value);
-  }
-
-  addComment() {
-    this.commentsView
   }
 
   _dynamicSetter(property, value) {
@@ -104,7 +101,7 @@ class FilmDetails extends SmartView {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Runtime</td>
-                    <td class="film-details__cell">${this._film.runtime.hours > 0 ? `${this._film.runtime.hours}h` : ''} ${this._film.runtime.minutes}m</td>
+                    <td class="film-details__cell">${utils.formatTime(this._film.runtime)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Country</td>
@@ -164,7 +161,7 @@ class FilmDetails extends SmartView {
       const commentsContainer = this.commentsView.getElement().querySelector('.film-details__comments-list');
       for(const comment of this._film.comments) {
         this.commentView.push(new FilmCommentView(comment));
-        utilsRender.renderView(commentsContainer, this.commentView[this.commentView.length - 1])
+        utilsRender.renderView(commentsContainer, this.commentView[this.commentView.length - 1]);
       }
     }
 

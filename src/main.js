@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 import FilmsStatisticsView from './view/films-statistics';
 import UserProfileView from './view/user-profile';
 import { filmListData, menuData, sortMenuData, filmsStatisticsData, userData } from './mocks.js';
@@ -8,8 +6,6 @@ import utilsRender from './utils/render';
 import FilmListPresenter from './presenter/film-list';
 
 const mainContainer = document.querySelector('.main');
-
-alert(dayjs().format());
 
 utilsRender.renderView(document.querySelector('.header'), new UserProfileView(userData));
 utilsRender.renderView(document.querySelector('.footer__statistics'), new FilmsStatisticsView(filmsStatisticsData));

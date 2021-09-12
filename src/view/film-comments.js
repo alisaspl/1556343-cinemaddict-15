@@ -67,8 +67,8 @@ class FilmComments extends AbstractView {
   }
 
   addComment() {
-    const commentText = this._element.querySelector('.film-details__comment-input').value;
-    const commentEmojiElement = this._element.querySelector('.film-details__comment-input-img');
+    const commentText = this.getElement().querySelector('.film-details__comment-input').value;
+    const commentEmojiElement = this.getElement().querySelector('.film-details__comment-input-img');
 
     if(commentText.trim() === '' || !commentEmojiElement) {
       return;
@@ -77,7 +77,7 @@ class FilmComments extends AbstractView {
     return {
       text: commentText,
       name: commentEmojiElement.value,
-      src: commentEmojiElement.src.replace(/^http:\/\/[a-zA-Z0-9\.\_]+(\:\d+)?/, ''),
+      src: commentEmojiElement.src.replace(/^https?:\/\/[a-zA-Z0-9._]+(:\d+)?/, ''),
     };
   }
 

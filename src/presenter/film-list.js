@@ -145,7 +145,7 @@ class FilmList {
         this._onFilmPropertyChange.bind(this, film, 'isInWatchList'),
         this._onFilmPropertyChange.bind(this, film, 'isWatched'),
         this._onFilmPropertyChange.bind(this, film, 'isFavorite'),
-        this._onFilmCommentsChange.bind(this, film)
+        this._onFilmCommentsChange.bind(this, film),
       ),
     );
   }

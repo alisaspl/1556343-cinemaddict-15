@@ -92,12 +92,9 @@ class Film {
 
         this._filmCommentsChange(this._film.comments.length);
 
-        // fixme scroll
-        // get scroll y
-
+        const scrollVal = this.filmCardDetails.getElement().scrollTop;
         this.filmCardDetails.updateData();
-
-        // set scroll y
+        this.filmCardDetails.getElement().scroll({ top: scrollVal });
       }
     }
   }

@@ -1,4 +1,5 @@
 import AbstractView from './abstract';
+import utils from '../utils/common';
 
 class FilmCard extends AbstractView {
   constructor(film, showFilmDetailsCallback, addToWatchListCallback, markAsWatchedCallback, favoriteCallback) {
@@ -61,7 +62,7 @@ class FilmCard extends AbstractView {
         <p class="film-card__rating">${this._film.totalRating}</p>
         <p class="film-card__info">
           <span class="film-card__year">${this._film.release.date.split(' ')[2]}</span>
-          <span class="film-card__duration">${this._film.runtime.hours > 0 ? `${this._film.runtime.hours}h` : ''} ${this._film.runtime.minutes}m</span>
+          <span class="film-card__duration">${utils.formatTime(this._film.runtime)}</span>
           <span class="film-card__genre">${this._film.genres[0]}</span>
         </p>
         <img src="./${this._film.poster}" alt="" class="film-card__poster">
