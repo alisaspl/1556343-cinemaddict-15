@@ -5,9 +5,13 @@ dayjs.extend(relativeTime);
 import AbstractView from './abstract';
 
 class FilmComment extends AbstractView {
-  constructor(comment) {
+  constructor(comment, index, onDeleteCallback) {
     super();
     this._comment = comment;
+    this._index = index;
+    this._deleteButton = null;
+    this._commentDeleteHandler = this._commentDeleteHandler.bind(this);
+    this._onDeleteCallback = onDeleteCallback;
   }
 
   getTemplate() {
@@ -27,6 +31,27 @@ class FilmComment extends AbstractView {
       </li>
     `;
   }
+
+  getElement() {
+    super.getElement();
+    this._deleteButton = this._element.querySelector('.film-details__comment-delete');
+    this._deleteButton.addEventListener('click', this._commentDeleteHandler);
+
+    return this._element;
+  }
+
+  removeElement() {
+    if(this._element !== null) {
+      this._deleteButton.removeEventListener('click', this._commentDeleteHandler);
+    }
+    super.removeElement();
+  }
+
+  _commentDeleteHandler(evt) {
+    evt.preventDefault();
+    this._onDeleteCallback(this._index);
+  }
+
 }
 
 export default FilmComment;

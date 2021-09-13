@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import duration from 'dayjs/plugin/duration';
+dayjs.extend(customParseFormat);
 dayjs.extend(duration);
 
 const sortBy = function (data, sortByFunction){
@@ -53,4 +55,6 @@ const formatTime = (runtime) => {
   return time;
 };
 
-export default { formatTime, sortBy, getRandomInteger, getRandomUniqArray, getRandomElementFromArray };
+const formatDate = (releaseDate) => dayjs(releaseDate, 'DD-MM-YYYY').format('DD MMMM YYYY');
+
+export default { formatTime, formatDate, sortBy, getRandomInteger, getRandomUniqArray, getRandomElementFromArray };

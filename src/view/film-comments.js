@@ -77,7 +77,7 @@ class FilmComments extends AbstractView {
     return {
       text: commentText,
       name: commentEmojiElement.value,
-      src: commentEmojiElement.src.replace(/^https?:\/\/[a-zA-Z0-9._]+(:\d+)?/, ''),
+      src: commentEmojiElement.src.replace(/^https?:\/\/[a-zA-Z0-9._-]+(:\d+)?/, ''),
     };
   }
 

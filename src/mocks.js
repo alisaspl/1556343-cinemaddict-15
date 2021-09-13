@@ -1,7 +1,3 @@
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
-
 import utils from './utils/common';
 
 const titles = [
@@ -127,19 +123,19 @@ const writers = [
 
 const releases = [
   {
-    date: dayjs('05-10-1999', 'DD-MM-YYYY').format('DD MMMM YYYY'),
+    date: '05-10-1999',
     releaseCountry: 'Finland',
   },
   {
-    date: dayjs('10 04 2000', 'DD-MM-YYYY').format('DD MMMM YYYY'),
+    date: '10-04-2000',
     releaseCountry: 'USA',
   },
   {
-    date: dayjs('17 02 1945', 'DD-MM-YYYY').format('DD MMMM YYYY'),
+    date: '17-02-1945',
     releaseCountry: 'Russia',
   },
   {
-    date: dayjs('28 03 1938', 'DD-MM-YYYY').format('DD MMMM YYYY'),
+    date: '28-03-1938',
     releaseCountry: 'France',
   },
 ];

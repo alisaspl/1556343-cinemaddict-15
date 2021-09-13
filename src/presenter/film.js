@@ -19,6 +19,7 @@ class Film {
 
     this._closeByEscape = this._closeByEscape.bind(this);
     this._submitComment = this._submitComment.bind(this);
+    this._deleteCommentCallback = this._deleteCommentCallback.bind(this);
     this._filmCommentsChange = filmCommentsChangeCallback;
   }
 
@@ -41,6 +42,7 @@ class Film {
       this._callCalback.bind(this, 'filmCardDetails', 'isInWatchList'),
       this._callCalback.bind(this, 'filmCardDetails', 'isWatched'),
       this._callCalback.bind(this, 'filmCardDetails', 'isFavorite'),
+      this._deleteCommentCallback,
     );
 
     utilsRender.renderView(document.body, this.filmCardDetails);
@@ -97,6 +99,15 @@ class Film {
         this.filmCardDetails.getElement().scroll({ top: scrollVal });
       }
     }
+  }
+
+  _deleteCommentCallback(commentToDelete) {
+    this._film.comments.splice(commentToDelete, 1);
+    this._filmCommentsChange(this._film.comments.length);
+
+    const scrollVal = this.filmCardDetails.getElement().scrollTop;
+    this.filmCardDetails.updateData();
+    this.filmCardDetails.getElement().scroll({ top: scrollVal });
   }
 
 }

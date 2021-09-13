@@ -6,13 +6,14 @@ import FilmCommentsView from '../view/film-comments';
 import FilmCommentView from '../view/film-comment';
 
 class FilmDetails extends SmartView {
-  constructor(film, closeCallback, addToWatchListCallback, markAsWatchedCallback, favoriteCallback) {
+  constructor(film, closeCallback, addToWatchListCallback, markAsWatchedCallback, favoriteCallback, onDeleteCommentCallback) {
     super();
     this._film = film;
     this._closeCallback = closeCallback;
     this._addToWatchListCallback = addToWatchListCallback;
     this._markAsWatchedCallback = markAsWatchedCallback;
     this._favoriteCallback = favoriteCallback;
+    this._onDeleteCommentCallback = onDeleteCommentCallback;
 
     this._isInWatchListButton = null;
     this._isWatchedButton = null;
@@ -97,7 +98,7 @@ class FilmDetails extends SmartView {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Release Date</td>
-                    <td class="film-details__cell">${this._film.release.date}</td>
+                    <td class="film-details__cell">${utils.formatDate(this._film.release.date)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Runtime</td>
@@ -159,8 +160,9 @@ class FilmDetails extends SmartView {
       );
 
       const commentsContainer = this.commentsView.getElement().querySelector('.film-details__comments-list');
-      for(const comment of this._film.comments) {
-        this.commentView.push(new FilmCommentView(comment));
+      for(let i = 0; i < this._film.comments.length; i++) {
+        const comment = this._film.comments[i];
+        this.commentView.push(new FilmCommentView(comment, i, this._onDeleteCommentCallback));
         utilsRender.renderView(commentsContainer, this.commentView[this.commentView.length - 1]);
       }
     }
