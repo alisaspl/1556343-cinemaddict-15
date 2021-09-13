@@ -125,6 +125,17 @@ class FilmList {
     this._renderMenu();
   }
 
+  _onFilmCommentsChange(film, value) {
+    this._view.mostCommented.removeElement();
+    this._renderMostCommented();
+    for(const key of this._filmPresenters.keys()) {
+      const presenter = this._filmPresenters.get(key);
+      if(key.id === film.id) {
+        presenter.filmCard.changeCommentsLength(value);
+      }
+    }
+  }
+
   _renderFilmCard(film, view) {
     this._filmPresenters.set(
       {id: film.id, view},
@@ -134,6 +145,7 @@ class FilmList {
         this._onFilmPropertyChange.bind(this, film, 'isInWatchList'),
         this._onFilmPropertyChange.bind(this, film, 'isWatched'),
         this._onFilmPropertyChange.bind(this, film, 'isFavorite'),
+        this._onFilmCommentsChange.bind(this, film),
       ),
     );
   }

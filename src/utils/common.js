@@ -1,3 +1,9 @@
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(customParseFormat);
+dayjs.extend(duration);
+
 const sortBy = function (data, sortByFunction){
   const dataToSort = [...data];
 
@@ -34,9 +40,21 @@ const getRandomUniqArray = (data) => {
 
 const getRandomElementFromArray = (data) => data[getRandomInteger(0, data.length - 1)];
 
-const formatDate = (runtime) => ({
-  hours: Math.trunc(runtime/60),
-  minutes: runtime%60,
-});
+const formatTime = (runtime) => {
+  const hours = Math.trunc(dayjs.duration({ minutes: runtime }).asHours());
+  let time = '';
 
-export default { formatDate, sortBy, getRandomInteger, getRandomUniqArray, getRandomElementFromArray };
+  if(hours > 0) {
+    time += `${hours}h `;
+    runtime -= hours*60;
+  }
+  if(runtime !== 0) {
+    time += `${runtime}m`;
+  }
+
+  return time;
+};
+
+const formatDate = (releaseDate) => dayjs(releaseDate, 'DD-MM-YYYY').format('DD MMMM YYYY');
+
+export default { formatTime, formatDate, sortBy, getRandomInteger, getRandomUniqArray, getRandomElementFromArray };

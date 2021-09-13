@@ -4,6 +4,7 @@ class FilmComments extends AbstractView {
   constructor(comments) {
     super();
     this._comments = comments;
+    this._onEmojiClick = this._onEmojiClick.bind(this);
   }
 
   getTemplate() {
@@ -45,6 +46,59 @@ class FilmComments extends AbstractView {
       </section>
     `;
   }
+
+  getElement() {
+    super.getElement();
+
+    this._emojies = this._element.querySelectorAll('.film-details__emoji-item');
+    for(const emoji of this._emojies) {
+      emoji.addEventListener('click', this._onEmojiClick);
+    }
+    this._emojiAddContainer = this._element.querySelector('.film-details__add-emoji-label');
+
+    return this._element;
+  }
+
+  removeElement() {
+    for(const emoji of this._emojies) {
+      emoji.removeEventListener('click', this._onEmojiClick);
+    }
+    super.removeElement();
+  }
+
+  addComment() {
+    const commentText = this.getElement().querySelector('.film-details__comment-input').value;
+    const commentEmojiElement = this.getElement().querySelector('.film-details__comment-input-img');
+
+    if(commentText.trim() === '' || !commentEmojiElement) {
+      return;
+    }
+
+    return {
+      text: commentText,
+      name: commentEmojiElement.value,
+      src: commentEmojiElement.src.replace(/.*\/images/, 'images'),
+    };
+  }
+
+  _onEmojiClick(evt) {
+    evt.currentTarget.checked = 'checked';
+
+    const imgElement = this._element.querySelector(`label[for=${evt.currentTarget.id}]`).querySelector('img');
+    const newImgElement = document.createElement('img');
+    newImgElement.width = 50;
+    newImgElement.height = 50;
+    newImgElement.src = imgElement.src;
+    newImgElement.alt = imgElement.alt;
+    newImgElement.classList.add('film-details__comment-input-img');
+    newImgElement.value = evt.currentTarget.value;
+
+    if(this._emojiAddContainer.lastChild) {
+      this._emojiAddContainer.removeChild(this._emojiAddContainer.lastChild);
+    }
+    this._emojiAddContainer.appendChild(newImgElement);
+  }
+
 }
 
 export default FilmComments;

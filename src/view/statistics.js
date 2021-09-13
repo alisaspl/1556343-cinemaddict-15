@@ -6,6 +6,7 @@ class Statistics extends AbstractView {
     this._user = user;
     this._userFilmsStat = userFilmsStat;
     this._menu = menu;
+    this._timeFormatRe = /([hm])/g;
   }
 
   getTemplate() {
@@ -48,8 +49,7 @@ class Statistics extends AbstractView {
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Total duration</h4>
-            <p class="statistic__item-text">${this._userFilmsStat.runtime.hours} <span class="statistic__item-description">h</span> ${this._userFilmsStat.runtime.minutes} <span
-                class="statistic__item-description">m</span></p>
+            <p class="statistic__item-text">${this._userFilmsStat.runtime.replace(this._timeFormatRe, '<span class="statistic__item-description">$1</span>')}</p>
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Top genre</h4>

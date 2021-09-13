@@ -1,4 +1,5 @@
 import AbstractView from './abstract';
+import utils from '../utils/common';
 
 class FilmCard extends AbstractView {
   constructor(film, showFilmDetailsCallback, addToWatchListCallback, markAsWatchedCallback, favoriteCallback) {
@@ -41,6 +42,10 @@ class FilmCard extends AbstractView {
     this._dynamicSetter('isFavorite', value);
   }
 
+  changeCommentsLength(value) {
+    this._element.querySelector('.film-card__comments').innerText = `${value} comments`;
+  }
+
   _dynamicSetter(property, value) {
     this._film[property] = !!value;
     if(this._film[property]){
@@ -56,13 +61,13 @@ class FilmCard extends AbstractView {
         <h3 class="film-card__title">${this._film.title}</h3>
         <p class="film-card__rating">${this._film.totalRating}</p>
         <p class="film-card__info">
-          <span class="film-card__year">${this._film.release.date.split(' ')[2]}</span>
-          <span class="film-card__duration">${this._film.runtime.hours > 0 ? `${this._film.runtime.hours}h` : ''} ${this._film.runtime.minutes}m</span>
+          <span class="film-card__year">${utils.formatDate(this._film.release.date).split(' ')[2]}</span>
+          <span class="film-card__duration">${utils.formatTime(this._film.runtime)}</span>
           <span class="film-card__genre">${this._film.genres[0]}</span>
         </p>
         <img src="./${this._film.poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${this._film.description.length > 140 ? `${this._film.description.slice(0, 139)}...` : this._film.description}</p>
-        <a class="film-card__comments">${this._film.comments.length} comments</a>
+        <a class="film-card__comments"></a>
         <div class="film-card__controls">
           <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
           <button class="film-card__controls-item film-card__controls-item--mark-as-watched" type="button">Mark as watched</button>
@@ -91,6 +96,8 @@ class FilmCard extends AbstractView {
       this._isInWatchListButton.addEventListener('click', this._addToWatchListCallback);
       this._isWatchedButton.addEventListener('click', this._markAsWatchedCallback);
       this._isFavoriteButton.addEventListener('click', this._favoriteCallback);
+
+      this.changeCommentsLength(this._film.comments.length);
     }
     return this._element;
   }

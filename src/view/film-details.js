@@ -1,19 +1,26 @@
-import AbstractView from './abstract';
+import utils from '../utils/common';
+import utilsRender from '../utils/render';
 
-class FilmDetails extends AbstractView {
-  constructor(film, closeCallback, addToWatchListCallback, markAsWatchedCallback, favoriteCallback) {
+import SmartView from './smart';
+import FilmCommentsView from '../view/film-comments';
+import FilmCommentView from '../view/film-comment';
+
+class FilmDetails extends SmartView {
+  constructor(film, closeCallback, addToWatchListCallback, markAsWatchedCallback, favoriteCallback, onDeleteCommentCallback) {
     super();
     this._film = film;
     this._closeCallback = closeCallback;
     this._addToWatchListCallback = addToWatchListCallback;
     this._markAsWatchedCallback = markAsWatchedCallback;
     this._favoriteCallback = favoriteCallback;
-    this.removeElement = this.removeElement.bind(this);
-
+    this._onDeleteCommentCallback = onDeleteCommentCallback;
 
     this._isInWatchListButton = null;
     this._isWatchedButton = null;
     this._isFavoriteButton = null;
+
+    this.commentsView = null;
+    this.commentView = [];
   }
 
   get isInWatchList() {
@@ -91,11 +98,11 @@ class FilmDetails extends AbstractView {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Release Date</td>
-                    <td class="film-details__cell">${this._film.release.date}</td>
+                    <td class="film-details__cell">${utils.formatDate(this._film.release.date)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Runtime</td>
-                    <td class="film-details__cell">${this._film.runtime.hours > 0 ? `${this._film.runtime.hours}h` : ''} ${this._film.runtime.minutes}m</td>
+                    <td class="film-details__cell">${utils.formatTime(this._film.runtime)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Country</td>
@@ -140,26 +147,48 @@ class FilmDetails extends AbstractView {
       this._isFavoriteButton = this._element.querySelector('#favorite');
       this.isFavorite = this._film.isFavorite;
 
-      this._element.querySelector('.film-details__close').addEventListener('click', this.removeElement);
+      this._element.querySelector('.film-details__close').addEventListener('click', this._closeCallback);
 
       this._isInWatchListButton.addEventListener('click', this._addToWatchListCallback);
       this._isWatchedButton.addEventListener('click', this._markAsWatchedCallback);
       this._isFavoriteButton.addEventListener('click', this._favoriteCallback);
+
+      this.commentsView = new FilmCommentsView(this._film.comments);
+      utilsRender.renderView(
+        this._element.querySelector('.film-details__bottom-container'),
+        this.commentsView,
+      );
+
+      const commentsContainer = this.commentsView.getElement().querySelector('.film-details__comments-list');
+      for(let i = 0; i < this._film.comments.length; i++) {
+        const comment = this._film.comments[i];
+        this.commentView.push(new FilmCommentView(comment, i, this._onDeleteCommentCallback));
+        utilsRender.renderView(commentsContainer, this.commentView[this.commentView.length - 1]);
+      }
     }
 
     return this._element;
   }
 
   removeElement() {
-    this._element.querySelector('.film-details__close').removeEventListener('click', this.removeElement);
+    for(const commentView of this.commentView) {
+      commentView.removeElement();
+    }
+    this.commentView = [];
+    this.commentsView.removeElement();
+
+    this._element.querySelector('.film-details__close').removeEventListener('click', this._closeCallback);
 
     this._isInWatchListButton.removeEventListener('click', this._addToWatchListCallback);
     this._isWatchedButton.removeEventListener('click', this._markAsWatchedCallback);
     this._isFavoriteButton.removeEventListener('click', this._favoriteCallback);
 
     super.removeElement();
-    this._closeCallback();
   }
+
+  restoreHandlers() {
+  }
+
 }
 
 export default FilmDetails;
