@@ -1,15 +1,15 @@
 import utils from '../utils/common';
 import utilsRender from '../utils/render';
-
+import { sortMenuData } from '../mocks';
 import StatisticsView from '../view/statistics';
 
 class Statistics {
-  constructor(container, user, films, menu){
+  constructor(container, user, films){
     this._container = container;
     this._data = {
       user,
       films,
-      menu,
+      menu: sortMenuData,
     };
     this._view = null;
 

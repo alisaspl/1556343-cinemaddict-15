@@ -3,113 +3,72 @@ import utils from '../utils/common';
 import utilsRender from '../utils/render';
 
 import FilmPresenter from './film';
-import StatisticsPresenter from './statistics';
 
-import EmptyView from '../view/empty';
 import FilmListView from '../view/film-list';
-import MenuView from '../view/menu';
 import SortMenuView from '../view/sort-menu';
 import FilmExtraTopRatedView from '../view/film-extra-top-rated';
 import FilmExtraMostCommentedView from '../view/film-extra-most-commented';
 import ShowMoreButtonView from '../view/show-more-button';
 
+import { sortMenuData } from '../mocks';
+
 class FilmList {
-  constructor(container) {
+  constructor(container, rerenderMenuCallback) {
     this._container = container;
+    this._rerenderMenuCallback = rerenderMenuCallback;
 
     this._data = {
       films: null,
       filmsCopy: null,
-      menu: null,
       sortMenu: null,
-      user: null,
-      filmStatistics: null,
     };
 
     this._view = {
-      empty: null,
-      menu: null,
       sortMenu: null,
       filmList: null,
       filmCard: null,
       topRated: null,
       mostCommented: null,
       showMoreButton: null,
-      statistics: null,
     };
 
     this._filmPresenters = new Map();
-    this._statisticsPresenter = null;
 
     this._lastFilmIndex = 0;
   }
 
-  init(films, menu, sortMenu, user, filmStatistics){
+  init(films){
     this._data = {
       films,
       filmsCopy: [...films],
-      menu,
-      sortMenu,
-      user,
-      filmStatistics,
+      sortMenu: sortMenuData,
     };
-    this._renderMenu();
+
+    this._data.sortMenu.selected = 'default';
+
     this._rerenderFilms();
   }
 
-  _getSelectedMenu() {
-    for(const menu of this._data.menu) {
-      if(menu.selected) {
-        return menu;
+  remove() {
+    this._lastFilmIndex = 0;
+    for(const key in this._view) {
+      if(this._view[key] !== null) {
+        this._view[key].removeElement();
       }
     }
   }
 
   _rerenderFilms() {
+    this.remove();
+
     this._data.filmsCopy = [...this._data.films];
-    const menu = this._getSelectedMenu();
 
-    switch(menu.type) {
-      case 'watchlist':
-        this._data.filmsCopy = this._data.filmsCopy.filter((element) => !!element.isInWatchList);
-        break;
-      case 'history':
-        this._data.filmsCopy = this._data.filmsCopy.filter((element) => !!element.isWatched);
-        break;
-      case 'favorites':
-        this._data.filmsCopy = this._data.filmsCopy.filter((element) => !!element.isFavorite);
-        break;
-    }
-
-    if(!this._data.filmsCopy || this._data.filmsCopy.length === 0) {
-      this._renderEmpty();
-    } else {
-      this._clearMainContainer();
-
-      if(menu.type === 'stats') {
-        this._renderStatistics();
-      } else {
-        this._renderSortMenu();
-        this._renderFilmList();
-        this._renderShowMoreButton();
-        this._renderNextElements();
-        this._renderTopRated();
-        this._renderMostCommented();
-      }
-    }
-  }
-
-  _clearMainContainer() {
-    this._lastFilmIndex = 0;
-    for(const key in this._view) {
-      if(this._view[key] !== null && key !== 'menu') {
-        this._view[key].removeElement();
-      }
-    }
-    if(this._statisticsPresenter !== null) {
-      this._statisticsPresenter.remove();
-      this.StatisticsPresenter = null;
-    }
+    this._renderSortMenu();
+    this._renderFilmList();
+    this._renderShowMoreButton();
+    this._renderNextElements();
+    this._renderTopRated();
+    this._renderMostCommented();
   }
 
   _onFilmPropertyChange(film, property, value) {
@@ -122,7 +81,7 @@ class FilmList {
         }
       }
     }
-    this._renderMenu();
+    this._rerenderMenuCallback();
   }
 
   _onFilmCommentsChange(film, value) {
@@ -148,77 +107,6 @@ class FilmList {
         this._onFilmCommentsChange.bind(this, film),
       ),
     );
-  }
-
-  _renderEmpty() {
-    this._clearMainContainer();
-    this._view.empty = new EmptyView(this._getSelectedMenu());
-    utilsRender.renderView(this._container, this._view.empty);
-  }
-
-  _renderMenu() {
-    if(this._view.menu !== null) {
-      this._view.menu.removeElement();
-    }
-    const stat = {
-      favorites: 0,
-      watchlist: 0,
-      watched: 0,
-    };
-    for(const film of this._data.films) {
-      if(film.isInWatchList) {
-        stat.watchlist++;
-      }
-      if(film.isWatched) {
-        stat.watched++;
-      }
-      if(film.isFavorite) {
-        stat.favorites++;
-      }
-    }
-
-    const selectedMenu = this._getSelectedMenu();
-
-    this._view.menu = new MenuView(selectedMenu, stat);
-    this._view.menu.addListener(
-      (menuType) => {
-        for(const menu of this._data.menu) {
-          if(menu.type === menuType) {
-            menu.selected = true;
-          } else {
-            menu.selected = false;
-          }
-        }
-
-        this._renderMenu();
-
-        this._data.sortMenu.selected = 'default';
-
-        switch(menuType) {
-          case 'stats':
-            this._clearMainContainer();
-            this._renderStatistics();
-            break;
-          case 'allMovies':
-            this._rerenderFilms();
-            break;
-          case 'watchlist':
-            this._rerenderFilms();
-            break;
-          case 'history':
-            this._rerenderFilms();
-            break;
-          case 'favorites':
-            this._rerenderFilms();
-            break;
-        }
-      },
-    );
-    utilsRender.renderView(this._container, this._view.menu, utilsRender.RenderPosition.AFTERBEGIN);
-  }
-
-  _renderStatistics() {
-    this._statisticsPresenter = new StatisticsPresenter(this._container, this._data.user, this._data.films, this._data.filmStatistics.selectedMenu);
   }
 
   _renderSortMenu() {

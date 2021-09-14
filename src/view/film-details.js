@@ -98,7 +98,7 @@ class FilmDetails extends SmartView {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Release Date</td>
-                    <td class="film-details__cell">${utils.formatDate(this._film.release.date)}</td>
+                    <td class="film-details__cell">${this._film.release.date}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Runtime</td>

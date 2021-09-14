@@ -1,15 +1,28 @@
-import FilmsStatisticsView from './view/films-statistics';
-import UserProfileView from './view/user-profile';
-import { filmListData, menuData, sortMenuData, filmsStatisticsData, userData } from './mocks.js';
 import utilsRender from './utils/render';
 
-import FilmListPresenter from './presenter/film-list';
+import MenuPresenter from './presenter/menu';
+
+import MenuModel from './model/menu';
+import UserModel from './model/user';
+import FilmsModel from './model/films';
+
+import FilmsStatisticsView from './view/films-statistics';
+import UserProfileView from './view/user-profile';
+
+import { filmListData, menuData, filmsStatisticsData, userData } from './mocks.js';
 
 const mainContainer = document.querySelector('.main');
 
 utilsRender.renderView(document.querySelector('.header'), new UserProfileView(userData));
 utilsRender.renderView(document.querySelector('.footer__statistics'), new FilmsStatisticsView(filmsStatisticsData));
 
-const filmListPresenter = new FilmListPresenter(mainContainer);
+const menuModel = new MenuModel();
+menuModel.setMenu(menuData);
 
-filmListPresenter.init(filmListData, menuData, sortMenuData, userData, filmsStatisticsData);
+const userModel = new UserModel();
+userModel.setUser(userData);
+
+const filmsModel = new FilmsModel();
+filmsModel.setFilms(filmListData);
+
+new MenuPresenter(mainContainer, menuModel, filmsModel, userModel);

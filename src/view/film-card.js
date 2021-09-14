@@ -61,7 +61,7 @@ class FilmCard extends AbstractView {
         <h3 class="film-card__title">${this._film.title}</h3>
         <p class="film-card__rating">${this._film.totalRating}</p>
         <p class="film-card__info">
-          <span class="film-card__year">${utils.formatDate(this._film.release.date).split(' ')[2]}</span>
+          <span class="film-card__year">${this._film.release.date.split(' ')[2]}</span>
           <span class="film-card__duration">${utils.formatTime(this._film.runtime)}</span>
           <span class="film-card__genre">${this._film.genres[0]}</span>
         </p>
