@@ -38,7 +38,6 @@ class Films extends AbstractObserver {
         break;
       }
     }
-    console.log(222)
     this._notify(Films.CHANGE_EVENT, { filmId, property, value });
   }
 }

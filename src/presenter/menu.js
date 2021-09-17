@@ -74,7 +74,7 @@ class Menu {
     this._filmsPresenter = new FilmListPresenter(
       this._container,
       this._filmsModel,
-      this._menuModel.getSelected().type,
+      this._menuModel,
       this._renderMenu.bind(this),
     );
   }

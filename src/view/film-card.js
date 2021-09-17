@@ -42,6 +42,10 @@ class FilmCard extends AbstractView {
     this._dynamicSetter('isFavorite', value);
   }
 
+  get id() {
+    return this._film.id;
+  }
+
   changeCommentsLength(value) {
     this._element.querySelector('.film-card__comments').innerText = `${value} comments`;
   }
@@ -102,9 +106,11 @@ class FilmCard extends AbstractView {
   }
 
   removeElement() {
-    this._detailsViewOpenElements.forEach((element) =>
-      this._element.querySelector(element).removeEventListener('click', this._showFilmDetails),
-    );
+    if(this._element !== null) {
+      this._detailsViewOpenElements.forEach((element) =>
+        this._element.querySelector(element).removeEventListener('click', this._showFilmDetails),
+      );
+    }
     this._isInWatchListButton.removeEventListener('click', this._addToWatchListCallback);
     this._isWatchedButton.removeEventListener('click', this._markAsWatchedCallback);
     this._isFavoriteButton.removeEventListener('click', this._favoriteCallback);

@@ -52,6 +52,10 @@ const formatTime = (runtime) => {
     time += `${runtime}m`;
   }
 
+  if(time === '') {
+    time = '0m';
+  }
+
   return time;
 };
 
