@@ -32,7 +32,7 @@ class Menu {
       this._emptyView = null;
     }
     if(this._filmsPresenter !== null) {
-      this._filmsPresenter.remove();
+      this._filmsPresenter.remove(true);
       this._filmsPresenter = null;
     }
     if(this._statisticsPresenter !== null) {
@@ -70,12 +70,13 @@ class Menu {
     utilsRender.renderView(this._container, this._menuView, utilsRender.RenderPosition.AFTERBEGIN);
   }
 
-  _renderFilms(films) {
+  _renderFilms() {
     this._filmsPresenter = new FilmListPresenter(
       this._container,
-      this._onMenuChange.bind(this, this._menuModel.getSelected().type),
+      this._filmsModel,
+      this._menuModel.getSelected().type,
+      this._renderMenu.bind(this),
     );
-    this._filmsPresenter.init(films);
   }
 
   _renderEmpty() {
@@ -97,11 +98,10 @@ class Menu {
       return;
     }
 
-    const films = this._filmsModel.getFilms(menuType);
-    if(films.length === 0) {
+    if(this._filmsModel.getFilms(menuType).length === 0) {
       this._renderEmpty();
     } else {
-      this._renderFilms(films);
+      this._renderFilms();
     }
 
   }

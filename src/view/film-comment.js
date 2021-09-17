@@ -1,3 +1,4 @@
+import he from 'he';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
@@ -21,7 +22,7 @@ class FilmComment extends AbstractView {
           <img src="./${this._comment.emoji.src}" width="55" height="55" alt="emoji-${this._comment.emoji.name}">
         </span>
         <div>
-          <p class="film-details__comment-text">${this._comment.text}</p>
+          <p class="film-details__comment-text">${he.escape(this._comment.text)}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${this._comment.author}</span>
             <span class="film-details__comment-day">${dayjs().from(dayjs(this._comment.date))}</span>

@@ -46,8 +46,7 @@ class FilmCard extends AbstractView {
     this._element.querySelector('.film-card__comments').innerText = `${value} comments`;
   }
 
-  _dynamicSetter(property, value) {
-    this._film[property] = !!value;
+  _dynamicSetter(property) {
     if(this._film[property]){
       this[`_${property}Button`].classList.add('film-card__controls-item--active');
     } else {

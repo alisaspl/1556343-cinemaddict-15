@@ -2,18 +2,21 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
-class Films {
+import AbstractObserver from '../utils/abstract-observer.js';
+
+class Films extends AbstractObserver {
   constructor() {
+    super();
     this._films = null;
   }
 
   getFilms(filter) {
     switch(filter) {
-      case 'watchlist':
+      case 'isInWatchList':
         return this._films.filter((element) => !!element.isInWatchList);
-      case 'history':
+      case 'isWatched':
         return this._films.filter((element) => !!element.isWatched);
-      case 'favorites':
+      case 'isFavorite':
         return this._films.filter((element) => !!element.isFavorite);
     }
 
@@ -28,7 +31,18 @@ class Films {
     }
   }
 
-  updateFilm() {}
+  updateFilm(filmId, property, value) {
+    for(const film of this._films) {
+      if(film.id === filmId) {
+        film[property] = value;
+        break;
+      }
+    }
+    console.log(222)
+    this._notify(Films.CHANGE_EVENT, { filmId, property, value });
+  }
 }
+
+Films.CHANGE_EVENT = Symbol('single film change event');
 
 export default Films;

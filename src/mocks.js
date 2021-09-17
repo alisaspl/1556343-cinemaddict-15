@@ -146,15 +146,15 @@ const mainMenuTitles = [
     emptyText: 'There are no movies in our database',
   },
   {
-    type: 'watchlist',
+    type: 'isInWatchList',
     emptyText: 'There are no movies to watch now',
   },
   {
-    type: 'history',
+    type: 'isWatched',
     emptyText: 'There are no watched movies now',
   },
   {
-    type: 'favorites',
+    type: 'isFavorite',
     emptyText: 'There are no favorite movies now',
   },
   {
@@ -220,7 +220,7 @@ const generateFilmData = () => ({
   ageRating: utils.getRandomInteger(0, 18),
 });
 
-const filmListData = new Array(12).fill().map(() => generateFilmData());
+const filmListData = new Array(22).fill().map(() => generateFilmData());
 
 const userData =  {
   avatar:  `images/${utils.getRandomElementFromArray(userAvatars)}`,

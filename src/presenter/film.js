@@ -3,7 +3,7 @@ import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/film-details';
 
 class Film {
-  constructor(container, film, isInWatchListCallback, isWatchedCallback, isFavoriteCallback, filmCommentsChangeCallback) {
+  constructor(container, film, isInWatchListCallback, isWatchedCallback, isFavoriteCallback, filmCommentsChangeCallback, renderAtIndex) {
     this._film = film;
     this._container = container;
     this._callbacks = {
@@ -15,7 +15,7 @@ class Film {
     this.filmCard = null;
     this.filmCardDetails = null;
 
-    this._renderFilmCard();
+    this.renderFilmCard(renderAtIndex);
 
     this._closeByEscape = this._closeByEscape.bind(this);
     this._submitComment = this._submitComment.bind(this);
@@ -24,17 +24,27 @@ class Film {
   }
 
   _callCalback(view, property) {
-    this[view][property] = !this._film[property];
-    this._callbacks[property](this[view][property]);
+    // FIXME change model here
+    // this[view][property] = this._film[property] = !this._film[property];
+    this._callbacks[property](!this._film[property]);
   }
 
-  _renderFilmCard() {
+  renderFilmCard(renderAtIndex) {
     this.filmCard = new FilmCardView(this._film, this._showFilmDetails.bind(this),
       this._callCalback.bind(this, 'filmCard', 'isInWatchList'),
       this._callCalback.bind(this, 'filmCard', 'isWatched'),
       this._callCalback.bind(this, 'filmCard', 'isFavorite'),
     );
-    utilsRender.renderView(this._container, this.filmCard);
+    if(renderAtIndex === 0){
+      utilsRender.renderView(this._container, this.filmCard, utilsRender.RenderPosition.AFTERBEGIN);
+    } else if(!renderAtIndex) {
+      utilsRender.renderView(this._container, this.filmCard);
+    } else {
+      const element = this._container.querySelectorAll('article')[renderAtIndex-1];
+      if(element) {
+        element.parentNode.insertBefore(this.filmCard.getElement(), element.nextSibling);
+      }
+    }
   }
 
   _showFilmDetails() {

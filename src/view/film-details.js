@@ -47,8 +47,7 @@ class FilmDetails extends SmartView {
     this._dynamicSetter('isFavorite', value);
   }
 
-  _dynamicSetter(property, value) {
-    this._film[property] = !!value;
+  _dynamicSetter(property) {
     if(this._film[property]){
       this[`_${property}Button`].classList.add('film-details__control-button--active');
     } else {
