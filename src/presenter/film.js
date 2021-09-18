@@ -23,17 +23,15 @@ class Film {
     this._filmCommentsChange = filmCommentsChangeCallback;
   }
 
-  _callCalback(view, property) {
-    // FIXME change model here
-    // this[view][property] = this._film[property] = !this._film[property];
+  _callCalback(property) {
     this._callbacks[property](!this._film[property]);
   }
 
   renderFilmCard(renderAtIndex) {
     this.filmCard = new FilmCardView(this._film, this._showFilmDetails.bind(this),
-      this._callCalback.bind(this, 'filmCard', 'isInWatchList'),
-      this._callCalback.bind(this, 'filmCard', 'isWatched'),
-      this._callCalback.bind(this, 'filmCard', 'isFavorite'),
+      this._callCalback.bind(this, 'isInWatchList'),
+      this._callCalback.bind(this, 'isWatched'),
+      this._callCalback.bind(this, 'isFavorite'),
     );
     if(renderAtIndex === 0){
       utilsRender.renderView(this._container, this.filmCard, utilsRender.RenderPosition.AFTERBEGIN);
@@ -119,6 +117,6 @@ class Film {
     this.filmCardDetails.updateData();
     this.filmCardDetails.getElement().scroll({ top: scrollVal });
   }
-
 }
+
 export default Film;

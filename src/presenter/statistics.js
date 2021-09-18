@@ -25,6 +25,7 @@ class Statistics {
       runtime: 0,
       genres: {},
       topGenre: '',
+      sortedGenresStatistics: [],
     };
 
     for(const film of this._data.films) {
@@ -37,23 +38,34 @@ class Statistics {
       }
       if(film.isFavorite) {
         userFilmsStatistics.favorites++;
+      }
 
-        for(const genre of film.genres){
-          if(userFilmsStatistics.genres[genre]) {
-            userFilmsStatistics.genres[genre]++;
-          } else {
-            userFilmsStatistics.genres[genre] = 1;
-          }
+      for(const genre of film.genres){
+        if(userFilmsStatistics.genres[genre]) {
+          userFilmsStatistics.genres[genre]++;
+        } else {
+          userFilmsStatistics.genres[genre] = 1;
         }
       }
     }
+
     userFilmsStatistics.runtime = utils.formatTime(userFilmsStatistics.runtime);
-    const maxGenresValue = Math.max(...Object.values(userFilmsStatistics.genres));
+
     for(const key in userFilmsStatistics.genres) {
-      if(userFilmsStatistics.genres[key] === maxGenresValue) {
-        userFilmsStatistics.topGenre = key;
-      }
+      userFilmsStatistics.sortedGenresStatistics.push({
+        key,
+        value: userFilmsStatistics.genres[key],
+      });
     }
+    userFilmsStatistics.sortedGenresStatistics.sort((a, b) => {
+      if(a.value < b.value) {
+        return 1;
+      } else if(a.value > b.value) {
+        return -1;
+      }
+      return 0;
+    });
+    userFilmsStatistics.topGenre = userFilmsStatistics.sortedGenresStatistics[0].key;
 
     return userFilmsStatistics;
   }

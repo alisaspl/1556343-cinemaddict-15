@@ -63,22 +63,21 @@ class FilmList {
     }
   }
 
-  // FIXME name
   _onFilmPropertyChange(film, property, value) {
     this._filmModel.updateFilm(film.id, property, value);
   }
 
-  _onFilmDataChange(event, payload) {
+  _onFilmDataChange(event, eventPayload) {
     if(event === FilmModel.CHANGE_EVENT) {
       const presenters = [];
       for(const key of this._filmPresenters.keys()) {
         const presenter = this._filmPresenters.get(key);
-        if(key.id === payload.filmId) {
-          presenters.push({ presenter, payload, type: key.type });
+        if(key.id === eventPayload.filmId) {
+          presenters.push({ presenter, payload: eventPayload, type: key.type });
         }
       }
 
-      for(const { presenter, payload, type } of presenters) {
+      for(const { presenter, payload } of presenters) {
         if(presenter.filmCard !== null) {
           presenter.filmCard[payload.property] = payload.value;
         }
@@ -94,11 +93,11 @@ class FilmList {
         this._sortFilms();
       }
 
-      if(payload.property === this._filter) {
-        if(payload.value === true) {
-          this._addFilm(payload.filmId);
-        } else if(payload.value === false) {
-          this._removeFilm(payload.filmId);
+      if(eventPayload.property === this._filter) {
+        if(eventPayload.value === true) {
+          this._addFilm(eventPayload.filmId);
+        } else if(eventPayload.value === false) {
+          this._removeFilm(eventPayload.filmId);
         }
       }
 
@@ -112,7 +111,6 @@ class FilmList {
 
   _addFilm(filmId) {
     this._removeEmpty();
-    console.log('add film id ', filmId)
 
     const filmIndex = this._films.findIndex((film) => film.id === filmId);
     if(filmIndex === 0 || filmIndex <= this._lastFilmIndex) {
@@ -121,7 +119,7 @@ class FilmList {
       if(this._lastFilmIndex % config.FILMS_IN_LINE === 0 && filmIndex !== 0) {
         needRenderCard = false;
 
-        let presentersToDelete = {};
+        const presentersToDelete = {};
         for(const key of this._filmPresenters.keys()) {
           const presenter = this._filmPresenters.get(key);
           if(key.type === 'film_list' && presenter.filmCard !== null) {
@@ -131,8 +129,8 @@ class FilmList {
         }
 
         const indexToDelete = Math.max(
-          ...Object.keys(presentersToDelete).map((element) => parseInt(element, 10))
-        )
+          ...Object.keys(presentersToDelete).map((element) => parseInt(element, 10)),
+        );
         const presenterToDelete = presentersToDelete[indexToDelete];
 
         if(filmIndex < indexToDelete && presenterToDelete && presenterToDelete.filmCard) {
@@ -154,11 +152,6 @@ class FilmList {
   }
 
   _removeFilm(filmId) {
-    // if(type != 'film_list') {
-    //   return;
-    // }
-    console.log('remove film id ', filmId)
-
     let presenterToDelete = null;
     for(const key of this._filmPresenters.keys()) {
       const presenter = this._filmPresenters.get(key);
@@ -167,12 +160,10 @@ class FilmList {
       }
     }
 
-    // FIXME: why here not after this._lastFilmIndex++ this._lastFilmIndex--
     if(this._films.length === 0) {
       this._renderEmpty();
     }
 
-    // DIRTY HACK wrong presenter
     if(presenterToDelete !== null) {
       if(presenterToDelete.filmCard) {
         presenterToDelete.filmCard.removeElement();
@@ -335,7 +326,7 @@ class FilmList {
   }
 
   _renderEmpty() {
-   this. _removeEmpty();
+    this._removeEmpty();
 
     this._view.sortMenu.removeElement();
     this._view.sortMenu = null;

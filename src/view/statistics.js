@@ -1,4 +1,8 @@
+import { Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 import AbstractView from './abstract';
+import config from '../config';
 
 class Statistics extends AbstractView {
   constructor(user, userFilmsStat, menu) {
@@ -63,6 +67,31 @@ class Statistics extends AbstractView {
       </section>
     `;
   }
+
+  getElement() {
+    super.getElement();
+
+    const statisticCtx = this._element.querySelector('.statistic__chart');
+    statisticCtx.height = config.STAT_BAR_HEIGHT * 5;
+
+    new Chart(statisticCtx, {
+      plugins: [ChartDataLabels],
+      type: 'horizontalBar',
+      data: {
+        labels: this._userFilmsStat.sortedGenresStatistics.map((element) => element.key),
+        datasets: [{
+          data: this._userFilmsStat.sortedGenresStatistics.map((element) => element.value),
+          backgroundColor: '#ffe800',
+          hoverBackgroundColor: '#ffe800',
+          anchor: 'start',
+        }],
+      },
+      options: config.STAT_CHART_OPTIONS,
+    });
+
+    return this._element;
+  }
+
 }
 
 export default Statistics;
