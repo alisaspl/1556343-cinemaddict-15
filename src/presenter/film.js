@@ -76,17 +76,17 @@ class Film {
     document.body.classList.remove('hide-overflow');
   }
 
-  _closeByEscape(evt) {
-    if(evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
+  _closeByEscape(event) {
+    if(event.key === 'Escape' || event.key === 'Esc') {
+      event.preventDefault();
       if(Film.currentOpenedFilmDetailsView) {
         this._hideFilmDetails();
       }
     }
   }
 
-  _submitComment(evt) {
-    if(evt.key === 'Enter' && evt.ctrlKey) {
+  _submitComment(event) {
+    if(event.key === 'Enter' && event.ctrlKey) {
       if(this.filmCardDetails !== null) {
         const newComment = this.filmCardDetails.commentsView.addComment();
         if(!newComment) {
