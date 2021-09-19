@@ -108,7 +108,7 @@ class FilmDetails extends SmartView {
                     <td class="film-details__cell">${this._film.release.releaseCountry}</td>
                   </tr>
                   <tr class="film-details__row">
-                    <td class="film-details__term">Genres</td>
+                    <td class="film-details__term">Genre${this._film.genres.length === 1 ? '' : 's'}</td>
                     <td class="film-details__cell">
                       ${this._film.genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join('')}
                   </tr>

@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import utils from './utils/common';
 
 const titles = [
@@ -170,7 +172,7 @@ const sortMenuTitles = [
 ];
 
 const statisticsMenuTitles = [
-  'allTime',
+  'all-time',
   'today',
   'week',
   'month',
@@ -200,6 +202,8 @@ const generateFilmDescription = (sentences) => {
 
 let id = 0;
 
+const today = new Date();
+
 const generateFilmData = () => ({
   id: id++,
   title: utils.getRandomElementFromArray(titles),
@@ -217,10 +221,11 @@ const generateFilmData = () => ({
   isWatched: utils.getRandomInteger(0,1),
   isInWatchList: utils.getRandomInteger(0,1),
   isFavorite: utils.getRandomInteger(0,1),
+  watchingDate: dayjs.unix(utils.getRandomInteger(today.getTime()/1000 - 2*356*24*60*60, today.getTime()/1000)),
   ageRating: utils.getRandomInteger(0, 18),
 });
 
-const filmListData = new Array(20).fill().map(() => generateFilmData());
+const filmListData = new Array(1000).fill().map(() => generateFilmData());
 
 const userData =  {
   avatar:  `images/${utils.getRandomElementFromArray(userAvatars)}`,

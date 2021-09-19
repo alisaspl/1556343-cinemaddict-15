@@ -47,9 +47,9 @@ class Film {
 
   _showFilmDetails() {
     this.filmCardDetails = new FilmDetailsView(this._film, this._hideFilmDetails.bind(this),
-      this._callCalback.bind(this, 'filmCardDetails', 'isInWatchList'),
-      this._callCalback.bind(this, 'filmCardDetails', 'isWatched'),
-      this._callCalback.bind(this, 'filmCardDetails', 'isFavorite'),
+      this._callCalback.bind(this, 'isInWatchList'),
+      this._callCalback.bind(this, 'isWatched'),
+      this._callCalback.bind(this, 'isFavorite'),
       this._deleteCommentCallback,
     );
 

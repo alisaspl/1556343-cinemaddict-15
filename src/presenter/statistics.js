@@ -1,6 +1,8 @@
+import dayjs from 'dayjs';
+
 import utils from '../utils/common';
 import utilsRender from '../utils/render';
-import { sortMenuData } from '../mocks';
+import { filmsStatisticsData } from '../mocks';
 import StatisticsView from '../view/statistics';
 
 class Statistics {
@@ -9,17 +11,15 @@ class Statistics {
     this._data = {
       user,
       films,
-      menu: sortMenuData,
+      menu: filmsStatisticsData.selectedMenu,
     };
     this._view = null;
 
-    this._renderStatistics();
+    this._renderStatistics(this._computeStatistics(this._data.menu));
   }
 
-  _computeStatistics() {
+  _computeStatistics(filter) {
     const userFilmsStatistics = {
-      favorites: 0,
-      watchlist: 0,
       watched: 0,
       duration: 0,
       runtime: 0,
@@ -28,17 +28,24 @@ class Statistics {
       sortedGenresStatistics: [],
     };
 
+    let dateToCompare;
+    if(filter === 'today') {
+      dateToCompare = dayjs().startOf('day');
+    } else if(filter === 'week') {
+      dateToCompare = dayjs().subtract(1, 'week');
+    } else if(filter === 'month') {
+      dateToCompare = dayjs().subtract(1, 'month');
+    } else if(filter === 'year') {
+      dateToCompare = dayjs().subtract(1, 'year');
+    }
+
     for(const film of this._data.films) {
-      if(film.isInWatchList) {
-        userFilmsStatistics.watchlist++;
+      if((dateToCompare && dateToCompare.diff(film.watchingDate) >= 0) || !film.isWatched) {
+        continue;
       }
-      if(film.isWatched) {
-        userFilmsStatistics.watched++;
-        userFilmsStatistics.runtime += film.runtime;
-      }
-      if(film.isFavorite) {
-        userFilmsStatistics.favorites++;
-      }
+
+      userFilmsStatistics.watched++;
+      userFilmsStatistics.runtime += film.runtime;
 
       for(const genre of film.genres){
         if(userFilmsStatistics.genres[genre]) {
@@ -65,14 +72,22 @@ class Statistics {
       }
       return 0;
     });
-    userFilmsStatistics.topGenre = userFilmsStatistics.sortedGenresStatistics[0].key;
+    if(userFilmsStatistics.sortedGenresStatistics.length > 0) {
+      userFilmsStatistics.topGenre = userFilmsStatistics.sortedGenresStatistics[0].key;
+    }
 
     return userFilmsStatistics;
   }
 
-  _renderStatistics() {
-    this._view = new StatisticsView(this._data.user, this._computeStatistics(), this._data.menu);
+  _renderStatistics(statData) {
+    this._view = new StatisticsView(this._data.user, statData, this._data.menu, this._onFilterChange.bind(this));
     utilsRender.renderView(this._container, this._view);
+  }
+
+  _onFilterChange(filter) {
+    this._data.menu = filter;
+    this.remove();
+    this._renderStatistics(this._computeStatistics(filter));
   }
 
   remove() {
