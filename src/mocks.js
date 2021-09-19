@@ -225,7 +225,7 @@ const generateFilmData = () => ({
   ageRating: utils.getRandomInteger(0, 18),
 });
 
-const filmListData = new Array(1000).fill().map(() => generateFilmData());
+const filmListData = new Array(20).fill().map(() => generateFilmData());
 
 const userData =  {
   avatar:  `images/${utils.getRandomElementFromArray(userAvatars)}`,
