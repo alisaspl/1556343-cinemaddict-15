@@ -1,3 +1,5 @@
+import he from 'he';
+
 import utilsRender from '../utils/render';
 import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/film-details';
@@ -91,7 +93,7 @@ class Film {
           return;
         }
         this._film.comments.push({
-          text: newComment.text,
+          text: he.escape(newComment.text),
           emoji: {
             src: newComment.src,
             name: newComment.name,
