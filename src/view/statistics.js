@@ -1,12 +1,21 @@
+import { Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 import AbstractView from './abstract';
+import config from '../config';
 
 class Statistics extends AbstractView {
-  constructor(user, userFilmsStat, menu) {
+  constructor(user, userFilmsStat, menu, onFilterChangeCallback) {
     super();
     this._user = user;
     this._userFilmsStat = userFilmsStat;
     this._menu = menu;
     this._timeFormatRe = /([hm])/g;
+
+    this._filters = null;
+    this._onMenuChange = this._onMenuChange.bind(this);
+
+    this._onFilterChangeCallback = onFilterChangeCallback;
   }
 
   getTemplate() {
@@ -22,7 +31,7 @@ class Statistics extends AbstractView {
           <p class="statistic__filters-description">Show stats:</p>
 
           <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time"
-            value="all-time" ${this._menu === 'allTime' ? 'checked' : ''}>
+            value="all-time" ${this._menu === 'all-time' ? 'checked' : ''}>
           <label for="statistic-all-time" class="statistic__filters-label">All time</label>
 
           <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today"
@@ -63,6 +72,51 @@ class Statistics extends AbstractView {
       </section>
     `;
   }
+
+  getElement() {
+    super.getElement();
+
+    const statisticCtx = this._element.querySelector('.statistic__chart');
+    statisticCtx.height = config.STAT_BAR_HEIGHT * 5;
+
+    new Chart(statisticCtx, {
+      plugins: [ChartDataLabels],
+      type: 'horizontalBar',
+      data: {
+        labels: this._userFilmsStat.sortedGenresStatistics.map((element) => element.key),
+        datasets: [{
+          data: this._userFilmsStat.sortedGenresStatistics.map((element) => element.value),
+          backgroundColor: '#ffe800',
+          hoverBackgroundColor: '#ffe800',
+          anchor: 'start',
+        }],
+      },
+      options: config.STAT_CHART_OPTIONS,
+    });
+
+    this._filters = this._element.querySelectorAll('.statistic__filters-input');
+    for(const filter of this._filters) {
+      filter.addEventListener('change', this._onMenuChange);
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    if(this._element !== null) {
+      for(const filter of this._filters) {
+        filter.removeEventListener('change', this._onMenuChange);
+      }
+      super.removeElement();
+    }
+  }
+
+  _onMenuChange(event) {
+    if(event.currentTarget.checked) {
+      this._onFilterChangeCallback(event.currentTarget.value);
+    }
+  }
+
 }
 
 export default Statistics;

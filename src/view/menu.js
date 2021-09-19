@@ -25,9 +25,9 @@ class Menu extends AbstractView {
       <nav class="main-navigation">
         <div class="main-navigation__items">
           <a href="#all" data-type="allMovies" class="main-navigation__item ${this._menu.type === 'allMovies' ? 'main-navigation__item--active' : ''}">All movies</a>
-          <a href="#watchlist" data-type="watchlist" class="main-navigation__item ${this._menu.type === 'watchlist' ? 'main-navigation__item--active' : ''}">Watchlist <span class="main-navigation__item-count" >${this._stat.watchlist}</span></a>
-          <a href="#history" data-type="history" class="main-navigation__item ${this._menu.type === 'history' ? 'main-navigation__item--active' : ''}">History <span class="main-navigation__item-count" >${this._stat.watched}</span></a>
-          <a href="#favorites" data-type="favorites" class="main-navigation__item ${this._menu.type === 'favorites' ? 'main-navigation__item--active' : ''}">Favorites <span class="main-navigation__item-count">${this._stat.favorites}</span></a>
+          <a href="#watchlist" data-type="isInWatchList" class="main-navigation__item ${this._menu.type === 'isInWatchList' ? 'main-navigation__item--active' : ''}">Watchlist <span class="main-navigation__item-count" >${this._stat.watchlist}</span></a>
+          <a href="#history" data-type="isWatched" class="main-navigation__item ${this._menu.type === 'isWatched' ? 'main-navigation__item--active' : ''}">History <span class="main-navigation__item-count" >${this._stat.watched}</span></a>
+          <a href="#favorites" data-type="isFavorite" class="main-navigation__item ${this._menu.type === 'isFavorite' ? 'main-navigation__item--active' : ''}">Favorites <span class="main-navigation__item-count">${this._stat.favorites}</span></a>
         </div>
         <a href="#stats" data-type="stats" class="main-navigation__additional ${this._menu.type === 'stats' ? 'main-navigation__item--active' : ''}">Stats</a>
       </nav>

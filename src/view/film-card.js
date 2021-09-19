@@ -42,12 +42,15 @@ class FilmCard extends AbstractView {
     this._dynamicSetter('isFavorite', value);
   }
 
+  get id() {
+    return this._film.id;
+  }
+
   changeCommentsLength(value) {
     this._element.querySelector('.film-card__comments').innerText = `${value} comments`;
   }
 
-  _dynamicSetter(property, value) {
-    this._film[property] = !!value;
+  _dynamicSetter(property) {
     if(this._film[property]){
       this[`_${property}Button`].classList.add('film-card__controls-item--active');
     } else {
@@ -61,7 +64,7 @@ class FilmCard extends AbstractView {
         <h3 class="film-card__title">${this._film.title}</h3>
         <p class="film-card__rating">${this._film.totalRating}</p>
         <p class="film-card__info">
-          <span class="film-card__year">${utils.formatDate(this._film.release.date).split(' ')[2]}</span>
+          <span class="film-card__year">${this._film.release.date.split(' ')[2]}</span>
           <span class="film-card__duration">${utils.formatTime(this._film.runtime)}</span>
           <span class="film-card__genre">${this._film.genres[0]}</span>
         </p>
@@ -103,9 +106,11 @@ class FilmCard extends AbstractView {
   }
 
   removeElement() {
-    this._detailsViewOpenElements.forEach((element) =>
-      this._element.querySelector(element).removeEventListener('click', this._showFilmDetails),
-    );
+    if(this._element !== null) {
+      this._detailsViewOpenElements.forEach((element) =>
+        this._element.querySelector(element).removeEventListener('click', this._showFilmDetails),
+      );
+    }
     this._isInWatchListButton.removeEventListener('click', this._addToWatchListCallback);
     this._isWatchedButton.removeEventListener('click', this._markAsWatchedCallback);
     this._isFavoriteButton.removeEventListener('click', this._favoriteCallback);

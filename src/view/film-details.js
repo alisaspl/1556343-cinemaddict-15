@@ -47,8 +47,7 @@ class FilmDetails extends SmartView {
     this._dynamicSetter('isFavorite', value);
   }
 
-  _dynamicSetter(property, value) {
-    this._film[property] = !!value;
+  _dynamicSetter(property) {
     if(this._film[property]){
       this[`_${property}Button`].classList.add('film-details__control-button--active');
     } else {
@@ -98,7 +97,7 @@ class FilmDetails extends SmartView {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Release Date</td>
-                    <td class="film-details__cell">${utils.formatDate(this._film.release.date)}</td>
+                    <td class="film-details__cell">${this._film.release.date}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Runtime</td>
@@ -109,7 +108,7 @@ class FilmDetails extends SmartView {
                     <td class="film-details__cell">${this._film.release.releaseCountry}</td>
                   </tr>
                   <tr class="film-details__row">
-                    <td class="film-details__term">Genres</td>
+                    <td class="film-details__term">Genre${this._film.genres.length === 1 ? '' : 's'}</td>
                     <td class="film-details__cell">
                       ${this._film.genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join('')}
                   </tr>
