@@ -25,6 +25,8 @@ class Films extends AbstractObserver {
 
   setFilms(films) {
     this._films = films;
+
+    // FIXME remove
     for(const film of this._films) {
       film.release = Object.assign({}, film.release);
       film.release.date = dayjs(film.release.date, 'DD-MM-YYYY').format('DD MMMM YYYY');
@@ -42,18 +44,27 @@ class Films extends AbstractObserver {
   }
 
   static adaptToClient(data) {
-    console.log(data);
     const film = {
       id: data.id,
       title: data.film_info.alternative_title,
       originalTitle: data.film_info.title,
       poster: data.film_info.poster,
       description: data.film_info.description,
-      //comments
-
-
-
+      comments: data.comments,
+      genres: data.film_info.genre,
+      director: data.film_info.director,
+      actors: data.film_info.actors,
+      writers: data.film_info.writers,
+      release: data.film_info.release,
+      totalRating: data.film_info.total_rating,
+      runtime: data.film_info.runtime,
+      ageRating: data.film_info.age_rating,
+      isWatched: data.user_details.already_watched,
+      isInWatchList: data.user_details.watchlist,
+      isFavorite: data.user_details.favorite,
+      watchingDate: dayjs.unix(data.user_details.watching_date),
     };
+    film.release.date = dayjs(film.release.date, 'YYYY-MM-DD').format('DD MMMM YYYY');
     return film;
   }
 

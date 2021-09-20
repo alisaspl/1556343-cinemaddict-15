@@ -29,7 +29,10 @@ class Film {
     this._callbacks[property](!this._film[property]);
   }
 
-  renderFilmCard(renderAtIndex) {
+  renderFilmCard(renderAtIndex, container) {
+    if(container) {
+      this._container = container;
+    }
     this.filmCard = new FilmCardView(this._film, this._showFilmDetails.bind(this),
       this._callCalback.bind(this, 'isInWatchList'),
       this._callCalback.bind(this, 'isWatched'),

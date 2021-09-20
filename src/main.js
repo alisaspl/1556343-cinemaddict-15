@@ -4,6 +4,7 @@ import Api from './api';
 
 import MenuPresenter from './presenter/menu';
 import UserPresenter from './presenter/user';
+import FilmListPresenter from './presenter/film-list';
 
 import MenuModel from './model/menu';
 import UserModel from './model/user';
@@ -28,6 +29,7 @@ userModel.setUser(userData);
 
 new UserPresenter(document.querySelector('.header'), userModel);
 new MenuPresenter(mainContainer, menuModel, filmsModel, userModel);
+new FilmListPresenter(mainContainer, filmsModel, menuModel);
 
 const api = new Api();
 api.getMovies();

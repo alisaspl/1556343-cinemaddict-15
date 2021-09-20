@@ -1,5 +1,8 @@
-class Menu {
+import AbstractObserver from '../utils/abstract-observer'
+
+class Menu extends AbstractObserver {
   constructor() {
+    super();
     this._menu = null;
   }
 
@@ -12,6 +15,10 @@ class Menu {
   }
 
   setSelected(type) {
+    console.log(type, this.getSelected().type);
+    if(type === this.getSelected().type){
+      return;
+    }
     for(const menu of this._menu) {
       if(menu.type === type) {
         menu.selected = true;
@@ -19,6 +26,7 @@ class Menu {
         menu.selected = false;
       }
     }
+    this._notify(Menu.CHANGE_EVENT, this.getSelected());
   }
 
   getSelected() {
@@ -28,7 +36,8 @@ class Menu {
       }
     }
   }
-
 }
+
+Menu.CHANGE_EVENT = Symbol('change selected menu')
 
 export default Menu;
