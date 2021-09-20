@@ -45,4 +45,12 @@ const STAT_CHART_OPTIONS = {
   },
 };
 
-export default { FILMS_IN_LINE, STAT_BAR_HEIGHT, STAT_CHART_OPTIONS };
+const USER_RANK_VALUES = [
+  {value: 'novice', min: 1, max: 10},
+  {value: 'fan', min: 11, max: 20},
+  {value: 'movie buff', min: 21, max: Infinity},
+];
+//потом убрать max т.к. особо необходимости нет
+
+
+export default { FILMS_IN_LINE, STAT_BAR_HEIGHT, STAT_CHART_OPTIONS, USER_RANK_VALUES };
