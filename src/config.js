@@ -50,7 +50,13 @@ const USER_RANK_VALUES = [
   {value: 'fan', min: 11, max: 20},
   {value: 'movie buff', min: 21, max: Infinity},
 ];
-//потом убрать max т.к. особо необходимости нет
 
+const API_URL = 'https://15.ecmascript.pages.academy/cinemaddict';
+const API_AUTHORIZATION = (Math.random() + 1).toString(36).substring(2);
+const HTTP_METHODS = {
+  GET: 'GET',
+  POST: 'POST',
+  DELETE: 'DELETE',
+};
 
-export default { FILMS_IN_LINE, STAT_BAR_HEIGHT, STAT_CHART_OPTIONS, USER_RANK_VALUES };
+export default { FILMS_IN_LINE, STAT_BAR_HEIGHT, STAT_CHART_OPTIONS, USER_RANK_VALUES, API_URL, API_AUTHORIZATION, HTTP_METHODS };

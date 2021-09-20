@@ -1,5 +1,7 @@
 import utilsRender from './utils/render';
 
+import Api from './api';
+
 import MenuPresenter from './presenter/menu';
 import UserPresenter from './presenter/user';
 
@@ -26,3 +28,6 @@ userModel.setUser(userData);
 
 new UserPresenter(document.querySelector('.header'), userModel);
 new MenuPresenter(mainContainer, menuModel, filmsModel, userModel);
+
+const api = new Api();
+api.getMovies();

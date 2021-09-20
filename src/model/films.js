@@ -40,6 +40,28 @@ class Films extends AbstractObserver {
     }
     this._notify(Films.CHANGE_EVENT, { filmId, property, value });
   }
+
+  static adaptToClient(data) {
+    console.log(data);
+    const film = {
+      id: data.id,
+      title: data.film_info.alternative_title,
+      originalTitle: data.film_info.title,
+      poster: data.film_info.poster,
+      description: data.film_info.description,
+      //comments
+
+
+
+    };
+    return film;
+  }
+
+  static adaptToServer(film) {
+    const data = {};
+    return data;
+  }
+
 }
 
 Films.CHANGE_EVENT = Symbol('single film change event');
