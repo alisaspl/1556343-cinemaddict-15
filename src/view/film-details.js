@@ -210,7 +210,7 @@ class FilmDetails extends SmartView {
       input.disabled = true;
     }
 
-    callback(newComment).catch((err) => {
+    callback(newComment).catch(() => {
       form.disabled = false;
       for(const input of form) {
         input.disabled = false;
