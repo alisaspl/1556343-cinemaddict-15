@@ -11,7 +11,11 @@ class User {
     this._userModel.addObserver(this._onRankChange.bind(this));
 
     this._profileView = null;
-    this._renderProfile();
+
+    const user = this._userModel.getUser();
+    if(user.rank !== 0) {
+      this._renderProfile();
+    }
   }
 
   _onRankChange(event, payload) {

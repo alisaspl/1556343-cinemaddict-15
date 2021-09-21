@@ -40,7 +40,7 @@ class Statistics {
     }
 
     for(const film of this._data.films) {
-      if((dateToCompare && dateToCompare.diff(film.watchingDate) >= 0) || !film.isWatched) {
+      if((dateToCompare && dateToCompare.diff(dayjs(film.watchingDate)) >= 0) || !film.isWatched) {
         continue;
       }
 

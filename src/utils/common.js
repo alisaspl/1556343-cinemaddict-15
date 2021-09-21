@@ -59,6 +59,6 @@ const formatTime = (runtime) => {
   return time;
 };
 
-const formatDate = (releaseDate) => dayjs(releaseDate, 'DD-MM-YYYY').format('DD MMMM YYYY');
+const formatDate = (releaseDate) => dayjs(releaseDate, 'YYYY-MM-DD').format('DD MMMM YYYY');
 
 export default { formatTime, formatDate, sortBy, getRandomInteger, getRandomUniqArray, getRandomElementFromArray };

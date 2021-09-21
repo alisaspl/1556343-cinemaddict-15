@@ -1,6 +1,6 @@
 import config from './config';
 
-import FilmModel from './model/films'
+import FilmModel from './model/films';
 
 class Api {
   constructor() {
@@ -11,17 +11,33 @@ class Api {
     headers.append('Content-Type', 'application/json');
     headers.append('Authorization', `Basic ${this._authorization}`);
     this._options = {
-      headers
+      headers,
     };
 
   }
 
-  getMovies() {
-    this._load('movies')
-      .then((data) => {
-        const films = data.map((film) => FilmModel.adaptToClient(film));
-        console.log(films);
-      });
+  getFilms() {
+    return this._load('movies').then(
+      (data) => data.map((film) => FilmModel.adaptToClient(film)),
+    );
+  }
+
+  updateFilm(film) {
+    return this._load(`movies/${film.id}`, config.HTTP_METHODS.PUT, JSON.stringify(FilmModel.adaptToServer(film))).then(
+      (data) => data,
+    );
+  }
+
+  getComments(filmId) {
+    return this._load(`comments/${filmId}`);
+  }
+
+  addComment(filmId, comment) {
+    return this._load(`comments/${filmId}`, config.HTTP_METHODS.POST, JSON.stringify(comment));
+  }
+
+  removeComment(commentId) {
+    return this._load(`comments/${commentId}`, config.HTTP_METHODS.DELETE);
   }
 
   _load(url, method = 'GET', data = '') {
@@ -42,13 +58,15 @@ class Api {
     return fetch(url, options)
       .then((response) => {
         if(response.status === 200) {
-          let jsonData;
-          try {
-            jsonData = response.json();
-          } catch(error) {
-            throw error;
+          const type = response.headers.get('Content-Type');
+          if(type.startsWith('application/json')) {
+            return response.json();
+          } else if(type.startsWith('text/plain')) {
+            return {
+              status: response.body,
+            };
           }
-          return jsonData;
+          throw new Error('unknown response body type');
         }
         if(response.status === 401) {
           throw new Error('authorization error');

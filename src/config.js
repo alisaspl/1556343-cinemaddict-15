@@ -56,7 +56,43 @@ const API_AUTHORIZATION = (Math.random() + 1).toString(36).substring(2);
 const HTTP_METHODS = {
   GET: 'GET',
   POST: 'POST',
+  PUT: 'PUT',
   DELETE: 'DELETE',
 };
 
-export default { FILMS_IN_LINE, STAT_BAR_HEIGHT, STAT_CHART_OPTIONS, USER_RANK_VALUES, API_URL, API_AUTHORIZATION, HTTP_METHODS };
+const MENU_DESCRIPTION = [
+  {
+    type: 'allMovies',
+    emptyText: 'There are no movies in our database',
+    selected: true,
+  },
+  {
+    type: 'isInWatchList',
+    emptyText: 'There are no movies to watch now',
+  },
+  {
+    type: 'isWatched',
+    emptyText: 'There are no watched movies now',
+  },
+  {
+    type: 'isFavorite',
+    emptyText: 'There are no favorite movies now',
+  },
+  {
+    type: 'stats',
+    emptyText: 'No stat sorry',
+  },
+];
+
+const USER_AVATAR = 'images/bitmap.png';
+
+const LOADING_TEXT = 'Loading...';
+
+const SHAKE_TIMEOUT = 600;
+
+export default {
+  FILMS_IN_LINE, STAT_BAR_HEIGHT, STAT_CHART_OPTIONS,
+  USER_RANK_VALUES, API_URL, API_AUTHORIZATION,
+  HTTP_METHODS, MENU_DESCRIPTION, USER_AVATAR, LOADING_TEXT,
+  SHAKE_TIMEOUT,
+};

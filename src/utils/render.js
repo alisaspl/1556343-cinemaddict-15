@@ -17,7 +17,6 @@ const renderView = (container, view, place = RenderPosition.BEFOREEND) => {
   }
   switch(place) {
     case RenderPosition.AFTERBEGIN:
-      console.log(container, view.getElement());
       container.prepend(view.getElement());
       break;
     case RenderPosition.BEFOREEND:

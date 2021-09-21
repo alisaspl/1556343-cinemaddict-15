@@ -75,9 +75,8 @@ class FilmComments extends AbstractView {
     }
 
     return {
-      text: commentText,
-      name: commentEmojiElement.value,
-      src: commentEmojiElement.src.replace(/.*\/images/, 'images'),
+      comment: commentText,
+      emotion: commentEmojiElement.value,
     };
   }
 

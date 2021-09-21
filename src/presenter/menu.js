@@ -2,12 +2,11 @@ import utilsRender from '../utils/render';
 
 import MenuView from '../view/menu';
 import EmptyView from '../view/empty';
-import FilmExtraTopRatedView from '../view/film-extra-top-rated';
-import FilmExtraMostCommentedView from '../view/film-extra-most-commented';
 
 import FilmsModel from '../model/films';
 
 import StatisticsPresenter from '../presenter/statistics';
+import config from '../config';
 
 class Menu {
   constructor(container, menuModel, filmsModel, userModel) {
@@ -22,14 +21,17 @@ class Menu {
 
     this._statisticsPresenter = null;
 
-    this._renderMenu();
+    this._inited = false;
 
     const selectedMenu = this._menuModel.getSelected();
     this._onMenuChange(selectedMenu.type);
 
     this._filmsModel.addObserver((event) => {
       if(event === FilmsModel.CHANGE_EVENT) {
-        this._onMenuChange(this._menuModel.getSelected().type);
+        this._onFilmsChange(this._menuModel.getSelected().type);
+      } else if(event === FilmsModel.INIT_EVENT) {
+        this._inited = true;
+        this._onMenuChange(selectedMenu.type);
       }
     });
   }
@@ -74,46 +76,20 @@ class Menu {
     utilsRender.renderView(this._container, this._menuView, utilsRender.RenderPosition.AFTERBEGIN);
   }
 
-  _renderEmpty() {
-    this._emptyView = new EmptyView(this._menuModel.getSelected());
-    utilsRender.renderView(this._container, this._emptyView);
+  _renderEmpty(menuType) {
+    if(this._filmsModel.getFilms(menuType).length === 0) {
+      if(this._inited) {
+        this._emptyView = new EmptyView(this._menuModel.getSelected());
+        utilsRender.renderView(this._container, this._emptyView);
+      } else {
+        this._emptyView = new EmptyView({emptyText: config.LOADING_TEXT});
+        utilsRender.renderView(this._container, this._emptyView);
+      }
+    }
   }
 
   _renderStatistics() {
     this._statisticsPresenter = new StatisticsPresenter(this._container, this._userModel.getUser(), this._filmsModel.getFilms());
-  }
-
-  _renderTopRated() {
-    if(this._view.topRated !== null) {
-      this._view.topRated.removeElement();
-      this._view.topRated = null;
-    }
-    const films = utils.sortBy(this._filmModel.getFilms(),
-      (film) => parseFloat(film.totalRating),
-    ).slice(0,2);
-    this._view.topRated = new FilmExtraTopRatedView();
-    for(const film of films){
-      this._renderFilmCard(film, this._view.topRated, 'top_rated');
-    }
-    utilsRender.renderView(this._view.filmList.getElement(), this._view.topRated);
-  }
-
-  _renderMostCommented() {
-    if(this._view.mostCommented !== null) {
-      this._view.mostCommented.removeElement();
-      this._view.mostCommented = null;
-    }
-
-    const films = utils.sortBy(this._filmModel.getFilms(),
-      (film) => film.comments.length,
-    ).slice(0,2);
-
-    this._view.mostCommented = new FilmExtraMostCommentedView();
-    for(const film of films) {
-      this._renderFilmCard(film, this._view.mostCommented, 'most_commented');
-    }
-
-    utilsRender.renderView(this._view.filmList.getElement(), this._view.mostCommented);
   }
 
   _onMenuChange(menuType) {
@@ -125,13 +101,13 @@ class Menu {
       this._renderStatistics();
       return;
     }
+    this._renderEmpty(menuType);
+  }
 
-    if(this._filmsModel.getFilms(menuType).length === 0) {
-      this._renderEmpty();
-    } else {
-      // this._renderTopRated();
-      // this._renderMostCommented();
-    }
+  _onFilmsChange(menuType) {
+    this._renderMenu();
+    this._clearMainContainer();
+    this._renderEmpty(menuType);
   }
 
 }
