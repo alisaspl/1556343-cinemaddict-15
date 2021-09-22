@@ -6,10 +6,12 @@ class FilmCard extends AbstractView {
     super();
     this._film = film;
 
-    this._showFilmDetails = showFilmDetailsCallback;
+    this._showFilmDetailsCallback = showFilmDetailsCallback;
     this._addToWatchListCallback = addToWatchListCallback;
     this._markAsWatchedCallback = markAsWatchedCallback;
     this._favoriteCallback = favoriteCallback;
+
+    this._showFilmDetails = this._showFilmDetails.bind(this);
 
     this._detailsViewOpenElements = ['.film-card__title', '.film-card__poster', '.film-card__comments'];
 
@@ -62,9 +64,9 @@ class FilmCard extends AbstractView {
     return `
       <article class="film-card">
         <h3 class="film-card__title">${this._film.title}</h3>
-        <p class="film-card__rating">${this._film.totalRating}</p>
+        <p class="film-card__rating">${this._film.totalRating.toFixed(1)}</p>
         <p class="film-card__info">
-          <span class="film-card__year">${this._film.release.date.split(' ')[2]}</span>
+          <span class="film-card__year">${utils.formatDate(this._film.release.date).split(' ')[2]}</span>
           <span class="film-card__duration">${utils.formatTime(this._film.runtime)}</span>
           <span class="film-card__genre">${this._film.genres[0]}</span>
         </p>
@@ -115,6 +117,10 @@ class FilmCard extends AbstractView {
     this._isWatchedButton.removeEventListener('click', this._markAsWatchedCallback);
     this._isFavoriteButton.removeEventListener('click', this._favoriteCallback);
     super.removeElement();
+  }
+
+  _showFilmDetails() {
+    this._showFilmDetailsCallback(this._film.id);
   }
 }
 

@@ -3,8 +3,10 @@ import utilsRender from '../utils/render';
 import MenuView from '../view/menu';
 import EmptyView from '../view/empty';
 
+import FilmsModel from '../model/films';
+
 import StatisticsPresenter from '../presenter/statistics';
-import FilmListPresenter from '../presenter/film-list';
+import config from '../config';
 
 class Menu {
   constructor(container, menuModel, filmsModel, userModel) {
@@ -17,23 +19,27 @@ class Menu {
     this._filmsModel = filmsModel;
     this._userModel = userModel;
 
-    this._filmsPresenter = null;
     this._statisticsPresenter = null;
 
-    this._renderMenu();
+    this._inited = false;
 
     const selectedMenu = this._menuModel.getSelected();
     this._onMenuChange(selectedMenu.type);
+
+    this._filmsModel.addObserver((event) => {
+      if(event === FilmsModel.CHANGE_EVENT) {
+        this._onFilmsChange(this._menuModel.getSelected().type);
+      } else if(event === FilmsModel.INIT_EVENT) {
+        this._inited = true;
+        this._onMenuChange(selectedMenu.type);
+      }
+    });
   }
 
   _clearMainContainer() {
     if(this._emptyView !== null) {
       this._emptyView.removeElement();
       this._emptyView = null;
-    }
-    if(this._filmsPresenter !== null) {
-      this._filmsPresenter.remove(true);
-      this._filmsPresenter = null;
     }
     if(this._statisticsPresenter !== null) {
       this._statisticsPresenter.remove();
@@ -70,18 +76,16 @@ class Menu {
     utilsRender.renderView(this._container, this._menuView, utilsRender.RenderPosition.AFTERBEGIN);
   }
 
-  _renderFilms() {
-    this._filmsPresenter = new FilmListPresenter(
-      this._container,
-      this._filmsModel,
-      this._menuModel,
-      this._renderMenu.bind(this),
-    );
-  }
-
-  _renderEmpty() {
-    this._emptyView = new EmptyView(this._menuModel.getSelected());
-    utilsRender.renderView(this._container, this._emptyView);
+  _renderEmpty(menuType) {
+    if(this._filmsModel.getFilms(menuType).length === 0) {
+      if(this._inited) {
+        this._emptyView = new EmptyView(this._menuModel.getSelected());
+        utilsRender.renderView(this._container, this._emptyView);
+      } else {
+        this._emptyView = new EmptyView({emptyText: config.LOADING_TEXT});
+        utilsRender.renderView(this._container, this._emptyView);
+      }
+    }
   }
 
   _renderStatistics() {
@@ -97,13 +101,13 @@ class Menu {
       this._renderStatistics();
       return;
     }
+    this._renderEmpty(menuType);
+  }
 
-    if(this._filmsModel.getFilms(menuType).length === 0) {
-      this._renderEmpty();
-    } else {
-      this._renderFilms();
-    }
-
+  _onFilmsChange(menuType) {
+    this._renderMenu();
+    this._clearMainContainer();
+    this._renderEmpty(menuType);
   }
 
 }

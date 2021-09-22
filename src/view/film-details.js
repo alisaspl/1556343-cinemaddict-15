@@ -1,14 +1,16 @@
 import utils from '../utils/common';
 import utilsRender from '../utils/render';
+import config from '../config';
 
 import SmartView from './smart';
 import FilmCommentsView from '../view/film-comments';
 import FilmCommentView from '../view/film-comment';
 
 class FilmDetails extends SmartView {
-  constructor(film, closeCallback, addToWatchListCallback, markAsWatchedCallback, favoriteCallback, onDeleteCommentCallback) {
+  constructor(film, comments, closeCallback, addToWatchListCallback, markAsWatchedCallback, favoriteCallback, onDeleteCommentCallback) {
     super();
     this._film = film;
+    this._comments = comments;
     this._closeCallback = closeCallback;
     this._addToWatchListCallback = addToWatchListCallback;
     this._markAsWatchedCallback = markAsWatchedCallback;
@@ -78,7 +80,7 @@ class FilmDetails extends SmartView {
                   </div>
 
                   <div class="film-details__rating">
-                    <p class="film-details__total-rating">${this._film.totalRating}</p>
+                    <p class="film-details__total-rating">${this._film.totalRating.toFixed(1)}</p>
                   </div>
                 </div>
 
@@ -97,7 +99,7 @@ class FilmDetails extends SmartView {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Release Date</td>
-                    <td class="film-details__cell">${this._film.release.date}</td>
+                    <td class="film-details__cell">${utils.formatDate(this._film.release.date)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Runtime</td>
@@ -152,16 +154,15 @@ class FilmDetails extends SmartView {
       this._isWatchedButton.addEventListener('click', this._markAsWatchedCallback);
       this._isFavoriteButton.addEventListener('click', this._favoriteCallback);
 
-      this.commentsView = new FilmCommentsView(this._film.comments);
+      this.commentsView = new FilmCommentsView(this._comments);
       utilsRender.renderView(
         this._element.querySelector('.film-details__bottom-container'),
         this.commentsView,
       );
 
       const commentsContainer = this.commentsView.getElement().querySelector('.film-details__comments-list');
-      for(let i = 0; i < this._film.comments.length; i++) {
-        const comment = this._film.comments[i];
-        this.commentView.push(new FilmCommentView(comment, i, this._onDeleteCommentCallback));
+      for(const comment of this._comments) {
+        this.commentView.push(new FilmCommentView(comment, this._onDeleteCommentCallback));
         utilsRender.renderView(commentsContainer, this.commentView[this.commentView.length - 1]);
       }
     }
@@ -185,7 +186,41 @@ class FilmDetails extends SmartView {
     super.removeElement();
   }
 
+  updateData(comments) {
+    this._comments = comments;
+    super.updateElement();
+  }
+
   restoreHandlers() {
+  }
+
+  addComment(callback) {
+    const form = this._element.querySelector('form');
+    if(form.disabled) {
+      return;
+    }
+
+    const newComment = this.commentsView.addComment();
+    if(!newComment) {
+      return;
+    }
+
+    form.disabled = true;
+    for(const input of form) {
+      input.disabled = true;
+    }
+
+    callback(newComment).catch(() => {
+      form.disabled = false;
+      for(const input of form) {
+        input.disabled = false;
+      }
+
+      form.style.animation = `shake ${config.SHAKE_TIMEOUT / 1000}s`;
+      setTimeout(() => {
+        form.style.animation = '';
+      }, config.SHAKE_TIMEOUT);
+    });
   }
 
 }

@@ -1,14 +1,14 @@
 import AbstractView from './abstract';
 
 class FilmsStatistics extends AbstractView {
-  constructor(stat) {
+  constructor(filmsCount) {
     super();
-    this._stat = stat;
+    this._filmsCount = filmsCount;
   }
 
   getTemplate() {
     return `
-      <p>${this._stat.allFilms} movies inside</p>
+      <p>${this._filmsCount} movies inside</p>
     `;
   }
 }

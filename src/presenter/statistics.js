@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 
 import utils from '../utils/common';
 import utilsRender from '../utils/render';
-import { filmsStatisticsData } from '../mocks';
 import StatisticsView from '../view/statistics';
 
 class Statistics {
@@ -11,7 +10,7 @@ class Statistics {
     this._data = {
       user,
       films,
-      menu: filmsStatisticsData.selectedMenu,
+      menu: 'all-time',
     };
     this._view = null;
 
@@ -40,7 +39,7 @@ class Statistics {
     }
 
     for(const film of this._data.films) {
-      if((dateToCompare && dateToCompare.diff(film.watchingDate) >= 0) || !film.isWatched) {
+      if((dateToCompare && dateToCompare.diff(dayjs(film.watchingDate)) >= 0) || !film.isWatched) {
         continue;
       }
 

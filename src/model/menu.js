@@ -1,14 +1,15 @@
-class Menu {
+import AbstractObserver from '../utils/abstract-observer';
+
+import config from '../config';
+
+class Menu extends AbstractObserver {
   constructor() {
-    this._menu = null;
+    super();
+    this._menu = config.MENU_DESCRIPTION;
   }
 
   getMenu() {
     return this._menu;
-  }
-
-  setMenu(menu) {
-    this._menu = menu;
   }
 
   setSelected(type) {
@@ -19,6 +20,7 @@ class Menu {
         menu.selected = false;
       }
     }
+    this._notify(Menu.CHANGE_EVENT, this.getSelected());
   }
 
   getSelected() {
@@ -28,7 +30,8 @@ class Menu {
       }
     }
   }
-
 }
+
+Menu.CHANGE_EVENT = Symbol('change selected menu');
 
 export default Menu;

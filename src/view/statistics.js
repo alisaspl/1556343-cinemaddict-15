@@ -76,6 +76,10 @@ class Statistics extends AbstractView {
   getElement() {
     super.getElement();
 
+    if(this._user.rank === 0) {
+      this._element.querySelector('.statistic__rank').remove();
+    }
+
     const statisticCtx = this._element.querySelector('.statistic__chart');
     statisticCtx.height = config.STAT_BAR_HEIGHT * 5;
 
