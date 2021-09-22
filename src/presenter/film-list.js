@@ -12,8 +12,6 @@ import ShowMoreButtonView from '../view/show-more-button';
 import FilmModel from '../model/films';
 import MenuModel from '../model/menu';
 
-import { sortMenuData } from '../mocks';
-
 class FilmList {
   constructor(container, filmModel, menuModel) {
     this._container = container;
@@ -38,7 +36,7 @@ class FilmList {
 
     this._filter = menuModel.getSelected().type;
 
-    this._sortMenu = sortMenuData;
+    this._sortMenu = {};
     this._sortMenu.selected = 'default';
 
     this._lastFilmIndex = 0;
