@@ -105,8 +105,10 @@ class FilmList {
         if(this._films[this._lastFilmIndex-1].id !== filmId) {
           needRenderCard = true;
           const presenterToDelete = this._filmPresenters.get(this._films[this._lastFilmIndex].id);
-          presenterToDelete.filmCard.removeElement();
-          presenterToDelete.filmCard = null;
+          if(presenterToDelete && presenterToDelete.filmCard) {
+            presenterToDelete.filmCard.removeElement();
+            presenterToDelete.filmCard = null;
+          }
 
           if(this._lastFilmIndex > 0) {
             this._lastFilmIndex--;
