@@ -41,8 +41,6 @@ class FilmList {
 
     this._lastFilmIndex = 0;
     this._films = this._filmModel.getFilms(this._filter);
-
-    // this._rerenderFilms();
   }
 
   remove(final) {
