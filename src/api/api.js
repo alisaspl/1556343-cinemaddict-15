@@ -1,6 +1,6 @@
-import config from './config';
+import config from '../config';
 
-import FilmModel from './model/films';
+import FilmModel from '../model/films';
 
 class Api {
   constructor() {
@@ -23,9 +23,7 @@ class Api {
   }
 
   updateFilm(film) {
-    return this._load(`movies/${film.id}`, config.HTTP_METHODS.PUT, JSON.stringify(FilmModel.adaptToServer(film))).then(
-      (data) => data,
-    );
+    return this._load(`movies/${film.id}`, config.HTTP_METHODS.PUT, JSON.stringify(FilmModel.adaptToServer(film)));
   }
 
   getComments(filmId) {
@@ -38,6 +36,10 @@ class Api {
 
   removeComment(commentId) {
     return this._load(`comments/${commentId}`, config.HTTP_METHODS.DELETE);
+  }
+
+  sync(films) {
+    return this._load('/movies/sync', config.HTTP_METHODS.POST, JSON.stringify(films));
   }
 
   _load(url, method = 'GET', data = '') {

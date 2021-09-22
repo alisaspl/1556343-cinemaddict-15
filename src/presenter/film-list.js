@@ -206,7 +206,7 @@ class FilmList {
   _sortFilms() {
     if(this._sortMenu.selected === 'default') {
       this._films = utils.sortBy(this._films,
-        (film) => film.id,
+        (film) => parseInt(film.id, 10),
       );
     } else if(this._sortMenu.selected === 'rating') {
       this._films = utils.sortBy(this._films,
