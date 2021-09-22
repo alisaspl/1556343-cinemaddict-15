@@ -61,4 +61,6 @@ const formatTime = (runtime) => {
 
 const formatDate = (releaseDate) => dayjs(releaseDate, 'YYYY-MM-DD').format('DD MMMM YYYY');
 
-export default { formatTime, formatDate, sortBy, getRandomInteger, getRandomUniqArray, getRandomElementFromArray };
+export const isOnline = () => window.navigator.onLine;
+
+export default { formatTime, formatDate, sortBy, getRandomInteger, getRandomUniqArray, getRandomElementFromArray, isOnline };

@@ -103,7 +103,6 @@ class Films extends AbstractObserver {
 
 }
 
-// Films._films = [];
 Films.CHANGE_EVENT = Symbol('single film change event');
 Films.INIT_EVENT = Symbol('fires after films are loaded');
 
