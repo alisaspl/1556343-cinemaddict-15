@@ -1,8 +1,11 @@
+import config from '../config';
+
 import utilsRender from '../utils/render';
 import utils from '../utils/common';
 
 import FilmsModel from '../model/films';
 
+import AbstractView from '../view/abstract';
 import FilmExtraTopRatedView from '../view/film-extra-top-rated';
 import FilmExtraMostCommentedView from '../view/film-extra-most-commented';
 
@@ -21,10 +24,7 @@ class FilmExtra {
     this._filmModel.addObserver((event, payload) => {
       if(event === FilmsModel.CHANGE_EVENT) {
         if(payload.property === 'comments') {
-          if(this._mostCommentedView !== null) {
-            this._mostCommentedView.removeElement();
-            this._mostCommentedView = null;
-          }
+          FilmExtraMostCommentedView.removeView(this._mostCommentedView);
           this._renderMostCommented();
         } else {
 
@@ -46,80 +46,53 @@ class FilmExtra {
   }
 
   remove() {
-    if(this._topRatedView !== null) {
-      this._topRatedView.removeElement();
-      this._topRatedView = null;
+    FilmExtraTopRatedView.removeView(this._topRatedView);
+    FilmExtraMostCommentedView.removeView(this._mostCommentedView);
+  }
+
+  _renderFilmExtra(view, filmCardType, viewClass, sortCondition, renderCondition, getRandomFilmCondition) {
+    AbstractView.removeView(view);
+    const films = utils.sortBy(this._filmModel.getFilms(),
+      (film) => sortCondition(film),
+    );
+
+    if(films.length === 0 || renderCondition(films[0])) {
+      return;
     }
-    if(this._mostCommentedView !== null) {
-      this._mostCommentedView.removeElement();
-      this._mostCommentedView = null;
+
+    let topFilms = [];
+    if(films.length > config.EXTRA_FILMS_QUANTITY && !(films.some((element) => getRandomFilmCondition(element)))) {
+      const firstFilm = utils.getRandomElementFromArray(films);
+      let secondFilm = utils.getRandomElementFromArray(films);
+      while(firstFilm.id === secondFilm.id) {
+        secondFilm = utils.getRandomElementFromArray(films);
+      }
+      topFilms.push(firstFilm, secondFilm);
+    } else {
+      topFilms = films.slice(0, config.EXTRA_FILMS_QUANTITY);
     }
+
+    view = new viewClass();
+    for(const film of topFilms) {
+      this._renderFilmCard(film, view, filmCardType);
+    }
+    utilsRender.renderView(this._container, view);
   }
 
   _renderTopRated() {
-    if(this._topRatedView !== null) {
-      this._topRatedView.removeElement();
-      this._topRatedView = null;
-    }
-    const films = utils.sortBy(this._filmModel.getFilms(),
+    this._renderFilmExtra(this._topRatedView, config.EXTRA_FILM_CARD_TYPE.TOP_RATED, FilmExtraTopRatedView,
       (film) => parseFloat(film.totalRating),
+      (film) => parseFloat(film.totalRating) === 0.0,
+      (nextFilm, film) => nextFilm.totalRating !== film.totalRating,
     );
-
-    if(films.length === 0 || parseFloat(films[0].totalRating) === 0.0) {
-      return;
-    }
-
-    let topRatedFilms = [];
-    if(films.length > 2 && !(films.some((element) => element.totalRating !== films[0].totalRating))) {
-      const firstFilm = utils.getRandomElementFromArray(films);
-      let secondFilm = utils.getRandomElementFromArray(films);
-      while(firstFilm.id === secondFilm.id){
-        secondFilm = utils.getRandomElementFromArray(films);
-      }
-      topRatedFilms.push(firstFilm, secondFilm);
-    } else {
-      topRatedFilms = films.slice(0,2);
-    }
-
-    this._topRatedView = new FilmExtraTopRatedView();
-    for(const film of topRatedFilms){
-      this._renderFilmCard(film, this._topRatedView, 'top_rated');
-    }
-    utilsRender.renderView(this._container, this._topRatedView);
   }
 
   _renderMostCommented() {
-    if(this._mostCommentedView !== null) {
-      this._mostCommentedView.removeElement();
-      this._mostCommentedView = null;
-    }
-
-    const films = utils.sortBy(this._filmModel.getFilms(),
+    this._renderFilmExtra(this._mostCommentedView, config.EXTRA_FILM_CARD_TYPE.MOST_COMMENTED, FilmExtraMostCommentedView,
       (film) => film.comments.length,
+      (film) => film.comments.length === 0,
+      (nextFilm, film) => nextFilm.comments.length !== film.comments.length,
     );
-
-    if(films.length === 0 || films[0].comments.length === 0) {
-      return;
-    }
-
-    let mostCommentedFilms = [];
-    if(films.length > 2 && !(films.some((element) => element.comments.length !== films[0].comments.length))) {
-      const firstFilm = utils.getRandomElementFromArray(films);
-      let secondFilm = utils.getRandomElementFromArray(films);
-      while(firstFilm.id === secondFilm.id){
-        secondFilm = utils.getRandomElementFromArray(films);
-      }
-      mostCommentedFilms.push(firstFilm, secondFilm);
-    } else {
-      mostCommentedFilms = films.slice(0,2);
-    }
-
-    this._mostCommentedView = new FilmExtraMostCommentedView();
-    for(const film of mostCommentedFilms) {
-      this._renderFilmCard(film, this._mostCommentedView, 'most_commented');
-    }
-
-    utilsRender.renderView(this._container, this._mostCommentedView);
   }
 
   _renderFilmCard(film, view, type) {

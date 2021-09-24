@@ -26,6 +26,13 @@ class Abstract {
       this._element = null;
     }
   }
+
+  static removeView(view) {
+    if(view !== null) {
+      view.removeElement();
+      view = null;
+    }
+  }
 }
 
 export default Abstract;

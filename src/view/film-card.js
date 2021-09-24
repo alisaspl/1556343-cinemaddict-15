@@ -1,3 +1,4 @@
+import config from '../config';
 import AbstractView from './abstract';
 import utils from '../utils/common';
 
@@ -71,7 +72,7 @@ class FilmCard extends AbstractView {
           <span class="film-card__genre">${this._film.genres[0]}</span>
         </p>
         <img src="./${this._film.poster}" alt="" class="film-card__poster">
-        <p class="film-card__description">${this._film.description.length > 140 ? `${this._film.description.slice(0, 139)}...` : this._film.description}</p>
+        <p class="film-card__description">${this._film.description.length > config.MAX_FILM_DESCRIPTION_LENGTH ? `${this._film.description.slice(0, config.MAX_FILM_DESCRIPTION_LENGTH - 1)}...` : this._film.description}</p>
         <a class="film-card__comments"></a>
         <div class="film-card__controls">
           <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>

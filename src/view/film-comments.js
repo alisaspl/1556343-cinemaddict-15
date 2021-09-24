@@ -1,3 +1,4 @@
+import config from '../config';
 import AbstractView from './abstract';
 
 class FilmComments extends AbstractView {
@@ -85,8 +86,8 @@ class FilmComments extends AbstractView {
 
     const imgElement = this._element.querySelector(`label[for=${evt.currentTarget.id}]`).querySelector('img');
     const newImgElement = document.createElement('img');
-    newImgElement.width = 50;
-    newImgElement.height = 50;
+    newImgElement.width = config.NEW_COMMENT_IMG.WIDTH;
+    newImgElement.height = config.NEW_COMMENT_IMG.HEIGHT;
     newImgElement.src = imgElement.src;
     newImgElement.alt = imgElement.alt;
     newImgElement.classList.add('film-details__comment-input-img');

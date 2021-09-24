@@ -79,7 +79,7 @@ class FilmDetails {
   }
 
   _submitComment(event) {
-    if(event.key === 'Enter' && event.ctrlKey) {
+    if(event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
       if(this._view !== null) {
         this._view.addComment((newComment) =>
 

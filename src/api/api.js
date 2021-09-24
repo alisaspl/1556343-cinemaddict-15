@@ -42,7 +42,7 @@ class Api {
     return this._load('/movies/sync', config.HTTP_METHODS.POST, JSON.stringify(films));
   }
 
-  _load(url, method = 'GET', data = '') {
+  _load(url, method = config.HTTP_METHODS.GET, data = '') {
     if(!url) {
       throw new Error('no url specified');
     }
@@ -59,7 +59,7 @@ class Api {
 
     return fetch(url, options)
       .then((response) => {
-        if(response.status === 200) {
+        if(response.status === config.HTTP_RESPONSE_STATUS.OK) {
           const type = response.headers.get('Content-Type');
           if(type.startsWith('application/json')) {
             return response.json();
@@ -70,7 +70,7 @@ class Api {
           }
           throw new Error('unknown response body type');
         }
-        if(response.status === 401) {
+        if(response.status === config.HTTP_RESPONSE_STATUS.AUTORIZATION_ERROR) {
           throw new Error('authorization error');
         }
         throw new Error('request error');
