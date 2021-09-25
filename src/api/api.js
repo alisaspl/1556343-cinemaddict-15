@@ -24,7 +24,7 @@ class Api {
 
   updateFilm(film) {
     return this._load(`movies/${film.id}`, config.HTTP_METHODS.PUT, JSON.stringify(FilmModel.adaptToServer(film)))
-      .then((film) => FilmModel.adaptToClient(film));
+      .then((filmFromServer) => FilmModel.adaptToClient(filmFromServer));
   }
 
   getComments(filmId) {

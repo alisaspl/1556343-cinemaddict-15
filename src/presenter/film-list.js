@@ -98,10 +98,9 @@ class FilmList {
 
   _addFilm(filmId) {
     const filmIndex = this._films.findIndex((film) => film.id === filmId);
+    const oldPresenter = this._filmPresenters.get(filmId);
 
-    console.log(this._lastFilmIndex, filmIndex, [...this._films], filmId);
-
-    if(filmIndex <= this._lastFilmIndex) {
+    if(filmIndex <= this._lastFilmIndex && (!oldPresenter || !oldPresenter.filmCard)) {
       let needRenderCard = true;
 
       if(this._lastFilmIndex % config.FILMS_IN_LINE === 0 && this._lastFilmIndex !== 0) {
@@ -116,7 +115,6 @@ class FilmList {
           }
 
           if(this._lastFilmIndex > 0) {
-            console.log('1', '--');
             this._lastFilmIndex--;
           }
         }
@@ -124,7 +122,6 @@ class FilmList {
 
       if(needRenderCard) {
         this._renderFilmCard(this._films[filmIndex], this._view.filmList, filmIndex);
-        console.log('2', '++');
         this._lastFilmIndex++;
       }
 
@@ -136,16 +133,15 @@ class FilmList {
     if(presenterToDelete && presenterToDelete.filmCard !== null) {
       presenterToDelete.filmCard.removeElement();
       presenterToDelete.filmCard = null;
-      console.log('3', '--');
       this._lastFilmIndex--;
 
       if(this._films.length > this._lastFilmIndex) {
         this._renderFilmCard(this._films[this._lastFilmIndex], this._view.filmList);
-        console.log('3', '++');
         this._lastFilmIndex++;
       }
     }
     if(this._films.length === 0) {
+      this._lastFilmIndex = 0;
       this.remove(false, true);
     }
   }
