@@ -46,14 +46,14 @@ class Api {
     if(!url) {
       throw new Error('no url specified');
     }
-    if(url.startsWith('/')){
+    if(url.startsWith('/')) {
       url = url.substring(1);
     }
     url = `${this._url}/${url}`;
 
     const options = Object.assign({}, this._options);
     options.method = method;
-    if(method !== config.HTTP_METHODS.GET){
+    if(method !== config.HTTP_METHODS.GET) {
       options.body = data;
     }
 

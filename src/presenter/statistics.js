@@ -5,7 +5,7 @@ import utilsRender from '../utils/render';
 import StatisticsView from '../view/statistics';
 
 class Statistics {
-  constructor(container, user, films){
+  constructor(container, user, films) {
     this._container = container;
     this._data = {
       user,
@@ -46,7 +46,7 @@ class Statistics {
       userFilmsStatistics.watched++;
       userFilmsStatistics.runtime += film.runtime;
 
-      for(const genre of film.genres){
+      for(const genre of film.genres) {
         if(userFilmsStatistics.genres[genre]) {
           userFilmsStatistics.genres[genre]++;
         } else {

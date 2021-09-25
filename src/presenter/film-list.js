@@ -43,19 +43,22 @@ class FilmList {
     this._films = this._filmModel.getFilms(this._filter);
   }
 
-  remove(final) {
+  remove(final, dontRemoveExtra) {
     this._lastFilmIndex = 0;
 
+    if(this._filmExtraPresenter !== null && !dontRemoveExtra) {
+      this._filmExtraPresenter.remove();
+      this._filmExtraPresenter = null;
+    }
+
     for(const key in this._view) {
+      if(dontRemoveExtra && key === 'filmList') {
+        continue;
+      }
       if(this._view[key] !== null) {
         this._view[key].removeElement();
         this._view[key] = null;
       }
-    }
-
-    if(this._filmExtraPresenter !== null) {
-      this._filmExtraPresenter.remove();
-      this._filmExtraPresenter = null;
     }
 
     if(final) {
@@ -137,9 +140,8 @@ class FilmList {
         this._lastFilmIndex++;
       }
     }
-
     if(this._films.length === 0) {
-      this.remove();
+      this.remove(false, true);
     }
   }
 
@@ -171,7 +173,7 @@ class FilmList {
   }
 
   _onMenuChange(event, eventPayload) {
-    if(event !== MenuModel.CHANGE_EVENT){
+    if(event !== MenuModel.CHANGE_EVENT) {
       return;
     }
     if(eventPayload.type === 'stats') {

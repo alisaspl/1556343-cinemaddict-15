@@ -28,8 +28,8 @@ class FilmExtra {
           this._renderMostCommented();
         } else {
 
-          for(const key of this._filmPresenters.keys()){
-            if(key.id === payload.filmId){
+          for(const key of this._filmPresenters.keys()) {
+            if(key.id === payload.filmId) {
               const presenter = this._filmPresenters.get(key);
               if(presenter && presenter.filmCard !== null) {
                 presenter.filmCard[payload.property] = payload.value;
@@ -61,7 +61,7 @@ class FilmExtra {
     }
 
     let topFilms = [];
-    if(films.length > config.EXTRA_FILMS_QUANTITY && !(films.some((element) => getRandomFilmCondition(element)))) {
+    if(films.length > config.EXTRA_FILMS_QUANTITY && !(films.some((element) => getRandomFilmCondition(element, films[0])))) {
       const firstFilm = utils.getRandomElementFromArray(films);
       let secondFilm = utils.getRandomElementFromArray(films);
       while(firstFilm.id === secondFilm.id) {

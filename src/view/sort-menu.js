@@ -41,7 +41,7 @@ class SortMenu extends AbstractView {
   }
 
   removeElement() {
-    if(this._element !== null){
+    if(this._element !== null) {
       this._element.querySelectorAll('a').forEach((element) => element.removeEventListener('click', this._clickHandler));
       super.removeElement();
     }

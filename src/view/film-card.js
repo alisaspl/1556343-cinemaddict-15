@@ -54,7 +54,7 @@ class FilmCard extends AbstractView {
   }
 
   _dynamicSetter(property) {
-    if(this._film[property]){
+    if(this._film[property]) {
       this[`_${property}Button`].classList.add('film-card__controls-item--active');
     } else {
       this[`_${property}Button`].classList.remove('film-card__controls-item--active');

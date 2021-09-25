@@ -25,4 +25,15 @@ const renderView = (container, view, place = RenderPosition.BEFOREEND) => {
   }
 };
 
-export default { renderView, createElement, RenderPosition };
+const renderViewAfter = (view, placeAfterView) => {
+  if(!(view instanceof AbstractView)) {
+    throw new Error('View must be instance of AbstracView');
+  }
+  if(!(placeAfterView instanceof AbstractView)) {
+    throw new Error('AfterView must be instance of AbstracView');
+  }
+  const placeAfterViewElement = placeAfterView.getElement();
+  placeAfterViewElement.parentNode.insertBefore(view.getElement(), placeAfterViewElement.nextSibling);
+};
+
+export default { renderView, renderViewAfter, createElement, RenderPosition };

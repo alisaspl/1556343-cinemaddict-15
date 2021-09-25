@@ -80,10 +80,10 @@ class Menu {
     if(this._filmsModel.getFilms(menuType).length === 0) {
       if(this._inited) {
         this._emptyView = new EmptyView(this._menuModel.getSelected());
-        utilsRender.renderView(this._container, this._emptyView);
+        utilsRender.renderViewAfter(this._emptyView, this._menuView);
       } else {
         this._emptyView = new EmptyView({emptyText: config.LOADING_TEXT});
-        utilsRender.renderView(this._container, this._emptyView);
+        utilsRender.renderViewAfter(this._emptyView, this._menuView);
       }
     }
   }

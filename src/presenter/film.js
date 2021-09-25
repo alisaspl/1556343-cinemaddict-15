@@ -38,7 +38,7 @@ class Film {
       this._callCalback.bind(this, 'isWatched'),
       this._callCalback.bind(this, 'isFavorite'),
     );
-    if(renderAtIndex === 0){
+    if(renderAtIndex === 0) {
       utilsRender.renderView(this._container, this.filmCard, utilsRender.RenderPosition.AFTERBEGIN);
     } else if(!renderAtIndex) {
       utilsRender.renderView(this._container, this.filmCard);
