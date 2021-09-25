@@ -36,10 +36,12 @@ class Films extends AbstractObserver {
   updateFilm(filmId, property, value) {
     for(const film of Films._films) {
       if(film.id === filmId) {
-        film[property] = value;
-        return this._api.updateFilm(film)
-          .then(() => {
-            this._notify(Films.CHANGE_EVENT, { filmId, property, value });
+        const filmForServer = Object.assign({}, film);
+        filmForServer[property] = value;
+        return this._api.updateFilm(filmForServer)
+          .then((filmFromServer) => {
+            film[property] = filmFromServer[property];
+            this._notify(Films.CHANGE_EVENT, { filmId: filmFromServer.id, property, value: filmFromServer[property] });
           });
       }
     }

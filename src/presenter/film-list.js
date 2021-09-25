@@ -99,6 +99,8 @@ class FilmList {
   _addFilm(filmId) {
     const filmIndex = this._films.findIndex((film) => film.id === filmId);
 
+    console.log(this._lastFilmIndex, filmIndex, [...this._films], filmId);
+
     if(filmIndex <= this._lastFilmIndex) {
       let needRenderCard = true;
 
@@ -108,12 +110,13 @@ class FilmList {
         if(this._films[this._lastFilmIndex-1].id !== filmId) {
           needRenderCard = true;
           const presenterToDelete = this._filmPresenters.get(this._films[this._lastFilmIndex].id);
-          if(presenterToDelete && presenterToDelete.filmCard) {
+          if(presenterToDelete && presenterToDelete.filmCard !== null) {
             presenterToDelete.filmCard.removeElement();
             presenterToDelete.filmCard = null;
           }
 
           if(this._lastFilmIndex > 0) {
+            console.log('1', '--');
             this._lastFilmIndex--;
           }
         }
@@ -121,6 +124,7 @@ class FilmList {
 
       if(needRenderCard) {
         this._renderFilmCard(this._films[filmIndex], this._view.filmList, filmIndex);
+        console.log('2', '++');
         this._lastFilmIndex++;
       }
 
@@ -132,11 +136,12 @@ class FilmList {
     if(presenterToDelete && presenterToDelete.filmCard !== null) {
       presenterToDelete.filmCard.removeElement();
       presenterToDelete.filmCard = null;
-
+      console.log('3', '--');
       this._lastFilmIndex--;
 
       if(this._films.length > this._lastFilmIndex) {
         this._renderFilmCard(this._films[this._lastFilmIndex], this._view.filmList);
+        console.log('3', '++');
         this._lastFilmIndex++;
       }
     }
